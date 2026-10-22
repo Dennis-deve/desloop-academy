@@ -12,6 +12,10 @@ import type { Database } from './db.js';
 import { appendAudit, inTransaction, verifyRelease } from './db.js';
 import { loadCatalog, type PilotCatalog } from './catalog.js';
 import { PilotProgression } from './progression.js';
+import { loadEngineCatalog } from './engine/catalog.js';
+import { verifyEngineRelease } from './engine/migrate.js';
+import { LearningEngine } from './engine/service.js';
+import { SandboxService } from './engine/sandbox.js';
 import {
   ApiError,
   clearSessionCookies,
@@ -66,6 +70,41 @@ const review = z
     safetyApproved: z.boolean(),
     feedback: z.string().trim().min(10).max(3000),
   })
+  .strict();
+const v2Lesson = z
+  .object({
+    practice: z.string().trim().min(15).max(5000),
+    answerIndex: z.number().int().min(0).max(5),
+    requestId: uuid,
+  })
+  .strict();
+const v2Review = review.extend({ requestId: uuid }).strict();
+const v2Project = z
+  .object({
+    artefact: z.string().trim().min(40).max(5000),
+    reflection: z.string().trim().min(20).max(5000),
+    safetyAttested: z.literal(true),
+    requestId: uuid,
+  })
+  .strict();
+const sandboxCreate = z
+  .object({
+    scope: z.enum(['GUIDED', 'PLAYGROUND']),
+    title: z.string().trim().min(1).max(120),
+    courseId: z
+      .string()
+      .regex(/^course-\d{2}$/)
+      .optional(),
+    lessonId: z
+      .string()
+      .regex(/^c\d{2}-l\d+$/)
+      .optional(),
+    requestId: uuid,
+  })
+  .strict();
+const sandboxRevision = z.object({ document: z.record(z.unknown()), requestId: uuid }).strict();
+const sandboxRun = z
+  .object({ revisionNo: z.number().int().min(1).max(100), requestId: uuid })
   .strict();
 const idParams = z.object({ courseId: z.string().regex(/^course-\d{2}$/) });
 function parse<T>(schema: ZodType<T>, input: unknown): T {
@@ -148,6 +187,7 @@ export async function buildApi(
   });
   app.get('/api/pilot/status', async () => ({
     enabled: config.enabled,
+    engineV2Enabled: config.engineV2Enabled,
     audience: 'invited adults and internal reviewers only',
     curriculum: 'unreviewed internal draft; no official credit',
     contentVersion: catalog.version,
@@ -160,7 +200,11 @@ export async function buildApi(
 
     app.post(
       '/api/pilot/auth/register',
-      { config: { rateLimit: { max: 5, timeWindow: '15 minutes' } } },
+      {
+        config: {
+          rateLimit: { max: config.localE2eAuthLimit ? 100 : 5, timeWindow: '15 minutes' },
+        },
+      },
       async (request, reply) => {
         requireAuthOrigin(request, config);
         const body = parse(registration, request.body);
@@ -214,7 +258,11 @@ export async function buildApi(
     );
     app.post(
       '/api/pilot/auth/login',
-      { config: { rateLimit: { max: 8, timeWindow: '15 minutes' } } },
+      {
+        config: {
+          rateLimit: { max: config.localE2eAuthLimit ? 100 : 8, timeWindow: '15 minutes' },
+        },
+      },
       async (request, reply) => {
         requireAuthOrigin(request, config);
         const body = parse(login, request.body);
@@ -302,6 +350,91 @@ export async function buildApi(
       const { submissionId } = parse(z.object({ submissionId: uuid }), request.params);
       return progression.review(auth.user.id, submissionId, parse(review, request.body));
     });
+    if (config.engineV2Enabled) {
+      const engineCatalog = loadEngineCatalog();
+      const releaseId = await verifyEngineRelease(db, engineCatalog); // Fail startup closed on drift.
+      const engine = new LearningEngine(db, engineCatalog, releaseId);
+      const studio = new SandboxService(db, engineCatalog, releaseId, engine);
+      app.get('/api/pilot/engine/pathway', async (request) => {
+        const auth = await requireUser(request, db, config, 'learner');
+        return engine.pathway(auth.user.id);
+      });
+      app.get('/api/pilot/engine/courses/:courseId', async (request) => {
+        const auth = await requireUser(request, db, config, 'learner');
+        const { courseId } = parse(idParams, request.params);
+        return engine.courseDetail(auth.user.id, courseId);
+      });
+      app.post('/api/pilot/engine/courses/:courseId/lessons/:lessonId', async (request) => {
+        const auth = await requireMutation(request, db, config, 'learner');
+        const { courseId, lessonId } = parse(
+          z.object({
+            courseId: idParams.shape.courseId,
+            lessonId: z.string().regex(/^c\d{2}-l\d+$/),
+          }),
+          request.params,
+        );
+        return engine.lesson(auth.user.id, courseId, lessonId, parse(v2Lesson, request.body));
+      });
+      app.post('/api/pilot/engine/courses/:courseId/quiz', async (request) => {
+        const auth = await requireMutation(request, db, config, 'learner');
+        const { courseId } = parse(idParams, request.params);
+        return engine.quiz(auth.user.id, courseId, parse(quiz, request.body));
+      });
+      app.post('/api/pilot/engine/courses/:courseId/project', async (request, reply) => {
+        const auth = await requireMutation(request, db, config, 'learner');
+        const { courseId } = parse(idParams, request.params);
+        return reply
+          .code(201)
+          .send(await engine.submit(auth.user.id, courseId, parse(v2Project, request.body)));
+      });
+      app.get('/api/pilot/engine/reviews', async (request) => {
+        const auth = await requireUser(request, db, config, 'reviewer');
+        return { queue: await engine.reviewQueue(auth.user.id) };
+      });
+      app.post('/api/pilot/engine/reviews/:submissionId', async (request) => {
+        const auth = await requireMutation(request, db, config, 'reviewer');
+        const { submissionId } = parse(z.object({ submissionId: uuid }), request.params);
+        return engine.review(auth.user.id, submissionId, parse(v2Review, request.body));
+      });
+      app.get('/api/pilot/engine/studio', async (request) => {
+        const auth = await requireUser(request, db, config, 'learner');
+        return studio.list(auth.user.id);
+      });
+      app.post('/api/pilot/engine/studio', async (request, reply) => {
+        const auth = await requireMutation(request, db, config, 'learner');
+        return reply
+          .code(201)
+          .send(await studio.create(auth.user.id, parse(sandboxCreate, request.body)));
+      });
+      app.get('/api/pilot/engine/studio/projects/:projectId', async (request) => {
+        const auth = await requireUser(request, db, config, 'learner');
+        const { projectId } = parse(z.object({ projectId: uuid }), request.params);
+        return studio.project(auth.user.id, projectId);
+      });
+      app.post('/api/pilot/engine/studio/projects/:projectId/revisions', async (request, reply) => {
+        const auth = await requireMutation(request, db, config, 'learner');
+        const { projectId } = parse(z.object({ projectId: uuid }), request.params);
+        return reply
+          .code(201)
+          .send(await studio.save(auth.user.id, projectId, parse(sandboxRevision, request.body)));
+      });
+      app.post('/api/pilot/engine/studio/projects/:projectId/run', async (request) => {
+        const auth = await requireMutation(request, db, config, 'learner');
+        const { projectId } = parse(z.object({ projectId: uuid }), request.params);
+        return studio.run(auth.user.id, projectId, parse(sandboxRun, request.body));
+      });
+      app.get('/api/pilot/engine/studio/guided/:courseId/:lessonId/brief', async (request) => {
+        const auth = await requireUser(request, db, config, 'learner');
+        const { courseId, lessonId } = parse(
+          z.object({
+            courseId: idParams.shape.courseId,
+            lessonId: z.string().regex(/^c\d{2}-l\d+$/),
+          }),
+          request.params,
+        );
+        return studio.guidedBrief(auth.user.id, courseId, lessonId);
+      });
+    }
   }
 
   const dir = resolve(process.cwd(), config.staticDir);

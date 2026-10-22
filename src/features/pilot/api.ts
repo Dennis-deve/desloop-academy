@@ -8,6 +8,7 @@ export interface PilotUser {
 }
 export interface PilotStatus {
   enabled: boolean;
+  engineV2Enabled: boolean;
   audience: string;
   curriculum: string;
   contentVersion: string;
@@ -132,6 +133,8 @@ async function request<T>(path: string, body?: object): Promise<T> {
   }
   return result as T;
 }
+/** Same-origin pilot credentials and CSRF also protect the opt-in draft-2 engine. */
+export { request as pilotRequest };
 export const pilotApi = {
   status: () => request<PilotStatus>('/status'),
   me: () => request<{ user: PilotUser }>('/me'),

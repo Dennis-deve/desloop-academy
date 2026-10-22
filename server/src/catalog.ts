@@ -28,6 +28,7 @@ const courseSchema = z.object({
   stage: z.string(),
   title: z.string(),
   purpose: z.string(),
+  guidedHours: z.number().int().positive(),
   safetyCritical: z.boolean(),
   reviewStatus: z.string(),
   project: z.object({ brief: z.string(), requiredEvidence: z.array(z.string()) }),

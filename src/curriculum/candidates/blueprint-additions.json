@@ -1,0 +1,222 @@
+{
+  "schemaVersion": 1,
+  "baseVersion": "draft-1",
+  "candidateVersion": "draft-2-candidate",
+  "editorialStatus": "unreviewed-source-informed-candidate",
+  "sourceDocuments": {
+    "blueprint": {
+      "filename": "Desloop Academy Master Curriculum.pdf",
+      "sha256": "af6a8806d26edcf25a470f09129debcadfbba9bdd8f93710a6c13fbae48ac76d",
+      "pages": 5
+    },
+    "strategy": {
+      "filename": "Desloop Global Alignment Strategy.pdf",
+      "sha256": "b814466bf85d5af5ad2a4884c4bb85fcd0738a851936b751b8c55a38be474201",
+      "pages": 3
+    }
+  },
+  "policyDecision": {
+    "source": "User clarification in this conversation, 2026-10-22; reconciles conflicting > signs on Blueprint p.1 with its Course 01/44 gates and existing adult pilot",
+    "quizMinimumInclusive": 80,
+    "projectRubricMinimumInclusive": 70,
+    "allSafetyCriticalChecksMustPass": true,
+    "humanProjectReviewRequired": true,
+    "appliesTo": "proposed-next-release; existing draft-1 pilot policy remains unchanged"
+  },
+  "courseStructure": [
+    "Real-world purpose",
+    "Age-appropriate concept explanation",
+    "Facilitator demonstration",
+    "Guided practice",
+    "Independent practice",
+    "Knowledge check",
+    "Practical project",
+    "Feedback and reflection",
+    "Final assessment"
+  ],
+  "courseStructureSource": { "document": "blueprint", "page": 1 },
+  "strategyTagAssignments": [
+    { "code": "GES_CCP", "kind": "external-framework-hint", "courseNumbers": [7, 11, 17, 22, 30, 31, 33, 34], "sourcePage": 3 },
+    { "code": "CAMBRIDGE_0860", "kind": "external-framework-hint", "courseNumbers": [7, 8, 9, 10, 11, 17, 18, 28, 29, 31, 34], "sourcePage": 3 },
+    { "code": "OXFORD_INTL", "kind": "external-framework-hint", "courseNumbers": [12, 13, 22, 28, 29], "sourcePage": 3 },
+    { "code": "VOCATIONAL_PRO", "kind": "internal-desloop-focus", "courseNumbers": [21, 24, 25, 27, 36, 37, 41, 42, 43, 44], "sourcePage": 3 }
+  ],
+  "lessonAdditions": [
+    {
+      "id": "strat-09-boolean-gates",
+      "lessonId": "c09-l1",
+      "source": { "document": "strategy", "pages": [1, 2] },
+      "concept": "Use AND, OR and NOT to compare two fictional true/false conditions; represent each result in a truth table and connect the conditions to simple logic-gate symbols. Introduce a single binary 0/1 signal as a representation, not a person's identity.",
+      "guidedActivity": "Using picture cards, blocks or a printed four-row grid, predict whether a simulated room light turns on when a switch AND a safety sensor are active; compare the OR and NOT alternatives.",
+      "assessmentEvidence": "Correctly label every row for two input conditions and explain one AND/OR/NOT result orally, in text or through an accessible block trace.",
+      "safeguard": "Use only fictional switches and simulated components; do not ask young learners to wire circuits."
+    },
+    {
+      "id": "strat-09-logic-trace",
+      "lessonId": "c09-l4",
+      "source": { "document": "strategy", "pages": [1, 2] },
+      "concept": "Trace a compound Boolean decision and distinguish the expression's predicted output from a guessed answer.",
+      "guidedActivity": "Complete a four-case decision table for a fictional quiz that accepts either a correct answer OR an approved retry, then test one changed input.",
+      "assessmentEvidence": "All four outcomes agree with the declared Boolean rule, and the learner identifies a corrected error."
+    },
+    {
+      "id": "strat-10-reproducible-debug",
+      "lessonId": "c10-l2",
+      "source": { "document": "strategy", "pages": [2] },
+      "concept": "Record repeatable steps and distinguish a syntax error from a logic error in a prepared visual/text example.",
+      "guidedActivity": "Run a prewritten fictional story, record input, expected output and actual output, and replay the failure before changing any step.",
+      "assessmentEvidence": "A second learner can reproduce the failure from the report without being shown the answer."
+    },
+    {
+      "id": "strat-11-python-transition",
+      "lessonId": "c11-l1",
+      "source": { "document": "strategy", "pages": [1] },
+      "concept": "Bridge the existing block/pseudocode lesson to introductory Python print, a named variable and a fictional input, without assuming every learner has a personal device.",
+      "guidedActivity": "Translate a short, prewritten block sequence into Python statements in an embedded supervised editor; offer a printout/picture-card trace and oral explanation as an accessible practice path.",
+      "assessmentEvidence": "The program or equivalent trace produces the expected greeting and the learner identifies the variable's role.",
+      "safeguard": "Use fictional names only and never request a real student's identifying details."
+    },
+    {
+      "id": "strat-16-connectivity",
+      "lessonId": "c16-l3",
+      "source": { "document": "strategy", "pages": [1, 2] },
+      "concept": "Connect client/server request-response to a safe, high-level network-connectivity diagram, distinguishing a disconnected client from an unavailable server.",
+      "guidedActivity": "Arrange browser, network, server and response cards for a fictional information site; identify which boundary is affected when a response does not arrive.",
+      "assessmentEvidence": "The diagram places client and server correctly and explains one non-invasive connectivity check."
+    },
+    {
+      "id": "strat-17-hyperlinks",
+      "lessonId": "c17-l2",
+      "source": { "document": "strategy", "pages": [2] },
+      "concept": "Make the existing tags/elements/links outcome explicit: distinguish a link's readable text, href target and surrounding semantic element.",
+      "guidedActivity": "Create a local navigation link between two fictional HTML pages and inspect its keyboard focus and destination label.",
+      "assessmentEvidence": "A keyboard user can activate the link and predict its destination from the visible text; no personal data is published."
+    },
+    {
+      "id": "strat-22-types",
+      "lessonId": "c22-l2",
+      "source": { "document": "strategy", "pages": [1, 2] },
+      "concept": "Explicitly distinguish String, Integer, Float and Boolean values, and choose an appropriate type for an entirely synthetic example.",
+      "guidedActivity": "Annotate four fictional values in a simple Python list/dictionary and explain why adding two numbers differs from concatenating text.",
+      "assessmentEvidence": "Learner classifies all four types, predicts two outputs, and explains a mistaken conversion."
+    },
+    {
+      "id": "strat-22-branches-loops",
+      "lessonId": "c22-l3",
+      "source": { "document": "strategy", "pages": [1, 2] },
+      "concept": "Assess variable assignment, input/output, IF/ELIF/ELSE and finite WHILE/FOR loops rather than merely naming those constructs.",
+      "guidedActivity": "In a synthetic budget or quiz, add a three-way decision and a bounded loop; trace a typical input, boundary case and invalid input.",
+      "assessmentEvidence": "Independent tests exercise each branch and both loop paths; invalid input is handled without an uncontrolled loop.",
+      "safeguard": "No real spending, grades, contacts or accounts in sample data."
+    },
+    {
+      "id": "strat-28-data-bias",
+      "lessonId": "c28-l2",
+      "source": { "document": "strategy", "pages": [1] },
+      "concept": "Extend data-quality discussion to how incomplete or unbalanced synthetic training examples could affect a model's results.",
+      "guidedActivity": "Compare counts in two fictional categories and describe which examples a hypothetical model rarely sees.",
+      "assessmentEvidence": "Learner states one justified limitation and a fairer way to collect or represent examples, without claiming to have trained a real model."
+    },
+    {
+      "id": "strat-30-primary-keys",
+      "lessonId": "c30-l2",
+      "source": { "document": "strategy", "pages": [1] },
+      "concept": "Explicitly identify a primary key, a foreign key and why an identifier should be unique in a fictional course-enrolment schema.",
+      "guidedActivity": "Mark the key columns on two toy tables, then predict which duplicate or missing reference a constraint would reject.",
+      "assessmentEvidence": "The learner marks both keys correctly and explains one prevented inconsistent record."
+    },
+    {
+      "id": "strat-30-web-data-boundary",
+      "lessonId": "c30-l4",
+      "source": { "document": "strategy", "pages": [1] },
+      "concept": "A website connects to a database through a server/API and access controls, not through browser-held database credentials.",
+      "guidedActivity": "Trace a request from a mock frontend through a mock server to a disposable dataset and back; identify where validation and authentication belong.",
+      "assessmentEvidence": "Diagram separates browser, backend and fictional database; it includes no real personal record or exposed secret."
+    },
+    {
+      "id": "strat-31-training-data",
+      "lessonId": "c31-l1",
+      "source": { "document": "strategy", "pages": [1] },
+      "concept": "Explain at a conceptual level how an algorithm uses training examples to detect patterns and why outputs are not automatically true.",
+      "guidedActivity": "Compare predictions from two tiny, invented training sets and identify which missing examples might change a prediction.",
+      "assessmentEvidence": "Learner names a limitation of the examples and an independent way to check a claim; no live AI connection is required."
+    },
+    {
+      "id": "strat-31-bias-review",
+      "lessonId": "c31-l4",
+      "source": { "document": "strategy", "pages": [1] },
+      "concept": "Connect synthetic training-data imbalance to AI bias and human oversight; distinguish a model estimate from a decision about a person.",
+      "guidedActivity": "Review a fictional unequal dataset, describe a risk and write a human escalation or correction step.",
+      "assessmentEvidence": "The artefact documents one plausible bias, a verification step and an explicit privacy boundary."
+    },
+    {
+      "id": "strat-33-network-plan",
+      "lessonId": "c33-l3",
+      "source": { "document": "strategy", "pages": [1] },
+      "concept": "Recognise the role of a router, access point and a safe conceptual IP/DNS configuration; keep changes in a fictional network diagram.",
+      "guidedActivity": "Label devices on a simulated small-office network and choose a safe route to troubleshoot a disconnected client.",
+      "assessmentEvidence": "Diagram labels the boundaries and lists one check that does not touch a real school or neighbour's network."
+    },
+    {
+      "id": "strat-34-threats",
+      "lessonId": "c34-l1",
+      "source": { "document": "strategy", "pages": [1, 3] },
+      "concept": "Recognise phishing, malware and repeated password-guessing (brute force) as threats; use only defensive descriptions, not attack instructions.",
+      "guidedActivity": "Sort fictional warning-sign cards and choose an approved reporting path for a suspicious login alert or message.",
+      "assessmentEvidence": "All safety-critical scenarios choose a protective response and avoid interacting with a real target.",
+      "safeguard": "No credential guessing, exploit labs, live scans or real phishing messages for learners."
+    },
+    {
+      "id": "strat-34-authentication",
+      "lessonId": "c34-l2",
+      "source": { "document": "strategy", "pages": [1, 3] },
+      "concept": "Connect password authentication, passphrases and MFA to the protection of fictional accounts; never collect a real password in a lesson.",
+      "guidedActivity": "Compare two imaginary sign-in safeguards and explain why reusing a password creates a risk.",
+      "assessmentEvidence": "Learner recommends a suitable defensive control and identifies where to report unexpected login activity."
+    },
+    {
+      "id": "strat-34-encryption",
+      "lessonId": "c34-l3",
+      "source": { "document": "strategy", "pages": [1, 3] },
+      "concept": "Explain encryption in transit versus at rest at a high level, and why access control, backups and redundancy protect different things.",
+      "guidedActivity": "Label encrypted transport, restricted access and a recoverable backup on a fictional school-app diagram.",
+      "assessmentEvidence": "Learner chooses an appropriate protective control for two scenarios and explains that encryption alone is not a backup.",
+      "safeguard": "Conceptual protection only; do not imply this is a security qualification or expose production keys."
+    },
+    {
+      "id": "strat-39-simulated-gates",
+      "lessonId": "c39-l3",
+      "source": { "document": "strategy", "pages": [1] },
+      "concept": "Reuse the Course 09 AND/OR/NOT truth-table idea to express simulated sensor inputs, processing and outputs without requiring physical equipment.",
+      "guidedActivity": "Describe a virtual light indicator that activates only when a fictional sensor AND an enable switch are on; compare its four input cases.",
+      "assessmentEvidence": "The simulation or paper trace satisfies all four cases and the learner names a safe failure state.",
+      "safeguard": "No mains electricity, real wiring or unsupervised hardware access."
+    }
+  ],
+  "toolPlacements": [
+    { "lessonId": "c01-l2", "toolKind": "VISUAL", "purpose": "Optional picture-block sequencing for a learning routine; no new prerequisite" },
+    { "lessonId": "c07-l3", "toolKind": "VISUAL", "purpose": "Algorithm flowchart blocks" },
+    { "lessonId": "c08-l2", "toolKind": "VISUAL", "purpose": "Events and sequences" },
+    { "lessonId": "c09-l1", "toolKind": "VISUAL", "purpose": "Boolean gates and truth tables" },
+    { "lessonId": "c10-l2", "toolKind": "VISUAL", "purpose": "Reproduce and repair a block-program bug" },
+    { "lessonId": "c11-l1", "toolKind": "PYTHON", "purpose": "Supervised first text program" },
+    { "lessonId": "c12-l2", "toolKind": "DESIGN", "purpose": "Poster layout and hierarchy" },
+    { "lessonId": "c13-l2", "toolKind": "DESIGN", "purpose": "Shapes, layers and vector composition" },
+    { "lessonId": "c17-l2", "toolKind": "WEB", "purpose": "Semantic HTML and links" },
+    { "lessonId": "c18-l3", "toolKind": "WEB", "purpose": "CSS layout and states" },
+    { "lessonId": "c19-l2", "toolKind": "WEB", "purpose": "Responsive layout" },
+    { "lessonId": "c20-l3", "toolKind": "JAVASCRIPT", "purpose": "Accessible interactive DOM behaviour" },
+    { "lessonId": "c22-l3", "toolKind": "PYTHON", "purpose": "Branching and bounded loops" },
+    { "lessonId": "c23-l2", "toolKind": "PYTHON", "purpose": "Synthetic-data search" },
+    { "lessonId": "c24-l2", "toolKind": "WIREFRAME", "purpose": "Task-flow wireframes" },
+    { "lessonId": "c25-l3", "toolKind": "WEB", "purpose": "Mock API responses without real network calls" },
+    { "lessonId": "c27-l2", "toolKind": "WEB", "purpose": "Component-driven frontend" },
+    { "lessonId": "c28-l3", "toolKind": "SPREADSHEET", "purpose": "Interpret a fictional dataset" },
+    { "lessonId": "c29-l2", "toolKind": "SPREADSHEET", "purpose": "Formulas on fictional records" },
+    { "lessonId": "c30-l3", "toolKind": "SQL", "purpose": "Disposable course-enrolment database queries" },
+    { "lessonId": "c31-l4", "toolKind": "SPREADSHEET", "purpose": "Inspect training-data balance without live AI" },
+    { "lessonId": "c38-l3", "toolKind": "GAME_2D", "purpose": "Playable 2D story or game" },
+    { "lessonId": "c39-l3", "toolKind": "ROBOTICS", "purpose": "Virtual sensor and control logic" }
+  ],
+  "toolPlacementStatus": "engineering-suggestion-not-a-source-document-mapping"
+}

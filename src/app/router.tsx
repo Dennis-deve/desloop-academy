@@ -41,6 +41,34 @@ const PilotCoursePage = lazy(() =>
 const PilotReviewsPage = lazy(() =>
   import('@/features/pilot/PilotReviews').then((module) => ({ default: module.PilotReviewsPage })),
 );
+const EngineHome = lazy(() =>
+  import('@/features/pilot/engine/EnginePages').then((module) => ({ default: module.EngineHome })),
+);
+const EngineCoursePage = lazy(() =>
+  import('@/features/pilot/engine/EnginePages').then((module) => ({
+    default: module.EngineCoursePage,
+  })),
+);
+const EngineReviewsPage = lazy(() =>
+  import('@/features/pilot/engine/EnginePages').then((module) => ({
+    default: module.EngineReviewsPage,
+  })),
+);
+const EngineStudioList = lazy(() =>
+  import('@/features/pilot/engine/StudioPages').then((module) => ({
+    default: module.EngineStudioList,
+  })),
+);
+const EngineStudioProjectPage = lazy(() =>
+  import('@/features/pilot/engine/StudioPages').then((module) => ({
+    default: module.EngineStudioProjectPage,
+  })),
+);
+const EngineGuidedGateway = lazy(() =>
+  import('@/features/pilot/engine/StudioPages').then((module) => ({
+    default: module.EngineGuidedGateway,
+  })),
+);
 
 // Public sections and multi-step applications load only when visited.
 const ExplorePage = lazy(() =>
@@ -452,6 +480,12 @@ export function AppRouter() {
             <Route index element={<PilotHome />} />
             <Route path="courses/:courseId" element={<PilotCoursePage />} />
             <Route path="reviews" element={<PilotReviewsPage />} />
+            <Route path="engine" element={<EngineHome />} />
+            <Route path="engine/courses/:courseId" element={<EngineCoursePage />} />
+            <Route path="engine/reviews" element={<EngineReviewsPage />} />
+            <Route path="engine/studio" element={<EngineStudioList />} />
+            <Route path="engine/studio/projects/:projectId" element={<EngineStudioProjectPage />} />
+            <Route path="engine/guided/:courseId/:lessonId" element={<EngineGuidedGateway />} />
           </Route>
           <Route path="/apply/teacher" element={<TeacherApplicationPage />} />
           <Route path="/apply/school" element={<SchoolApplicationPage />} />

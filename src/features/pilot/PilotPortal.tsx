@@ -143,6 +143,14 @@ export function PilotLayout() {
                   Assigned reviews
                 </Link>
               )}
+              {status.engineV2Enabled && (
+                <Link
+                  to={user.role === 'reviewer' ? '/pilot/engine/reviews' : '/pilot/engine'}
+                  className={buttonStyles('outline', 'sm')}
+                >
+                  Draft-2 learning engine
+                </Link>
+              )}
               <Link to="/demo" className={buttonStyles('ghost', 'sm')}>
                 Separate sample demo
               </Link>

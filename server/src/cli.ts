@@ -2,17 +2,20 @@ import { randomToken, hexHash } from './security.js';
 import { loadCatalog } from './catalog.js';
 import { loadConfig } from './config.js';
 import { appendAudit, createDatabase, inTransaction, migrate, verifyRelease } from './db.js';
+import { loadEngineCatalog } from './engine/catalog.js';
+import { migrateEngine, verifyEngineRelease } from './engine/migrate.js';
+import { LearningEngine } from './engine/service.js';
 
 const [command, ...args] = process.argv.slice(2);
 const usage =
-  'Commands: migrate | invite <email> learner|reviewer | submissions | assign <submission-uuid> <reviewer-email> | disable <email>';
+  'Commands: migrate | invite <email> learner|reviewer | submissions | assign <submission-uuid> <reviewer-email> | disable <email> | engine-migrate | engine-enrol <adult-learner-email> | engine-submissions | engine-assign <submission-uuid> <reviewer-email>';
 if (command === 'help') {
   console.log(usage);
   process.exit(0);
 }
 if (!process.env.DATABASE_URL)
   throw new Error('DATABASE_URL must be set in the server environment');
-const config = loadConfig({ ...process.env, PILOT_ENABLED: 'false' });
+const config = loadConfig({ ...process.env, PILOT_ENABLED: 'false', ENGINE_V2_ENABLED: 'false' });
 const db = createDatabase(config);
 const catalog = loadCatalog();
 const operator = process.env.PILOT_OPERATOR?.trim();
@@ -138,6 +141,100 @@ try {
       });
     });
     console.log('Account disabled and all sessions revoked.');
+  } else if (command === 'engine-migrate') {
+    if (process.env.ENGINE_DRAFT_ACKNOWLEDGED !== 'true')
+      throw new Error(
+        'Set ENGINE_DRAFT_ACKNOWLEDGED=true for the unpublished adult learning engine.',
+      );
+    const actor = operatorRequired();
+    await migrate(db, catalog);
+    const candidate = loadEngineCatalog();
+    await migrateEngine(db, candidate);
+    await inTransaction(db, async (client) => {
+      await appendAudit(client, null, 'learning.release.migrated', candidate.version, {
+        operator: actor,
+        sha256: candidate.hash,
+        noPilotCompletionTransfer: true,
+      });
+    });
+    console.log(
+      `Installed unpublished adult-only release ${candidate.version}; no learner is enrolled automatically.`,
+    );
+  } else if (['engine-enrol', 'engine-submissions', 'engine-assign'].includes(command ?? '')) {
+    if (process.env.ENGINE_DRAFT_ACKNOWLEDGED !== 'true')
+      throw new Error('Set ENGINE_DRAFT_ACKNOWLEDGED=true for draft-2 operator actions.');
+    const actor = operatorRequired();
+    const candidate = loadEngineCatalog();
+    const releaseId = await verifyEngineRelease(db, candidate);
+    const engine = new LearningEngine(db, candidate, releaseId);
+    if (command === 'engine-enrol') {
+      const address = args[0]?.trim().toLowerCase();
+      if (!address || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address))
+        throw new Error('Usage: engine-enrol adult-learner@example.com');
+      const found = await db.query<{ id: string }>(
+        "SELECT id FROM pilot.users WHERE email=$1 AND role='learner' AND status='active'",
+        [address],
+      );
+      if (!found.rows[0]) throw new Error('Invite and register an active adult learner first.');
+      const result = await engine.enroll(found.rows[0].id, actor);
+      console.log(
+        `${result.repeated ? 'Already enrolled' : 'Enrolled'} in a SEPARATE ${result.releaseVersion} sequence, starting at Course 01. No draft-1 completions were transferred.`,
+      );
+    } else if (command === 'engine-submissions') {
+      const found = await inTransaction(db, async (client) => {
+        const rows = await client.query(
+          `SELECT s.id,s.course_id,s.iteration,s.submitted_at,u.email AS learner_email,
+           reviewer.email AS reviewer_email FROM learning.project_submissions s
+           JOIN pilot.users u ON u.id=s.learner_id
+           LEFT JOIN learning.review_assignments a ON a.submission_id=s.id
+           LEFT JOIN pilot.users reviewer ON reviewer.id=a.reviewer_id
+           WHERE s.status='submitted' AND s.release_id=$1 ORDER BY s.submitted_at DESC LIMIT 50`,
+          [releaseId],
+        );
+        await appendAudit(client, null, 'learning.submissions.listed', 'operator', {
+          operator: actor,
+          count: rows.rowCount,
+        });
+        return rows.rows;
+      });
+      console.log(JSON.stringify(found, null, 2));
+    } else {
+      const [submissionId, address] = args;
+      const email = address?.trim().toLowerCase();
+      if (!submissionId || !/^[0-9a-f-]{36}$/.test(submissionId) || !email)
+        throw new Error('Usage: engine-assign <submission-uuid> reviewer@example.com');
+      await inTransaction(db, async (client) => {
+        const sub = await client.query<{ learner_id: string; status: string; release_id: string }>(
+          'SELECT learner_id,status,release_id FROM learning.project_submissions WHERE id=$1 FOR UPDATE',
+          [submissionId],
+        );
+        const reviewer = await client.query<{ id: string }>(
+          "SELECT id FROM pilot.users WHERE email=$1 AND role='reviewer' AND status='active'",
+          [email],
+        );
+        if (
+          !sub.rows[0] ||
+          sub.rows[0].status !== 'submitted' ||
+          sub.rows[0].release_id !== releaseId ||
+          !reviewer.rows[0] ||
+          sub.rows[0].learner_id === reviewer.rows[0].id
+        )
+          throw new Error(
+            'A pending release-matched project and a distinct active reviewer are required.',
+          );
+        await client.query(
+          'INSERT INTO learning.review_assignments(submission_id,reviewer_id,assigned_by) VALUES($1,$2,$3)',
+          [submissionId, reviewer.rows[0].id, actor],
+        );
+        await appendAudit(client, null, 'learning.review.assigned', submissionId, {
+          operator: actor,
+          reviewerId: reviewer.rows[0].id,
+        });
+      });
+      console.log(
+        'Draft-2 submission assigned. The reviewer can now decide it in /pilot/engine/reviews.',
+      );
+    }
   } else {
     throw new Error(usage);
   }

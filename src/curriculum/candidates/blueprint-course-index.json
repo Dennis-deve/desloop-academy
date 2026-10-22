@@ -1,0 +1,273 @@
+{
+  "source": {
+    "filename": "Desloop Academy Master Curriculum.pdf",
+    "sha256": "af6a8806d26edcf25a470f09129debcadfbba9bdd8f93710a6c13fbae48ac76d",
+    "pages": 5
+  },
+  "courses": [
+    {
+      "number": 1,
+      "title": "Getting Started with Learning and Digital Confidence",
+      "guidedHours": 2,
+      "page": 2
+    },
+    {
+      "number": 2,
+      "title": "Devices, Hardware and Operating Systems",
+      "guidedHours": 4,
+      "page": 2
+    },
+    {
+      "number": 3,
+      "title": "Files, Folders and Digital Organisation",
+      "guidedHours": 3,
+      "page": 2
+    },
+    {
+      "number": 4,
+      "title": "Typing, Accessibility and Productivity Basics",
+      "guidedHours": 4,
+      "page": 2
+    },
+    {
+      "number": 5,
+      "title": "Internet, Search and Digital Research",
+      "guidedHours": 4,
+      "page": 2
+    },
+    {
+      "number": 6,
+      "title": "Digital Communication, Collaboration and Citizenship",
+      "guidedHours": 4,
+      "page": 2
+    },
+    {
+      "number": 7,
+      "title": "Computational Thinking and Algorithms",
+      "guidedHours": 4,
+      "page": 2
+    },
+    {
+      "number": 8,
+      "title": "Creative Coding with Blocks",
+      "guidedHours": 6,
+      "page": 2
+    },
+    {
+      "number": 9,
+      "title": "Logic, Conditions and Repetition",
+      "guidedHours": 5,
+      "page": 2
+    },
+    {
+      "number": 10,
+      "title": "Debugging, Testing and Problem Solving",
+      "guidedHours": 4,
+      "page": 2
+    },
+    {
+      "number": 11,
+      "title": "First Steps in Text-Based Programming",
+      "guidedHours": 6,
+      "page": 2
+    },
+    {
+      "number": 12,
+      "title": "Visual Design Foundations",
+      "guidedHours": 5,
+      "page": 3
+    },
+    {
+      "number": 13,
+      "title": "Digital Graphics and Illustration",
+      "guidedHours": 6,
+      "page": 3
+    },
+    {
+      "number": 14,
+      "title": "Photography, Audio and Video Basics",
+      "guidedHours": 6,
+      "page": 3
+    },
+    {
+      "number": 15,
+      "title": "Content Creation, Copyright and Online Reputation",
+      "guidedHours": 4,
+      "page": 3
+    },
+    {
+      "number": 16,
+      "title": "How the Web Works",
+      "guidedHours": 4,
+      "page": 3
+    },
+    {
+      "number": 17,
+      "title": "HTML: Structure and Meaning",
+      "guidedHours": 7,
+      "page": 3
+    },
+    {
+      "number": 18,
+      "title": "CSS: Styling and Layout",
+      "guidedHours": 8,
+      "page": 3
+    },
+    {
+      "number": 19,
+      "title": "Responsive Web Design and Accessibility",
+      "guidedHours": 6,
+      "page": 3
+    },
+    {
+      "number": 20,
+      "title": "JavaScript Fundamentals",
+      "guidedHours": 10,
+      "page": 3
+    },
+    {
+      "number": 21,
+      "title": "Git, GitHub and Version Control",
+      "guidedHours": 5,
+      "page": 3
+    },
+    {
+      "number": 22,
+      "title": "Programming Fundamentals and Problem Solving",
+      "guidedHours": 10,
+      "page": 4
+    },
+    {
+      "number": 23,
+      "title": "Data Structures and Algorithmic Thinking",
+      "guidedHours": 8,
+      "page": 4
+    },
+    {
+      "number": 24,
+      "title": "UI/UX Design and Prototyping",
+      "guidedHours": 7,
+      "page": 4
+    },
+    {
+      "number": 25,
+      "title": "APIs and Data Exchange",
+      "guidedHours": 8,
+      "page": 4
+    },
+    {
+      "number": 26,
+      "title": "Software Engineering and Testing",
+      "guidedHours": 8,
+      "page": 4
+    },
+    {
+      "number": 27,
+      "title": "Frontend Application Development",
+      "guidedHours": 12,
+      "page": 4
+    },
+    {
+      "number": 28,
+      "title": "Data Literacy and Responsible Data Use",
+      "guidedHours": 6,
+      "page": 4
+    },
+    {
+      "number": 29,
+      "title": "Spreadsheets and Practical Analytics",
+      "guidedHours": 7,
+      "page": 4
+    },
+    {
+      "number": 30,
+      "title": "Databases and SQL Foundations",
+      "guidedHours": 8,
+      "page": 4
+    },
+    {
+      "number": 31,
+      "title": "AI Literacy, Generative AI and Responsible Use",
+      "guidedHours": 6,
+      "page": 4
+    },
+    {
+      "number": 32,
+      "title": "Practical AI Applications and Automation",
+      "guidedHours": 8,
+      "page": 4
+    },
+    {
+      "number": 33,
+      "title": "Computer Networks and Internet Fundamentals",
+      "guidedHours": 6,
+      "page": 5
+    },
+    {
+      "number": 34,
+      "title": "Cybersecurity and Digital Safety",
+      "guidedHours": 7,
+      "page": 5
+    },
+    {
+      "number": 35,
+      "title": "Privacy, Digital Footprints and Online Safety",
+      "guidedHours": 5,
+      "page": 5
+    },
+    {
+      "number": 36,
+      "title": "Cloud Computing Foundations",
+      "guidedHours": 5,
+      "page": 5
+    },
+    {
+      "number": 37,
+      "title": "Deployment, Hosting and Operations",
+      "guidedHours": 7,
+      "page": 5
+    },
+    {
+      "number": 38,
+      "title": "Game Design and Interactive Experiences",
+      "guidedHours": 8,
+      "page": 5
+    },
+    {
+      "number": 39,
+      "title": "Robotics and Physical Computing Concepts",
+      "guidedHours": 8,
+      "page": 5
+    },
+    {
+      "number": 40,
+      "title": "Automation and Digital Workflows",
+      "guidedHours": 6,
+      "page": 5
+    },
+    {
+      "number": 41,
+      "title": "Entrepreneurship, Problem Discovery and Product Thinking",
+      "guidedHours": 6,
+      "page": 5
+    },
+    {
+      "number": 42,
+      "title": "Communication, Teamwork and Professional Practice",
+      "guidedHours": 5,
+      "page": 5
+    },
+    {
+      "number": 43,
+      "title": "Professional Portfolio and Career Readiness",
+      "guidedHours": 7,
+      "page": 5
+    },
+    {
+      "number": 44,
+      "title": "Final Integrated Capstone: Build, Test and Present",
+      "guidedHours": 16,
+      "page": 5
+    }
+  ]
+}

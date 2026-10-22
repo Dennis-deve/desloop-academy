@@ -15,6 +15,8 @@
     "dev:api": "tsx watch server/src/index.ts",
     "pilot:migrate": "node server/dist/cli.js migrate",
     "pilot:admin": "node server/dist/cli.js",
+    "engine:migrate": "node server/dist/cli.js engine-migrate",
+    "engine:admin": "node server/dist/cli.js",
     "preview": "vite preview --host 0.0.0.0",
     "test": "vitest run",
     "test:server": "tsx --test server/tests/*.test.ts",

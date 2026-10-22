@@ -1,6 +1,6 @@
 # Run, verify and hand off the adult pilot
 
-**Status (22 October 2026):** Source and tests exist; a local PostgreSQL migration and full pilot browser flow have been exercised. Verified: 28 frontend tests, 3 local-PostgreSQL server tests under Node 22, 44 default desktop/mobile browser passes (four skipped: two intentionally desktop-only and two opt-in pilot tests), and 2/2 separately run desktop/mobile pilot browser flows; typecheck, lint, full build and zero-vulnerability npm audit passed. **No Railway service or production database was provisioned; no migration has run on Railway and no hosted app deployment has occurred.** Check the existing GitHub repository’s current `main` branch for the latest source publication status. All public, child, partner, school, billing, AI and community journeys are still browser-only demonstrations. `/pilot` is an invitation-only **adult/internal draft rehearsal**, not official credit or verified identity.
+**Status (22 October 2026):** The original `draft-1` PostgreSQL adult pilot and an **additive, separately gated `draft-2-candidate` engine** have been exercised locally. Verified: 30 frontend tests, 14 server/policy tests including separate local PostgreSQL integrations, 5 PDF-candidate tests, 48 passing desktop/mobile browser journeys with 2 intentionally desktop-only skips, full typecheck/lint/build and zero-vulnerability npm audit; the extended Course 08 guided visual browser journey also passed on both desktop and mobile. **No Railway service or production database was provisioned; no migration has run on Railway and no hosted deployment has occurred.** The previous GitHub push at `c71307628dd3e1fca2f3cd057be6c6671c62879c` predates the new engine, which is still local-only. All public, child, partner, school, billing, AI and community journeys are browser-only demonstrations. `/pilot` and `/pilot/engine` are invitation-only **adult/internal draft rehearsals**, not official credit or verified identity. For the **new migration, flags and operator commands** use the [draft-2 runbook](LEARNING_ENGINE_RUNBOOK.md); this page retains the original pilot details.
 
 ## Local development (Node 22)
 
@@ -51,6 +51,7 @@ Do **not** paste invitation codes, real connection strings, passwords, personal 
 
 ```bash
 export PILOT_TEST_DATABASE_URL='postgresql://local_user@127.0.0.1:5432/desloop_pilot_test'
+export ENGINE_TEST_DATABASE_URL='postgresql://local_user@127.0.0.1:5432/desloop_engine_test'
 npm run test:server
 # Browser tests require a DIFFERENT disposable database, migrated and used by the running API:
 export PILOT_E2E_DATABASE_URL='postgresql://local_user@127.0.0.1:5432/desloop_pilot_e2e'
@@ -60,41 +61,42 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-**Warning:** both opt-in tests **TRUNCATE** their pilot-schema users, invitations and audit data. Run them only against dedicated, disposable local databases. Never point `PILOT_TEST_DATABASE_URL` or `PILOT_E2E_DATABASE_URL` at Railway or a shared environment. The normal `npm run test:e2e` skips the database-dependent browser flow when no E2E URL is provided. Automated axe checks are a regression aid, **not** WCAG certification.
+**Warning:** opt-in tests **TRUNCATE** their pilot-schema users, invitations and audit data. Run them only against distinct, dedicated, disposable local databases. Never point any `PILOT_*_DATABASE_URL` or `ENGINE_*_DATABASE_URL` E2E/test setting at Railway or a shared environment. The normal `npm run test:e2e` skips the database-dependent browser flow when no E2E URL is provided. Automated axe checks are a regression aid, **not** WCAG certification.
 
 ## Railway handoff — plan, not an accomplished deployment
 
 Railway documents creating a PostgreSQL service and referencing its `DATABASE_URL` from an app service, which avoids pasting database credentials; it is private by default [1](https://docs.railway.com/databases/postgresql). Railpack prioritises `RAILPACK_NODE_VERSION` and `engines.node` when choosing Node, so **verify that the Railway build and runtime both use Node 22** [2](https://railpack.com/languages/node). Pre-deploy commands run in a separate container on the private network before start [3](https://docs.railway.com/deployments/pre-deploy-command).
 
 1. After owner-authorised GitHub publication or an owner-run Railway CLI deployment, create a **non-production/internal** Railway project/environment and add its PostgreSQL service. Keep the DB off Public Access/TCP Proxy. Select a region and data residency with the operator's privacy lead. Configure backups, restore tests and alerts before storing any real data [1](https://docs.railway.com/databases/postgresql).
-2. Add a Node app service from the same project root. `railway.json` sets build `npm run build:all`, pre-deploy `npm run pilot:migrate`, start `npm start`, and healthcheck `/api/health`. Railway can configure these through service settings or its config-as-code fields [4](https://docs.railway.com/config-as-code/reference). `PORT` is supplied by the host; the server listens on `0.0.0.0`.
+2. Add a Node app service from the same project root. Set build `npm run build:all`, pre-deploy **`npm run pilot:migrate` for draft-1 only** or **`npm run engine:migrate` for opt-in draft-2**, start `npm start`, and healthcheck `/api/health`. `PORT` is supplied by the host; the server listens on `0.0.0.0`. **Railway's `railway.json` config-as-code is deprecated**: new services ignore it, while legacy services still use it to override dashboard values until 1 December 2026. Check the actual pre-deploy command and [Railway IaC migration guide](https://docs.railway.com/infrastructure-as-code) before enabling draft-2; see the [engine runbook](LEARNING_ENGINE_RUNBOOK.md).
 3. Add an app-service **reference** to the PostgreSQL service's `DATABASE_URL`; also set `NODE_ENV=production`, `APP_ORIGIN=https://<exact-approved-app-domain>` **without a trailing slash**, and `RAILPACK_NODE_VERSION=22`. Start with `PILOT_ENABLED=false`. Give the app service only the one approved HTTPS domain, with access controls outside the app appropriate for an internal pilot. Never use a second static origin for `/pilot`: cookies and CSRF rely on same-origin `/api`. The public demo can be hosted separately only if `/pilot` clearly reports disconnected there.
 4. Review the 44-course draft, safeguarding and data-retention limitations with the responsible team. Only for invited **adults/internal reviewers**, explicitly set `PILOT_DRAFT_ACKNOWLEDGED=true` and `PILOT_ENABLED=true`, then redeploy. The migration **must succeed** and `verifyRelease` must match the checked-in content hash and policy before routes become active. `/api/health` now checks PostgreSQL when the pilot is on. A Railway healthcheck tests readiness at deploy time, not continuous monitoring [5](https://docs.railway.com/deployments/healthchecks).
 5. Use the operator commands in a restricted runtime with the service's secret variables to issue invitations/assignments. Smoke-test the approved origin, registration, lesson gate, quiz, safety failure, manual review/revision, unlock, logout, disabled account, and API 401/403/423 responses. Verify that debug/dev URLs or browser demo roles cannot change pilot records. Check logs for accidental private-data exposure; rotate credentials and revoke test accounts. Keep a rollback and recovery plan.
 
-**Caution:** Railway may enable connection pooling; its documentation recommends an unpooled URL for schema migrations that require a dedicated session [6](https://docs.railway.com/databases/postgresql-pgbouncer). Review this before adding PgBouncer. This pilot has only one repeatable, additive schema migration, not a general versioned migration framework. The DB connection is set to private-network mode by default; if an external TLS connection is ever required, configure and validate CA trust with `DATABASE_TLS=verify` before use. Do not switch to a public database URL merely to make CLI commands convenient.
+**Caution:** Railway may enable connection pooling; its documentation recommends an unpooled URL for schema migrations that require a dedicated session [6](https://docs.railway.com/databases/postgresql-pgbouncer). Review this before adding PgBouncer. There are now two repeatable additive pilot migrations (001 and 002), but still no general versioned publication/migration framework. The DB connection is set to private-network mode by default; if an external TLS connection is ever required, configure and validate CA trust with `DATABASE_TLS=verify` before use. Do not switch to a public database URL merely to make CLI commands convenient.
 
 `PILOT_ENABLED=false` disables all registration, learner and review routes; the public static demo remains. Turning the pilot off does **not delete** already stored pilot records. Prepare lawful retention, request-handling and database deletion procedures before any real user data. For public launch, also require reviewer MFA, verification/recovery, distributed abuse controls, independent audit retention, security and accessibility reviews, backup/restore exercises, and an approved content/assessment bank. A change to draft JSON **without a new reviewed version and migration intentionally fails startup**.
 
 ## Existing GitHub repository handoff
 
-The user's [existing repository](https://github.com/Dennis-deve/desloop-academy) originally had five brand JPEGs on `main` at `880f334`. They were copied into `assets/brand-originals/` and the app uses optimised local derivatives. Its original root JPEGs should remain unchanged. This working directory is **not** the repository checkout; check the remote branch for its current commit. Never replace its history or remove the root JPEGs.
+The user's [existing repository](https://github.com/Dennis-deve/desloop-academy) originally had five brand JPEGs on `main` at `880f334`. The earlier approved browser/device-auth push brought the branded original pilot to `main` at `c71307628dd3e1fca2f3cd057be6c6671c62879c`; authorization was removed afterward. Its original root JPEGs were preserved and copied into `assets/brand-originals/`; optimized derivatives live in `public/brand/`. **The new draft-2 work has not been pushed.** This working source directory is **not** the repository checkout; check the remote branch for changes since that SHA. Never replace its history, remove the root JPEGs, or force-push.
 
-For an owner-run first publication or recovery **only if these files are not already on `main`**, use your own local authentication and review the separately delivered `desloop-academy-source.zip` in a fresh checkout **without deleting the existing root JPEGs** or force-pushing. If `main` already contains this app, pull the latest branch and do not reapply an older ZIP. Adjust paths to where you downloaded the ZIP; it contains source, the five optimized/archived brand images, docs and the PostgreSQL migration, but no generated dependencies or secrets:
+To publish this **new** source only after review, use an authenticated local checkout and the freshly generated `desloop-academy-source.zip` in a **new review branch**. Check the archive's paths and preserve any remote-only files. Example commands (adjust paths and branch name; do not reapply an older ZIP over newer changes):
 
 ```bash
 git clone https://github.com/Dennis-deve/desloop-academy.git desloop-repo
-unzip -o /path/to/desloop-academy-source.zip -d desloop-repo
 cd desloop-repo
+git fetch origin && git checkout -b draft-2-internal-learning-engine origin/main
+unzip -o /path/to/desloop-academy-source.zip -d .
 npm ci && npm run typecheck && npm run lint && npm run test && npm run build:all
 git status --short
 git add . && git diff --cached --check && git diff --cached --stat
-# Configure your own Git author locally if needed; review changes and secrets before committing.
-git commit -m "Add branded Desloop app and adult internal PostgreSQL pilot"
-git push origin main          # or push a review branch/PR if main is protected
+# Review the diff and scan for secrets before committing.
+git commit -m "Add opt-in internal learning engine and visual studio"
+git push -u origin draft-2-internal-learning-engine  # open a review PR
 ```
 
-These are optional owner-run handoff commands, **not an instruction to overwrite newer GitHub commits**. The GitHub connector is unavailable in this environment; an owner-approved GitHub CLI browser device flow can authenticate a single push without sending a token in chat. Do not send tokens or private keys in chat. Branch protection, reviewer approval, secret scanning, CI checks and an operator-approved Railway connection remain to be configured.
+These are optional owner-run handoff commands, **not** a claim that the current ZIP has been uploaded, the review branch created, or Railway deployed. Authenticate only via your own trusted Git credential/browser/device flow; never send tokens or private keys in chat. Branch protection, reviewer approval, secret scanning, CI checks and an operator-approved Railway connection remain to be configured.
 
 ## Beyond the pilot — release blockers
 

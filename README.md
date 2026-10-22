@@ -3,7 +3,7 @@
 A branded, responsive React/TypeScript learning app with **two deliberately separate trust levels**:
 
 1. **Public site and role workspaces:** runnable **browser-only demonstrations**. Demo sign-in, role switching, sample AI, payments, commissions, applications, messaging, child/guardian views and local course/reviewer actions are **simulated**; they do not grant real access, send messages, charge money or create official completion.
-2. **`/pilot`: a working server-backed, invitation-only adult/internal draft pilot** for identity, one required 44-course progression and assigned human review. The pilot has been tested against **local PostgreSQL**, but **has not been deployed to Railway** or published as an official programme. It has no age/email verification, minor enrolment, school accounts, public credentials or official credit.
+2. **`/pilot`: a working, invitation-only adult/internal PostgreSQL pilot** for identity, assigned human review and one required 44-course progression. The original `draft-1` pilot remains unchanged. An **additive, explicitly enabled `draft-2-candidate` learning engine** in `/pilot/engine` adds seven server-maintained states, an ordered lesson/module/course gate, versioned release/policy, assigned review, a required server-checked visual-block lesson in Course 08 and a distinct private saved free-practice playground. It was tested against **local PostgreSQL**; **Railway remains undeployed**. Neither draft is an official programme or supports verified age/email, minors, schools, credentials or official credit.
 
 > **Editorial and safeguarding status:** `draft-1` contains 44 course blueprints, 176 lesson outlines, illustrative checks and draft rubrics. This material has **not** received expert review, accessibility/child-safety sign-off or accreditation. The public demo bundles draft answer keys, so this is not a secure exam bank. Do not enter real child, confidential, payment or other sensitive information in either journey.
 
@@ -34,41 +34,46 @@ npm start                      # API and built site at :4000
 # Visit http://127.0.0.1:5173/pilot
 ```
 
-An operator issues one-time adult/reviewer invitations and assigns projects using `npm run pilot:admin -- ...` from a restricted shell. The browser cannot choose a pilot role. See [deployment and operator instructions](docs/DEPLOYMENT.md) for commands, Railway configuration, environment boundaries and **destructive test-DB warnings**. Never commit `.env`, a database connection string, credentials, an invitation code or a personal record. All `VITE_` values are public.
+An operator issues one-time adult/reviewer invitations and assigns projects using `npm run pilot:admin -- ...` from a restricted shell. The browser cannot choose a pilot role. **For the new additive draft-2 release**, follow the [engine migration, operator and Railway runbook](docs/LEARNING_ENGINE_RUNBOOK.md): `npm run engine:migrate` installs both migrations only after explicit draft acknowledgment, and `npm run engine:admin -- engine-enrol ...` separately enrols invited adults. The new engine routes also require `ENGINE_V2_ENABLED=true`; they are otherwise unavailable. The [original pilot handoff](docs/DEPLOYMENT.md) documents the unchanged draft-1 flow. Never commit `.env`, a database connection string, credentials, an invitation code or a personal record. All `VITE_` values are public.
 
 ## The required pathway
 
 The **one mandatory sequence** has 44 courses across nine stages: digital foundations, computational thinking, creation, web, programming, data/AI, networks/safety/cloud, interactive technology, then career and capstone. Later courses cannot be skipped. The demo adapts teaching examples/scaffolds for ages 6–8, 9–12, 13–17 and 18+ without bypassing outcomes; **this age selector is not verification or a permission for children to join the pilot**. Enrichment and remediation stay in the current course. Human review is required for the project; no learner is required to publish private data.
 
-For the **adult pilot only**, server-side transactions enforce: all four ordered practice checks, a server-scored five-item quiz (≥80% **and all critical safety items**), a privacy-attested text project, an operator-assigned active reviewer, rubric project and overall ≥70%, safety ≥70% with explicit approval, and a matching content/policy version. Revisions stay in the same course; the server alone writes completion and Course N+1 unlock. This is still an **internal rehearsal**, not an awarded qualification.
+For **both adult-only pilot releases**, server-side transactions enforce: all four ordered practice checks, a server-scored five-item quiz (≥80% **and all critical safety items**), a privacy-attested text project, an operator-assigned active reviewer, rubric project and overall ≥70%, safety ≥70% with explicit approval, and matching content/policy version. Revisions stay in the same course; the server alone writes completion and Course N+1 unlock. Draft-2 additionally persists the seven requested module/course states and permits only the **guided** Course 08 visual revision's independently server-checked evidence to satisfy `c08-l2`. Free practice, local previews, stage/tag filtering and prior draft-1 passes cannot unlock anything in the new release. These are still **internal rehearsals**, not awarded qualifications.
 
-| Route | Boundary |
-| --- | --- |
-| `/`, `/explore`, `/courses`, `/courses/:slug`, `/pricing` | Public informational **draft/demo**, including ordered course map and illustrative terms. |
-| `/demo`, `/app`, `/app/learn/*`, `/app/assess/*`, `/facilitator/pathway-reviews` | Browser-only role, lesson, quiz and reviewer **simulation**. LocalStorage and demo role switches are not security. |
-| `/partner`, `/school`, `/classroom`, `/parent`, `/facilitator`, `/admin`, `/workspace/*` | Illustrative partners, tenants, guardian links, billing, sample AI, messages, offline content and other workflows. **No authoritative services.** |
-| `/pilot`, `/pilot/courses/:courseId`, `/pilot/reviews` | **Separate PostgreSQL-backed adult/internal pilot**, available only after API, migration and explicit operator enablement. Disabled/unavailable state otherwise. |
+| Route                                                                                                                           | Boundary                                                                                                                                                                                      |
+| ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`, `/explore`, `/courses`, `/courses/:slug`, `/pricing`                                                                       | Public informational **draft/demo**, including ordered course map and illustrative terms.                                                                                                     |
+| `/demo`, `/app`, `/app/learn/*`, `/app/assess/*`, `/facilitator/pathway-reviews`                                                | Browser-only role, lesson, quiz and reviewer **simulation**. LocalStorage and demo role switches are not security.                                                                            |
+| `/partner`, `/school`, `/classroom`, `/parent`, `/facilitator`, `/admin`, `/workspace/*`                                        | Illustrative partners, tenants, guardian links, billing, sample AI, messages, offline content and other workflows. **No authoritative services.**                                             |
+| `/pilot`, `/pilot/courses/:courseId`, `/pilot/reviews`                                                                          | Original **draft-1** PostgreSQL-backed adult/internal pilot; requires enabled API, migration and explicit adult-draft acknowledgment.                                                         |
+| `/pilot/engine`, `/pilot/engine/courses/:courseId`, `/pilot/engine/reviews`, `/pilot/engine/guided/*`, `/pilot/engine/studio/*` | **Additive draft-2-candidate**, separately migrated, flagged and operator-enrolled. Only Course 08's guided visual blocks are server-graded; private free practice is saved but never graded. |
 
-See [curriculum guide](docs/CURRICULUM.md) and the [44-course Word reference](Desloop_Academy_Master_Curriculum.docx). The Word file can be regenerated from the JSON with `python3 scripts/export_curriculum.py` (requires `python-docx`). Do not use the draft as a published syllabus without a full review.
+See [curriculum guide](docs/CURRICULUM.md) and the [44-course Word reference](Desloop_Academy_Master_Curriculum.docx). The Word file can be regenerated from the active JSON with `python3 scripts/export_curriculum.py` (requires `python-docx`). Do not use the draft as a published syllabus without a full review.
+
+**Source-informed candidate (opt-in local/internal only):** The owner supplied the five-page Master Curriculum PDF and three-page Global Alignment Strategy PDF. [Source reconciliation](docs/BLUEPRINT_RECONCILIATION.md) records 34 proposed strategy hints, 18 lesson supplements, 23 tool-placement proposals and the inclusive policy decision. Rebuild `src/curriculum/candidates/master-draft-2.json` with `python3 scripts/build_blueprint_candidate.py` and run `python3 -m unittest discover -s scripts/tests`. The new [implemented learning-engine runbook](docs/LEARNING_ENGINE_RUNBOOK.md) and [longer tool-stack proposal](docs/LEARNING_ENGINE_PROPOSAL.md) separate the **one implemented declarative visual tool** from staged future sandboxes. `src/curriculum/master.json` and draft-1 completions are untouched. The prior GitHub push at `c71307628dd3e1fca2f3cd057be6c6671c62879c` predates draft-2; these newer files have **not** been pushed or deployed.
 
 ## Verify
 
 ```bash
 npm run typecheck && npm run lint
-npm run test                   # frontend demo Vitest tests
+npm run test                   # 30 frontend/demo/block-editor Vitest tests
+python3 -m unittest discover -s scripts/tests -v
 npm run build:all             # Vite + compiled Fastify API/CLI
 npm audit --audit-level=low
 npx playwright install chromium
 # Linux only if needed: npx playwright install-deps chromium
-npm run test:e2e              # desktop/mobile; DB pilot E2E skipped by default
+npm run test:e2e              # desktop/mobile; DB-backed journeys skipped by default
 
-# ONLY against a disposable, dedicated local DB (the test TRUNCATES pilot data):
-PILOT_TEST_DATABASE_URL='postgresql://.../desloop_pilot_test' npm run test:server
-# Browser full flow also TRUNCATES its separate E2E DB and needs the running API:
-PILOT_E2E_DATABASE_URL='postgresql://.../desloop_pilot_e2e' npm run test:e2e
+# Opt-in destructive integration tests: only against separate, disposable local DBs:
+PILOT_TEST_DATABASE_URL='postgresql://.../desloop_pilot_test' \
+ENGINE_TEST_DATABASE_URL='postgresql://.../desloop_engine_test' npm run test:server
+# See docs/LEARNING_ENGINE_RUNBOOK.md for the local API and the separate
+# ENGINE_E2E_DATABASE_URL/PILOT_E2E_DATABASE_URL browser test DB setup.
 ```
 
-**Verified here:** 28/28 frontend Vitest tests; 3/3 server/policy tests against a disposable local PostgreSQL DB under Node 22; 44 standard desktop/mobile Playwright passes with four skips (two intentional desktop cases plus two opt-in pilot cases); then 2/2 separate PostgreSQL-backed pilot browser journeys, desktop and mobile. Typecheck, lint, full static/server build and `npm audit --audit-level=low` passed with zero reported vulnerabilities. This is local verification, **not Railway deployment or security certification**. Axe A/AA-tag tests assist accessibility review but **do not certify WCAG 2.2 AA**. A previously visited static shell may load offline, but cold-first-visit offline and pilot account API usage are not available offline. The service worker does not cache API requests.
+**Verified locally under Node 22:** 5/5 Python source-reconciliation tests, 30/30 frontend Vitest tests, 14/14 server/policy tests including both separate disposable PostgreSQL databases, typecheck, zero-warning lint, full static/server builds and `npm audit --audit-level=low` with zero reported vulnerabilities. Desktop/mobile Playwright was run against a disposable E2E database and local API: **48 passed, 2 intentionally desktop-only skips**, including old pilot and new engine browser flows; a later extended guided visual Course 08 browser check also passed 2/2 on desktop/mobile. This is local verification, **not Railway deployment, assessment validity or security certification**. Automated axe A/AA-tag checks assist accessibility review but **do not certify WCAG 2.2 AA**. A previously visited static shell may load offline; cold-first-visit offline and pilot account API usage are not available offline. The service worker does not cache API requests.
 
 ## Key directories and source of truth
 
@@ -80,14 +85,15 @@ src/curriculum/master.json  One 44-course, nine-stage unreviewed source document
 src/curriculum/             Browser-only demo policy and local practice state
 src/features/pilot/         Isolated API-backed adult learner/reviewer experience
 server/src/                 Fastify, release policy, sessions/CSRF, progression and operator CLI
-server/migrations/          PostgreSQL pilot schema
-server/tests/               Real-Postgres API/policy integration tests (opt-in DB)
-e2e/                        Desktop/mobile/demo and opt-in live-pilot browser/axe journeys
-docs/                       Curriculum, brand, architecture and Railway handoff
+server/migrations/          Additive 001 adult pilot + 002 unpublished learning engine
+server/src/engine/          Draft-2 version/policy, PostgreSQL progression, review and visual interpreter
+server/tests/               Real-Postgres API/policy integration tests (opt-in disposable DBs)
+e2e/                        Desktop/mobile/demo and opt-in live-pilot/engine browser/axe journeys
+docs/                       Curriculum, brand, architecture, local and Railway runbooks
 ```
 
-See [architecture and trust boundaries](docs/ARCHITECTURE.md), [Railway handoff](docs/DEPLOYMENT.md) and [brand usage](docs/BRAND.md). No final prices, commissions, contacts, legal terms, partner claims or outcomes have been invented. Keep them centrally configured and subject to approval.
+See [architecture and trust boundaries](docs/ARCHITECTURE.md), [draft-2 operator/Railway runbook](docs/LEARNING_ENGINE_RUNBOOK.md), [original-pilot handoff](docs/DEPLOYMENT.md) and [brand usage](docs/BRAND.md). No final prices, commissions, contacts, legal terms, partner claims or outcomes have been invented. Keep them centrally configured and subject to approval.
 
 ## Not yet done
 
-**No Railway resource, hosted app URL or Railway database migration has been created from this work.** The source targets the existing [Desloop Academy GitHub repository](https://github.com/Dennis-deve/desloop-academy); check its current `main` branch for the latest publication state. Before real/minor enrolment or commercial launch: expert-approve immutable content and a protected assessment bank; add verified age/guardian consent, school isolation, reviewer MFA/recovery and safeguarding operations; build secure uploads, moderation, real AI/messaging, approved payments/commission ledger and audited entitlements; provide retention, data-rights, backups/restore, monitoring, security review and manual accessibility sign-off. Browser demo controls must never be promoted to production authority.
+**No Railway resource, hosted app URL or Railway database migration has been created from this work.** The previously pushed [Desloop Academy repository](https://github.com/Dennis-deve/desloop-academy) has the older pilot only; the additive draft-2 code here is not on GitHub. Before external adults, minors or commercial launch: expert-approve immutable content and protected assessments; add verified age/guardian consent, school isolation, reviewer MFA/recovery and safeguarding operations; build secure uploads, moderation, real AI/messaging, approved payments/commission ledger and audited entitlements; provide retention, data-rights, backups/restore, monitoring, security review and manual accessibility sign-off. Browser demo controls must never be promoted to production authority.
