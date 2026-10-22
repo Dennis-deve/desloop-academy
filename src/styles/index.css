@@ -1,0 +1,328 @@
+@import 'tailwindcss';
+@config '../../tailwind.config.ts';
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  font-family: 'Manrope Variable', Manrope, system-ui, sans-serif;
+  color: var(--heading);
+  background: var(--canvas);
+  font-synthesis: none;
+  --canvas: #f7f9fc;
+  --panel: #ffffff;
+  --raised: #f2f5fa;
+  --line: #e1e7f0;
+  --heading: #142344;
+  --body: #465775;
+  --subdued: #53627d;
+  --public-bg: #fcfbf8;
+  --field: #ffffff;
+  --ring: #5135c5;
+}
+.dark {
+  color-scheme: dark;
+  --canvas: #101a30;
+  --panel: #192641;
+  --raised: #223352;
+  --line: #344562;
+  --heading: #f5f7fc;
+  --body: #c7d2e6;
+  --subdued: #a6b4ce;
+  --public-bg: #101a30;
+  --field: #1b2b49;
+  --ring: #d3c7ff;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  min-width: 320px;
+  font-size: 14px;
+  line-height: 1.65;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+}
+input,
+textarea,
+select {
+  min-width: 0;
+}
+a {
+  text-decoration: none;
+}
+::selection {
+  background: #c8d2ff;
+  color: #142344;
+}
+:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 3px;
+}
+.skip-link {
+  position: absolute;
+  z-index: 100;
+  top: -60px;
+  left: 16px;
+  padding: 12px 18px;
+  background: #fff;
+  color: #142344;
+  border-radius: 10px;
+  font-weight: 700;
+}
+.skip-link:focus {
+  top: 12px;
+}
+.public-bg {
+  background: var(--public-bg);
+}
+.field {
+  width: 100%;
+  background: var(--field);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  min-height: 46px;
+  color: var(--heading);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+.field::placeholder {
+  color: var(--subdued);
+  opacity: 0.8;
+}
+.field:focus {
+  outline: none;
+  border-color: #6579ea;
+  box-shadow: 0 0 0 3px rgba(78, 100, 221, 0.15);
+}
+.field[aria-invalid='true'] {
+  border-color: #d4555f;
+}
+.field:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.field-error {
+  color: #b73549;
+  font-size: 12px;
+  margin-top: 5px;
+  font-weight: 650;
+}
+.dark .field-error {
+  color: #ff9faa;
+}
+.card-surface {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+}
+.demo-stripe {
+  background: #edf1ff;
+  border-bottom: 1px solid #d9e2ff;
+  color: #2c428b;
+}
+.dark .demo-stripe {
+  background: #252c52;
+  border-color: #394575;
+  color: #dce3ff;
+}
+.hero-surface {
+  background:
+    radial-gradient(ellipse at 91% 14%, rgba(218, 227, 255, 0.68), transparent 40%),
+    var(--public-bg);
+}
+.dark .hero-surface {
+  background:
+    radial-gradient(ellipse at 91% 14%, rgba(91, 64, 179, 0.24), transparent 43%), var(--public-bg);
+}
+.brand-spectrum {
+  background: linear-gradient(90deg, #00d3ec, #266aff 28%, #9346eb 54%, #f3389f 74%, #ff9c24);
+}
+.brand-stage {
+  isolation: isolate;
+  background: #0a132b;
+}
+.brand-stage::before {
+  content: '';
+  position: absolute;
+  inset: -35%;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 22% 29%, rgba(0, 209, 232, 0.22), transparent 29%),
+    radial-gradient(circle at 74% 60%, rgba(237, 55, 153, 0.19), transparent 31%),
+    linear-gradient(145deg, #0a132b, #151639 80%);
+}
+.brand-stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(to bottom, transparent, #000 90%);
+  pointer-events: none;
+}
+.course-art {
+  position: relative;
+  overflow: hidden;
+  min-height: 152px;
+  isolation: isolate;
+}
+.course-art::before {
+  content: '';
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  right: -26px;
+  bottom: -97px;
+  border-radius: 43% 57% 46% 54%;
+  border: 34px solid currentColor;
+  opacity: 0.14;
+  transform: rotate(-25deg);
+}
+.course-art::after {
+  content: '';
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  left: 30%;
+  top: -75px;
+  border-radius: 26px;
+  border: 20px solid currentColor;
+  opacity: 0.11;
+  transform: rotate(25deg);
+}
+.course-art-blue {
+  background: #dfe8ff;
+  color: #334ab8;
+}
+.course-art-lavender {
+  background: #e9e4fc;
+  color: #5641aa;
+}
+.course-art-mint {
+  background: #d9f2e9;
+  color: #177e67;
+}
+.course-art-amber {
+  background: #fff0ce;
+  color: #98600c;
+}
+.course-art-peach {
+  background: #ffe6dd;
+  color: #a84f37;
+}
+.course-art-navy {
+  background: #dbe3f1;
+  color: #273c68;
+}
+.dark .course-art {
+  filter: brightness(0.8);
+}
+.progress-track {
+  height: 7px;
+  border-radius: 99px;
+  background: var(--raised);
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: #4c64d8;
+  border-radius: inherit;
+  transition: width 0.3s ease;
+}
+.nav-link-active {
+  background: #e9eeff;
+  color: #3045b5;
+}
+.dark .nav-link-active {
+  background: #2c3a67;
+  color: #e0e6ff;
+}
+.public-nav-link {
+  color: var(--heading);
+  transition: color 0.15s;
+}
+.public-nav-link:hover {
+  color: #394cc4;
+}
+.dark .public-nav-link:hover {
+  color: #aab9ff;
+}
+.prose-lesson p {
+  margin: 0 0 1.15rem;
+  color: var(--body);
+  font-size: 15px;
+  line-height: 1.9;
+}
+.prose-lesson p:first-child::first-letter {
+  font-weight: 800;
+}
+.toast-stack {
+  position: fixed;
+  z-index: 150;
+  right: 22px;
+  bottom: 22px;
+  display: grid;
+  gap: 10px;
+  width: min(390px, calc(100vw - 32px));
+}
+.toast {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  box-shadow: 0 16px 44px rgba(13, 25, 51, 0.16);
+  background: var(--panel);
+  color: var(--heading);
+  font-weight: 650;
+}
+.toast-success {
+  border-left: 4px solid #279d7e;
+}
+.toast-error {
+  border-left: 4px solid #d4555f;
+}
+.toast-info {
+  border-left: 4px solid #4e64dd;
+}
+.toast button {
+  font-size: 20px;
+  line-height: 1;
+  color: var(--subdued);
+}
+.shimmer {
+  background: linear-gradient(90deg, var(--raised) 25%, var(--panel) 50%, var(--raised) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
