@@ -1,0 +1,40 @@
+import { defineRailway, github, postgres, preserve, project, service } from 'railway/iac';
+
+// Private, domainless adult/internal draft. No minor access and no public database proxy.
+// Apply with railway config plan / apply after linking to the owner-approved project.
+// This first stage migrates the database while the API routes remain disabled.
+export default defineRailway(() => {
+  const db = postgres('Postgres', { region: 'ams' });
+  const app = service('desloop-academy', {
+    source: github('Dennis-deve/desloop-academy', { branch: 'main', checkSuites: false }),
+    build: {
+      builder: 'RAILPACK',
+      buildEnvironment: 'V3',
+      buildCommand: 'npm run build:all',
+    },
+    deploy: {
+      preDeployCommand: ['npm run engine:migrate'],
+      preDeployTimeoutSeconds: 600,
+      startCommand: 'npm start',
+      healthcheckPath: '/api/health',
+      healthcheckTimeout: 120,
+    },
+    replicas: { ams: 1 },
+    domains: [],
+    env: {
+      DATABASE_URL: db.env.DATABASE_URL,
+      NODE_ENV: 'production',
+      RAILPACK_NODE_VERSION: '22',
+      APP_ORIGIN: 'https://no-public-origin.invalid',
+      PILOT_OPERATOR: preserve(), // set privately in Railway before applying this plan
+      PILOT_ENABLED: 'false',
+      PILOT_DRAFT_ACKNOWLEDGED: 'true',
+      ENGINE_V2_ENABLED: 'false',
+      ENGINE_DRAFT_ACKNOWLEDGED: 'true',
+      CHILD_ACCOUNTS_ENABLED: 'false',
+      GUARDIAN_EVIDENCE_COLLECTION_ENABLED: 'false',
+      MINOR_LEARNING_ENABLED: 'false',
+    },
+  });
+  return project('glorious-inspiration', { resources: [db, app] });
+});
