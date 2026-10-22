@@ -2,7 +2,8 @@ import { defineRailway, github, postgres, preserve, project, service } from 'rai
 
 // Private, domainless adult/internal draft. No minor access and no public database proxy.
 // Apply with railway config plan / apply after linking to the owner-approved project.
-// This first stage migrates the database while the API routes remain disabled.
+// Adult/internal API is enabled only inside Railway's private network; browser sign-in
+// remains closed because APP_ORIGIN has no public HTTPS host.
 export default defineRailway(() => {
   const db = postgres('Postgres', { region: 'ams' });
   const app = service('desloop-academy', {
@@ -27,9 +28,9 @@ export default defineRailway(() => {
       RAILPACK_NODE_VERSION: '22',
       APP_ORIGIN: 'https://no-public-origin.invalid',
       PILOT_OPERATOR: preserve(), // set privately in Railway before applying this plan
-      PILOT_ENABLED: 'false',
+      PILOT_ENABLED: 'true',
       PILOT_DRAFT_ACKNOWLEDGED: 'true',
-      ENGINE_V2_ENABLED: 'false',
+      ENGINE_V2_ENABLED: 'true',
       ENGINE_DRAFT_ACKNOWLEDGED: 'true',
       CHILD_ACCOUNTS_ENABLED: 'false',
       GUARDIAN_EVIDENCE_COLLECTION_ENABLED: 'false',
