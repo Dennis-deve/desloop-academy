@@ -115,13 +115,12 @@ export const commercial = {
   billingPeriods: ['monthly', 'annual'] as const,
 };
 
+// Short, consistent public wayfinding. Detailed adult/business links live in the footer.
 export const publicNav = [
-  { label: 'Explore', href: '/explore' },
   { label: 'Courses', href: '/courses' },
-  { label: 'Sample workshops', href: '/sample-courses' },
-  { label: 'For teachers', href: '/teachers' },
+  { label: 'How it works', href: '/explore' },
+  { label: 'For families', href: '/parents' },
   { label: 'For schools', href: '/schools' },
-  { label: 'Pricing', href: '/pricing' },
 ];
 
 export const publicFooter = [

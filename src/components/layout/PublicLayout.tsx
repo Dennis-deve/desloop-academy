@@ -3,16 +3,14 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { ArrowRight, Menu, X, Moon, Sun } from 'lucide-react';
 import { Logo } from './Logo';
 import { Container, buttonStyles } from '@/components/ui';
-import { publicNav, publicFooter, roleDetails, site } from '@/config/site';
-import { useAuth, useTheme } from '@/app/providers';
+import { publicNav, publicFooter, site } from '@/config/site';
+import { useTheme } from '@/app/providers';
 
 export function PublicLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { session } = useAuth();
   const { theme, toggle } = useTheme();
   const location = useLocation();
   const isPilot = location.pathname === '/pilot' || location.pathname.startsWith('/pilot/');
-  const currentHref = isPilot ? '/pilot' : session ? roleDetails[session.role].home : '/sign-in';
   return (
     <div className="public-bg min-h-screen text-heading">
       <a className="skip-link" href="#main-content">
@@ -22,7 +20,7 @@ export function PublicLayout() {
         <Container className="py-1.5">
           {isPilot
             ? 'Private adult/internal pilot · Server gates when enabled · Draft only, not official credit'
-            : 'Platform preview · Sample content and local demo interactions · No live accounts, AI or payments'}
+            : 'Draft course information · Children cannot create accounts yet · No live AI or payments'}
         </Container>
       </div>
       <header className="sticky top-0 z-50 border-b border-line/80 bg-panel/95 backdrop-blur-md">
@@ -50,11 +48,8 @@ export function PublicLayout() {
             >
               {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
-            <Link to={currentHref} className={buttonStyles('ghost', 'sm')}>
-              {isPilot ? 'Pilot portal' : session ? 'Dashboard' : 'Sign in'}
-            </Link>
-            <Link to={isPilot ? '/demo' : '/register'} className={buttonStyles('navy', 'sm')}>
-              {isPilot ? 'Sample demo' : 'Start learning'} <ArrowRight className="h-3.5 w-3.5" />
+            <Link to={isPilot ? '/pilot' : '/courses'} className={buttonStyles('navy', 'sm')}>
+              {isPilot ? 'Pilot home' : 'Browse courses'} <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
           <button
@@ -84,34 +79,29 @@ export function PublicLayout() {
                   {item.label}
                 </Link>
               ))}
-              <Link
-                to="/parents"
-                onClick={() => setMenuOpen(false)}
-                className="rounded-xl px-4 py-3 text-sm font-bold text-heading hover:bg-raised"
-              >
-                For parents
-              </Link>
-              <Link
-                to="/facilitators"
-                onClick={() => setMenuOpen(false)}
-                className="rounded-xl px-4 py-3 text-sm font-bold text-heading hover:bg-raised"
-              >
-                For facilitators
-              </Link>
-              <div className="mt-3 flex flex-wrap gap-2 border-t border-line pt-4">
+              <div className="mt-3 grid gap-0.5 border-t border-line pt-3">
                 <Link
-                  to={currentHref}
+                  to="/child-safety"
                   onClick={() => setMenuOpen(false)}
-                  className={buttonStyles('outline', 'md')}
+                  className="rounded-xl px-4 py-3 text-sm font-bold text-heading hover:bg-raised"
                 >
-                  {isPilot ? 'Pilot portal' : session ? 'Dashboard' : 'Sign in'}
+                  Child safety
                 </Link>
                 <Link
-                  to={isPilot ? '/demo' : '/register'}
+                  to="/support"
+                  onClick={() => setMenuOpen(false)}
+                  className="rounded-xl px-4 py-3 text-sm font-bold text-heading hover:bg-raised"
+                >
+                  Help
+                </Link>
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2 border-t border-line pt-4">
+                <Link
+                  to={isPilot ? '/pilot' : '/courses'}
                   onClick={() => setMenuOpen(false)}
                   className={buttonStyles('navy', 'md')}
                 >
-                  {isPilot ? 'Sample demo' : 'Start learning'}
+                  {isPilot ? 'Pilot home' : 'Browse courses'}
                 </Link>
                 <button
                   onClick={toggle}
@@ -189,7 +179,7 @@ export function PublicLayout() {
               © {new Date().getFullYear()} {site.name}.{' '}
               {isPilot
                 ? 'Adult-only draft pilot; other journeys are frontend previews. Business and legal terms pending review.'
-                : 'Frontend preview; business and legal terms pending review.'}
+                : 'Draft curriculum information; child accounts are not available. Business and legal terms pending review.'}
             </span>
             <span>Thoughtful learning, wherever you begin.</span>
           </div>

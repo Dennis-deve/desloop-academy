@@ -15,8 +15,13 @@ import {
   X,
 } from 'lucide-react';
 import { Logo } from './Logo';
-import { Button, buttonStyles } from '@/components/ui';
-import { appNavigation, commonNavigation, type NavItem } from '@/config/navigation';
+import { Button } from '@/components/ui';
+import {
+  appNavigation,
+  commonNavigation,
+  learnerHelpNavigation,
+  type NavItem,
+} from '@/config/navigation';
 import { primaryRoles, roleDetails } from '@/config/site';
 import { useAuth, useDemo, useTheme } from '@/app/providers';
 import { initials } from '@/lib/utils';
@@ -26,39 +31,45 @@ function SidebarContent({ close }: { close?: () => void }) {
   const { session, switchRole } = useAuth();
   const navigate = useNavigate();
   if (!session) return null;
-  const groups = [appNavigation[session.role], commonNavigation];
+  const isLearner = session.role === 'learner';
+  const groups = [
+    appNavigation[session.role],
+    isLearner ? learnerHelpNavigation : commonNavigation,
+  ];
   return (
     <div className="flex h-full flex-col">
       <div className="flex h-[78px] items-center border-b border-line px-6">
         <Logo to={roleDetails[session.role].home} />
       </div>
-      <div className="border-b border-line px-5 py-4 lg:hidden">
-        <label className="block text-[10px] font-extrabold uppercase tracking-wider text-subdued">
-          Preview workspace as
-          <select
-            value={session.role}
-            onChange={(event) => {
-              const role = event.target.value as typeof session.role;
-              switchRole(role);
-              close?.();
-              navigate(roleDetails[role].home);
-            }}
-            className="field mt-2 w-full text-xs font-bold normal-case tracking-normal text-heading"
-          >
-            {primaryRoles.map((role) => (
-              <option key={role} value={role}>
-                {roleDetails[role].label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <p className="mt-2 text-[11px] text-subdued">
-          Demo role switch · not an account permission
-        </p>
-      </div>
+      {!isLearner && (
+        <div className="border-b border-line px-5 py-4 lg:hidden">
+          <label className="block text-[10px] font-extrabold uppercase tracking-wider text-subdued">
+            Preview workspace as
+            <select
+              value={session.role}
+              onChange={(event) => {
+                const role = event.target.value as typeof session.role;
+                switchRole(role);
+                close?.();
+                navigate(roleDetails[role].home);
+              }}
+              className="field mt-2 w-full text-xs font-bold normal-case tracking-normal text-heading"
+            >
+              {primaryRoles.map((role) => (
+                <option key={role} value={role}>
+                  {roleDetails[role].label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <p className="mt-2 text-[11px] text-subdued">
+            Demo role switch · not an account permission
+          </p>
+        </div>
+      )}
       <div className="flex-1 overflow-y-auto px-3 py-6">
-        <p className="mb-2 px-3 text-[10px] font-extrabold uppercase tracking-[.18em] text-subdued">
-          Workspace
+        <p className="mb-2 px-3 text-[11px] font-extrabold uppercase tracking-[.14em] text-subdued">
+          {isLearner ? 'Your space' : 'Workspace'}
         </p>
         {groups.map((items, index) => (
           <nav
@@ -79,13 +90,14 @@ function SidebarContent({ close }: { close?: () => void }) {
                 onClick={close}
                 className={({ isActive }) =>
                   cn(
-                    'flex min-h-[43px] items-center gap-3 rounded-xl px-3 text-[12px] font-bold text-body transition hover:bg-raised hover:text-heading',
+                    'flex items-center gap-3 rounded-xl px-3 font-bold text-body transition hover:bg-raised hover:text-heading',
+                    isLearner ? 'min-h-14 text-sm' : 'min-h-11 text-xs',
                     isActive && 'nav-link-active',
                   )
                 }
               >
                 <item.icon
-                  className="h-[17px] w-[17px] shrink-0"
+                  className={isLearner ? 'h-5 w-5 shrink-0' : 'h-[17px] w-[17px] shrink-0'}
                   strokeWidth={1.9}
                   aria-hidden="true"
                 />
@@ -95,22 +107,28 @@ function SidebarContent({ close }: { close?: () => void }) {
           </nav>
         ))}
       </div>
-      <div className="m-4 rounded-2xl bg-ink-900 p-4 text-white">
-        <div className="mb-3 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/15">
-          <CircleHelp className="h-4 w-4" />
-        </div>
-        <p className="text-xs font-extrabold">Need a hand?</p>
-        <p className="mt-1 text-[11px] leading-5 text-slate-300">
-          Find answers or tell us what is not working.
+      {isLearner ? (
+        <p className="m-4 rounded-xl border border-line bg-raised p-4 text-xs leading-5 text-body">
+          This is a practice preview, not a child account. Your progress stays on this device.
         </p>
-        <Link
-          to="/workspace/support"
-          onClick={close}
-          className="mt-3 inline-flex items-center gap-1 text-[11px] font-extrabold text-[#9aeee0]"
-        >
-          Visit support →
-        </Link>
-      </div>
+      ) : (
+        <div className="m-4 rounded-2xl bg-ink-900 p-4 text-white">
+          <div className="mb-3 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/15">
+            <CircleHelp className="h-4 w-4" />
+          </div>
+          <p className="text-xs font-extrabold">Need a hand?</p>
+          <p className="mt-1 text-[11px] leading-5 text-slate-300">
+            Find answers or tell us what is not working.
+          </p>
+          <Link
+            to="/workspace/support"
+            onClick={close}
+            className="mt-3 inline-flex items-center gap-1 text-[11px] font-extrabold text-[#9aeee0]"
+          >
+            Visit support →
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
@@ -151,6 +169,8 @@ export function AppLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   if (!session) return null;
+  const isLearner = session.role === 'learner';
+  const bottomItems = isLearner ? appNavigation.learner : appNavigation[session.role].slice(0, 3);
   const unread = state.notifications.filter((item) => !item.read).length;
   return (
     <div className="min-h-screen bg-canvas text-heading">
@@ -191,35 +211,38 @@ export function AppLayout() {
                 </Dialog.Content>
               </Dialog.Portal>
             </Dialog.Root>
-            <span className="hidden text-xs font-extrabold text-subdued md:inline">
-              {roleDetails[session.role].label} workspace
+            <span className="text-sm font-extrabold text-heading">
+              {isLearner ? 'My learning space' : `${roleDetails[session.role].label} workspace`}
             </span>
-            <span className="text-xs font-extrabold text-heading md:hidden">My workspace</span>
-            <span className="hidden rounded-full bg-amber-50 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#80500c] sm:inline-flex dark:bg-amber-500/20 dark:text-amber-100">
-              Demo mode
+            <span className="hidden rounded-full bg-amber-50 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#80500c] md:inline-flex dark:bg-amber-500/20 dark:text-amber-100">
+              Practice preview
             </span>
           </div>
           <div className="flex items-center gap-1.5 sm:gap-2.5">
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-                navigate(`/courses?q=${encodeURIComponent(query)}`);
-              }}
-              className="relative hidden xl:block"
-            >
-              <Search
-                className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-subdued"
-                aria-hidden="true"
-              />
-              <input
-                aria-label="Search courses"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search courses"
-                className="field !h-9 !min-h-0 w-[190px] !rounded-xl !py-1 !pl-9 text-xs"
-              />
-            </form>
-            <RoleSelector />
+            {!isLearner && (
+              <>
+                <form
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    navigate(`/courses?q=${encodeURIComponent(query)}`);
+                  }}
+                  className="relative hidden xl:block"
+                >
+                  <Search
+                    className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-subdued"
+                    aria-hidden="true"
+                  />
+                  <input
+                    aria-label="Search courses"
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    placeholder="Search courses"
+                    className="field !h-9 !min-h-0 w-[190px] !rounded-xl !py-1 !pl-9 text-xs"
+                  />
+                </form>
+                <RoleSelector />
+              </>
+            )}
             <button
               type="button"
               onClick={toggle}
@@ -232,16 +255,18 @@ export function AppLayout() {
                 <Moon className="h-[18px] w-[18px]" />
               )}
             </button>
-            <Link
-              to="/workspace/notifications"
-              className="relative flex h-10 w-10 items-center justify-center rounded-xl text-body hover:bg-raised"
-              aria-label={`Notifications, ${unread} unread`}
-            >
-              <Bell className="h-[18px] w-[18px]" />
-              {unread > 0 && (
-                <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-brand-500 ring-2 ring-panel" />
-              )}
-            </Link>
+            {!isLearner && (
+              <Link
+                to="/workspace/notifications"
+                className="relative flex h-10 w-10 items-center justify-center rounded-xl text-body hover:bg-raised"
+                aria-label={`Notifications, ${unread} unread`}
+              >
+                <Bell className="h-[18px] w-[18px]" />
+                {unread > 0 && (
+                  <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-brand-500 ring-2 ring-panel" />
+                )}
+              </Link>
+            )}
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
                 <button
@@ -314,37 +339,38 @@ export function AppLayout() {
           </Suspense>
         </main>
       </div>
-      <div
-        className="fixed bottom-0 left-0 right-0 z-20 flex justify-around border-t border-line bg-panel px-2 py-1.5 lg:hidden"
+      <nav
+        className="fixed bottom-0 left-0 right-0 z-20 flex items-stretch border-t border-line bg-panel px-1 py-1.5 lg:hidden"
         aria-label="Quick navigation"
       >
-        <Link
-          to={roleDetails[session.role].home}
-          className={buttonStyles('ghost', 'sm', 'flex-col gap-0 !px-2 !py-1 text-[10px]')}
-        >
-          <span>⌂</span>Home
-        </Link>
-        <Link
-          to="/courses"
-          className={buttonStyles('ghost', 'sm', 'flex-col gap-0 !px-2 !py-1 text-[10px]')}
-        >
-          <span>▤</span>Courses
-        </Link>
-        <Link
-          to="/workspace/notifications"
-          className={buttonStyles('ghost', 'sm', 'flex-col gap-0 !px-2 !py-1 text-[10px]')}
-        >
-          <span>◎</span>Updates
-        </Link>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="flex-col gap-0 !px-2 !py-1 text-[10px]"
-          onClick={() => setMobileOpen(true)}
-        >
-          <span>☰</span>Menu
-        </Button>
-      </div>
+        {bottomItems.map((item) => (
+          <NavLink
+            key={item.href}
+            to={item.href}
+            end={item.href === roleDetails[session.role].home}
+            className={({ isActive }) =>
+              cn(
+                'flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-xl px-1 text-xs font-bold text-body',
+                isActive && 'bg-brand-50 text-brand-700 dark:bg-brand-500/20 dark:text-brand-100',
+              )
+            }
+          >
+            <item.icon className="h-5 w-5" aria-hidden="true" />
+            <span className="truncate">{item.label}</span>
+          </NavLink>
+        ))}
+        {!isLearner && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="!min-h-14 min-w-0 flex-1 flex-col gap-0.5 !px-1 text-xs"
+            onClick={() => setMobileOpen(true)}
+          >
+            <Menu className="h-5 w-5" aria-hidden="true" />
+            Menu
+          </Button>
+        )}
+      </nav>
     </div>
   );
 }

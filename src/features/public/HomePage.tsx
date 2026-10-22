@@ -80,7 +80,7 @@ const faqs = [
   {
     question: 'Is this a live learning platform already?',
     answer:
-      'This is an interactive frontend preview. Courses, AI responses, accounts, payment flows and example progress are demonstrations. Real services and safeguarding review are required before launch.',
+      'These public course pages are draft information, not enrolment. Role workspaces, AI, billing and child progress are demonstrations. A separate invite-only adult/internal pilot uses a real server, but child accounts require verified guardian consent and safeguarding review before they can open.',
   },
   {
     question: 'Do I need experience to start?',
@@ -152,9 +152,9 @@ export function HomePage() {
               </span>
             </h1>
             <p className="mt-7 max-w-[505px] text-[15px] leading-8 text-body sm:text-[17px]">
-              Turn curiosity into capability with hands-on courses, thoughtful AI guidance and real
-              people in your corner. Learn a skill, make something useful, and see how far you can
-              go.
+              Explore one 44-course journey built around hands-on learning and useful projects.
+              These pages show the draft pathway; child accounts and live AI guidance are not open
+              yet.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link className={buttonStyles('primary', 'lg')} to="/explore">
@@ -674,9 +674,9 @@ export function HomePage() {
             </Link>
             <Link
               className="inline-flex min-h-[50px] items-center gap-1 px-4 text-sm font-bold text-white hover:text-[#a9f0d4]"
-              to="/register"
+              to="/explore"
             >
-              Get started <ArrowRight className="h-4 w-4" />
+              How learning works <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </Container>

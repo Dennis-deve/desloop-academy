@@ -122,19 +122,32 @@ test('mobile navigation and key pages do not overflow horizontally', async ({ pa
   await expect(page.getByRole('heading', { level: 1 })).toContainText('A stronger way to learn');
 });
 
-test('mobile role switching is discoverable in the workspace drawer', async ({
+test('learner navigation stays simple and demo role switching stays on its labelled preview', async ({
   page,
   isMobile,
 }) => {
-  test.skip(!isMobile, 'Drawer is only shown below the desktop breakpoint');
   await page.goto('/demo');
   await page
     .getByRole('button', { name: /^Learner Courses, projects, and learning progress Open preview/ })
     .click();
-  await page.getByRole('button', { name: 'Open workspace menu' }).click();
-  await page.getByRole('combobox', { name: 'Preview workspace as' }).selectOption('school_admin');
+  if (isMobile) {
+    const quickNav = page.getByRole('navigation', { name: 'Quick navigation' });
+    await expect(quickNav.getByRole('link')).toHaveCount(4);
+    for (const label of ['Home', 'Learn', 'Make', 'My work']) {
+      await expect(quickNav.getByRole('link', { name: label, exact: true })).toBeVisible();
+    }
+    await page.getByRole('button', { name: 'Open workspace menu' }).click();
+    const drawer = page.getByRole('dialog', { name: 'Workspace navigation' });
+    await expect(drawer.getByRole('combobox', { name: 'Preview workspace as' })).toHaveCount(0);
+    await page.getByRole('button', { name: 'Close menu' }).click();
+  } else {
+    const sidebar = page.getByRole('navigation', { name: 'Workspace navigation' });
+    await expect(sidebar.getByRole('link')).toHaveCount(4);
+    await expect(page.getByRole('combobox', { name: 'Preview another role' })).toHaveCount(0);
+  }
+  await page.goto('/demo');
+  await page.getByRole('button', { name: /School administrator.*Open preview/i }).click();
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Demo Learning School');
-  await expect(page.getByRole('dialog', { name: 'Workspace navigation' })).not.toBeVisible();
 });
 
 test('offline lesson copy can be deleted with the local-data reset', async ({ page }) => {
@@ -222,7 +235,9 @@ test('facilitator can author a validated local draft without publishing it', asy
   await expect(page.getByText(/No reviewer was notified/i)).toBeVisible();
   await page.goto('/facilitator/courses');
   await expect(page.getByRole('heading', { name: 'Helpful digital habits' })).toBeVisible();
-  await expect(page.getByText(/cannot change either catalogue or bypass publication review/i)).toBeVisible();
+  await expect(
+    page.getByText(/cannot change either catalogue or bypass publication review/i),
+  ).toBeVisible();
 });
 
 test('a quiz failure and a project review gate prevent skipping Course 01', async ({
@@ -287,11 +302,8 @@ test('a quiz failure and a project review gate prevent skipping Course 01', asyn
   ).toBeVisible();
   await page.goto('/app/learn/course-02/c02-l1');
   await expect(page.getByRole('heading', { name: /Lesson locked in the demo/i })).toBeVisible();
-  if (isMobile) {
-    await page.getByRole('button', { name: 'Open workspace menu' }).click();
-    await page.getByRole('combobox', { name: 'Preview workspace as' }).selectOption('facilitator');
-  } else
-    await page.getByRole('combobox', { name: 'Preview another role' }).selectOption('facilitator');
+  await page.goto('/demo');
+  await page.getByRole('button', { name: /Facilitator.*Open preview/i }).click();
   await page.goto('/facilitator/pathway-reviews');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Required pathway reviews');
   const reviewAxe = await new AxeBuilder({ page })

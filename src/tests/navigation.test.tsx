@@ -39,4 +39,33 @@ describe('public navigation and role entry', () => {
       await screen.findByRole('heading', { name: /Welcome to Demo Learning School/i }),
     ).toBeInTheDocument();
   });
+  it('keeps the learner navigation to four clear destinations without billing or role switches', async () => {
+    renderApp('/app', 'learner');
+    expect(await screen.findByText('My learning space')).toBeInTheDocument();
+    const mainNav = screen.getByRole('navigation', { name: 'Workspace navigation' });
+    expect(
+      within(mainNav)
+        .getAllByRole('link')
+        .map((item) => item.textContent),
+    ).toEqual(['Home', 'Learn', 'Make', 'My work']);
+    expect(
+      within(screen.getByRole('navigation', { name: 'Quick navigation' }))
+        .getAllByRole('link')
+        .map((item) => item.textContent),
+    ).toEqual(['Home', 'Learn', 'Make', 'My work']);
+    expect(screen.queryByRole('combobox', { name: 'Preview another role' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Billing' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Community' })).toBeNull();
+  });
+  it('does not send public visitors to a simulated signup from the primary navigation', async () => {
+    renderApp('/');
+    const nav = screen.getByRole('navigation', { name: 'Primary navigation' });
+    expect(
+      within(nav)
+        .getAllByRole('link')
+        .map((item) => item.textContent),
+    ).toEqual(['Courses', 'How it works', 'For families', 'For schools']);
+    expect(screen.queryByRole('link', { name: 'Start learning' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Sign in' })).toBeNull();
+  });
 });

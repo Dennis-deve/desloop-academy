@@ -212,8 +212,8 @@ export function ExplorePage() {
               Production synchronisation, conflict handling and device security still need
               engineering and testing.
             </p>
-            <Link to="/register" className={buttonStyles('primary', 'md', 'mt-6')}>
-              Try the learner preview <ArrowRight className="h-4 w-4" />
+            <Link to="/courses" className={buttonStyles('primary', 'md', 'mt-6')}>
+              Explore the course map <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </Container>
@@ -336,8 +336,8 @@ export function AudiencePage({ audience }: { audience: keyof typeof audienceCont
               Begin with the foundations, your way.
             </h2>
           </div>
-          <Link to="/register" className={buttonStyles('white', 'lg')}>
-            Try the demo <ArrowRight className="h-4 w-4" />
+          <Link to="/courses" className={buttonStyles('white', 'lg')}>
+            See the 44 courses <ArrowRight className="h-4 w-4" />
           </Link>
         </Container>
       </section>

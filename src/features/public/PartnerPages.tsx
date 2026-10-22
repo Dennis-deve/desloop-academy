@@ -450,7 +450,7 @@ export function ParentsPage() {
               The parent experience is built for constructive involvement, not surveillance.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/register" className={buttonStyles('primary', 'lg')}>
+              <Link to="/courses" className={buttonStyles('primary', 'lg')}>
                 Explore family learning <ArrowRight className="h-4 w-4" />
               </Link>
               <Link to="/child-safety" className={buttonStyles('outline', 'lg')}>

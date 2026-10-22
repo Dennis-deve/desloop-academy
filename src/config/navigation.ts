@@ -1,12 +1,10 @@
 import {
   BookOpen,
   LayoutDashboard,
-  Sparkles,
-  Hammer,
-  BriefcaseBusiness,
+  Palette,
+  FolderOpen,
   UsersRound,
   Bell,
-  CloudDownload,
   CreditCard,
   Settings2,
   GraduationCap,
@@ -19,7 +17,7 @@ import {
   FilePlus2,
   ShieldCheck,
   MessageCircleQuestion,
-  HeartHandshake,
+  CircleHelp,
   type LucideIcon,
 } from 'lucide-react';
 import type { Role } from '@/types';
@@ -30,16 +28,13 @@ export interface NavItem {
   icon: LucideIcon;
 }
 export const appNavigation: Record<Role, NavItem[]> = {
+  // Keep the learner's primary navigation predictable: four short words, one next action.
+  // Hidden preview routes remain labelled demos and never grant real child access.
   learner: [
-    { label: 'Overview', href: '/app', icon: LayoutDashboard },
-    { label: '44-course pathway', href: '/app/courses', icon: BookOpen },
-    { label: 'Sample workshops', href: '/app/samples', icon: LibraryBig },
-    { label: 'AI learning studio', href: '/app/ai-studio', icon: Sparkles },
-    { label: 'Project studio', href: '/app/projects', icon: Hammer },
-    { label: 'My portfolio', href: '/app/portfolio', icon: BriefcaseBusiness },
-    { label: 'Community', href: '/app/community', icon: UsersRound },
-    { label: 'Learning circles', href: '/app/circles', icon: HeartHandshake },
-    { label: 'Saved offline', href: '/app/offline', icon: CloudDownload },
+    { label: 'Home', href: '/app', icon: LayoutDashboard },
+    { label: 'Learn', href: '/app/courses', icon: BookOpen },
+    { label: 'Make', href: '/app/projects', icon: Palette },
+    { label: 'My work', href: '/app/portfolio', icon: FolderOpen },
   ],
   parent: [
     { label: 'Overview', href: '/parent', icon: LayoutDashboard },
@@ -86,6 +81,11 @@ export const appNavigation: Record<Role, NavItem[]> = {
   ],
   moderator: [{ label: 'Moderation', href: '/admin/moderation', icon: ShieldCheck }],
 };
+export const learnerHelpNavigation: NavItem[] = [
+  { label: 'Help', href: '/workspace/support', icon: CircleHelp },
+  { label: 'Settings', href: '/workspace/settings', icon: Settings2 },
+];
+
 export const commonNavigation: NavItem[] = [
   { label: 'Notifications', href: '/workspace/notifications', icon: Bell },
   { label: 'Billing', href: '/workspace/billing', icon: CreditCard },
