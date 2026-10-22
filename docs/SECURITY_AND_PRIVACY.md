@@ -1,6 +1,6 @@
 # Security, privacy and safeguarding risk register
 
-**No formal audit or legal opinion has been performed.** This register controls release decisions; risk ownership must be assigned before real records. Refer to [guardian hold](GUARDIAN_CONSENT_AND_IDENTITY.md) and [permission matrix](ROLES_AND_PERMISSIONS.md). Current Railway data is synthetic only and domainless.
+**No formal audit or legal opinion has been performed.** This register controls release decisions; risk ownership must be assigned before real records. Refer to [guardian hold](GUARDIAN_CONSENT_AND_IDENTITY.md) and [permission matrix](ROLES_AND_PERMISSIONS.md). Railway was last verified as domainless with synthetic-only data; recheck after the source push.
 
 | ID / severity | Threat / evidence | Mitigation now | Unresolved release gate |
 |---|---|---|---|

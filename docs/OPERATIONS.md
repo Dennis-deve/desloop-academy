@@ -1,6 +1,6 @@
 # Operations, release and incident readiness
 
-**Current boundary:** existing Railway `glorious-inspiration`/`production` contains synthetic-only private Amsterdam PostgreSQL and a domainless adult engine on the **older verified GitHub main**. The new FND-01 branch is local until independently authorised push and a new deployment `SUCCESS` check. No public, minor or real-user release is approved. See [previous deployment record](RAILWAY_DEPLOYMENT_STATUS.md) and [Railway setup/rollback](RAILWAY_PRIVATE_ADULT_SETUP.md).
+**Current boundary:** existing Railway `glorious-inspiration`/`production` contains synthetic-only private Amsterdam PostgreSQL and a domainless adult engine, last **verified** on older main commit `784b0ed`. FND-01's initial commit `201a1e4` reached GitHub `main`, but the new Railway deployment status, migrations, domain count and denial gates have **not** been rechecked. No public, minor or real-user release is approved. See [previous deployment record](RAILWAY_DEPLOYMENT_STATUS.md) and [Railway setup/rollback](RAILWAY_PRIVATE_ADULT_SETUP.md).
 
 ## Operator controls that exist
 
@@ -17,7 +17,7 @@
 | Database backups | Check actual volume region, backups/retention/encryption/access; restore into isolated environment, verify catalog/constraints and log drill results; establish RPO/RTO. |
 | Secrets/roles | Reviewer MFA, restricted DB role, rotation plan, access inventory; avoid CLI sessions left on shared machines. |
 | Privacy/safety | Qualified Ghana-focused counsel, DPIA/retention/erasure and child release decision; no guardian evidence collection or minor account before approval. |
-| Release | Clean `main`, CI/security checks and branch protection, build bundle gate, diff/migration review, staged private deploy, live health/denial smoke, rollback and 24h observation. This local branch **has not** passed hosted verification. |
+| Release | Clean `main`, CI/security checks and branch protection, build bundle gate, diff/migration review, staged private deploy, live health/denial smoke, rollback and 24h observation. The pushed FND-01 source **has not** passed hosted verification. |
 | Incidents | Classify, isolate ingress, revoke sessions/keys, preserve safe logs, notify owners, investigate, restore and review within approved legal timeframes; never expose child data in shared logs. |
 
 **Safe local run:** Node 22 `npm ci`; `python3 scripts/build_public_catalog.py --check`; `npm run typecheck && npm run lint && npm test && npm run test:server && npm run build:all`; `npm audit --audit-level=low`. For a read-only local browser use `npm run dev` plus a disabled local API (`PILOT_ENABLED=false npm run dev:api`); the public course pages require no DB, adult integration tests require **new disposable** PostgreSQL databases. No provider messages/payments are sent. Stop test processes after use.

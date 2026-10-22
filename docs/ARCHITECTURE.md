@@ -1,6 +1,6 @@
 # Architecture, boundaries and module dependency map
 
-**Working branch status (22 October 2026):** The existing React/TypeScript + Fastify/TypeScript + PostgreSQL system was inspected, not replaced. FND-01 is a **local, unpushed** no-demo release candidate. GitHub `main`/domainless Railway still run the previously verified adult/internal draft build until a newly authorised push and deployment check. No public or minor release is authorised.
+**Source and hosting status (22 October 2026):** The existing React/TypeScript + Fastify/TypeScript + PostgreSQL system was inspected, not replaced. FND-01's initial no-demo commit `201a1e4` was pushed to GitHub `main` and its remote SHA confirmed. The last **verified** Railway deployment remains the older private adult/internal build; automatic rollout of the new source is **unverified** without Railway access. No public or minor release is authorised.
 
 ## Runtime paths
 
@@ -31,7 +31,7 @@ The historical `src/app/router.tsx`, `src/app/providers.tsx`, `src/services/demo
 | Draft-1 progression | `server/src/{catalog,progression,db}.ts`, `src/curriculum/master.json`, `pilot.*` | Authoritative ordered course prefix; quiz/project/safety/human review, request IDs/audits. Unreviewed questions **also exist in source**; static public release excludes them. |
 | Draft-2 engine | `server/src/engine/{catalog,migrate,policy,repository,service,sandbox,visual}.ts`, migration 002, `learning.*`, `src/features/pilot/engine/*` | Separate operator enrolment, version/policy hash, seven states, reviewer gates; Course 08 declarative visual guided tool; playground ungraded. No arbitrary user code execution. |
 | Safeguarding hold | migration 003, `server/src/guardian/readiness.ts`, adult-only reviewer metadata endpoint | No guardian proof ingestion, child identity or child account route; all release gates hard-disabled. |
-| Deployment | `.railway/railway.ts` → existing Railway project app + private PostgreSQL (`ams`); migrations before start | Node 22, domainless, closed origin. GitHub auto-deploys from `main`; a local branch is **not** hosted. See [verified prior deployment](RAILWAY_DEPLOYMENT_STATUS.md). |
+| Deployment | `.railway/railway.ts` → existing Railway project app + private PostgreSQL (`ams`); migrations before start | Node 22, domainless, closed origin. GitHub auto-deploys from `main`, but a confirmed push is **not** proof of a successful private deployment; new rollout has not been verified. See [verified prior deployment](RAILWAY_DEPLOYMENT_STATUS.md). |
 
 ## Database and server invariants
 

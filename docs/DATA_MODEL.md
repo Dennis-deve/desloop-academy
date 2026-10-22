@@ -1,6 +1,6 @@
 # Data model and migration plan
 
-**Current durable database:** private PostgreSQL 17-compatible migrations in `server/migrations/`; Railway synthetic-only database exists but this branch's changes have **not been deployed**. FND-01 public catalogue is a versioned **static projection**, not a table of visitor records and not a progress store.
+**Current durable database:** private PostgreSQL 17-compatible migrations in `server/migrations/`; Railway's synthetic-only database was verified on older source, while deployment of FND-01 after its GitHub push is **unverified**. FND-01 public catalogue is a versioned **static projection**, not a table of visitor records and not a progress store.
 
 | Schema / migration | Primary entities | Ownership, integrity and review |
 |---|---|---|

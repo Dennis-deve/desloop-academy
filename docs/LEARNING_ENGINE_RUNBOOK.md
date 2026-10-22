@@ -41,7 +41,7 @@ npm run dev               # Vite :5173; same-origin /api proxy → :4000
 # Open http://127.0.0.1:5173/pilot
 ```
 
-`ENGINE_V2_ENABLED=true` needs both the adult pilot and `ENGINE_DRAFT_ACKNOWLEDGED=true`. All flags default to off; `APP_ORIGIN` must match the **exact** origin in the browser, without a trailing slash. `/api/health` checks the DB when the pilot is on. The current local release branch removes simulated public workspaces; the existing Railway deployment still tracks the earlier GitHub main until this branch is separately authorised and pushed.
+`ENGINE_V2_ENABLED=true` needs both the adult pilot and `ENGINE_DRAFT_ACKNOWLEDGED=true`. All flags default to off; `APP_ORIGIN` must match the **exact** origin in the browser, without a trailing slash. `/api/health` checks the DB when the pilot is on. The FND-01 no-demo source removes simulated public workspaces and its initial commit `201a1e4` reached GitHub `main`; the existing Railway deployment was last **verified** on older source. Automatic rollout of FND-01 remains unverified without fresh private Railway checks.
 
 ## Step 2 — invite, enrol and review in the restricted shell
 
