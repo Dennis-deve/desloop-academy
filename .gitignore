@@ -1,4 +1,6 @@
 node_modules/
+# Railway CLI link metadata is local context; the reviewed IaC file remains tracked.
+.railway/config.json
 __pycache__/
 *.pyc
 dist/

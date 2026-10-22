@@ -20,4 +20,6 @@
 | Release | Clean `main`, CI/security checks and branch protection, build bundle gate, diff/migration review, staged private deploy, live health/denial smoke, rollback and 24h observation. The pushed FND-01 source **has not** passed hosted verification. |
 | Incidents | Classify, isolate ingress, revoke sessions/keys, preserve safe logs, notify owners, investigate, restore and review within approved legal timeframes; never expose child data in shared logs. |
 
+**Deployment sequence:** use [the staged private-to-public guide](DEPLOYMENT_GUIDE.md) for the current GitHub/Railway verification and every later public gate; copy [the blank worksheet](DEPLOYMENT_EVIDENCE_TEMPLATE.md) into a restricted operator record rather than putting real deployment details in this public repo. Neither guide is a go-live approval.
+
 **Safe local run:** Node 22 `npm ci`; `python3 scripts/build_public_catalog.py --check`; `npm run typecheck && npm run lint && npm test && npm run test:server && npm run build:all`; `npm audit --audit-level=low`. For a read-only local browser use `npm run dev` plus a disabled local API (`PILOT_ENABLED=false npm run dev:api`); the public course pages require no DB, adult integration tests require **new disposable** PostgreSQL databases. No provider messages/payments are sent. Stop test processes after use.
