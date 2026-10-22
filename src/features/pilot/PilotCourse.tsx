@@ -538,7 +538,7 @@ export function PilotCoursePage() {
         <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0" />
         <p>
           Real work is stored in the pilot PostgreSQL database; do not enter private information.
-          The separate demo uses local browser storage and cannot change this record.
+          This draft record is controlled by the server; changing the page cannot grant course credit.
         </p>
       </div>
     </div>

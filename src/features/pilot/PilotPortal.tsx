@@ -116,13 +116,9 @@ export function PilotLayout() {
           <Card className="mx-auto max-w-2xl p-8 sm:p-10">
             <EmptyState
               icon={Database}
-              title="The private pilot API is not connected"
-              description="The public demo is still available. An operator must deploy the Railway API, migrate its PostgreSQL database and explicitly enable the adult-only draft pilot before real accounts are offered. No browser-only sign-in is offered here."
-              action={
-                <Link to="/demo" className={buttonStyles('primary')}>
-                  Explore the labelled demo <ArrowRight className="h-4 w-4" />
-                </Link>
-              }
+              title="The private adult pilot is unavailable"
+              description="No registration or progress can be saved here until an operator enables the private API and grants approved browser access. Nothing has been submitted."
+              action={<Link to="/availability" className={buttonStyles('outline')}>Read the access status</Link>}
             />
           </Card>
         ) : !user ? (
@@ -151,9 +147,7 @@ export function PilotLayout() {
                   Draft-2 learning engine
                 </Link>
               )}
-              <Link to="/demo" className={buttonStyles('ghost', 'sm')}>
-                Separate sample demo
-              </Link>
+
             </nav>
             <Outlet
               context={
@@ -202,7 +196,7 @@ function PilotAccess({ onAuthenticated }: { onAuthenticated: (user: PilotUser) =
       <Card className="p-7 sm:p-9">
         <Badge tone="amber">Invitation-only adults</Badge>
         <h2 className="mt-4 font-display text-3xl text-heading">
-          A real server boundary, not a demo account.
+          Invitation-only account with server-owned progress.
         </h2>
         <p className="mt-4 text-sm leading-7 text-body">
           Only adults invited by the pilot operator can register. The server stores your account and
@@ -300,7 +294,7 @@ function PilotAccess({ onAuthenticated }: { onAuthenticated: (user: PilotUser) =
             id="pilot-password"
             hint={
               view === 'invitation'
-                ? 'Use a unique passphrase of at least 12 characters. Never use your demo password.'
+                ? 'Use a unique passphrase of at least 12 characters that you do not use elsewhere.'
                 : undefined
             }
           >
@@ -373,8 +367,8 @@ export function PilotHome() {
       <Card className="p-8">
         <h2 className="font-display text-3xl text-heading">Your assigned review space</h2>
         <p className="mt-3 text-sm text-body">
-          You can see only projects assigned to your verified pilot reviewer account. Role switching
-          in the separate demo grants no access here.
+          You can see only projects assigned to your server-authorised reviewer account. This role
+          cannot be chosen in the browser.
         </p>
         <Link to="/pilot/reviews" className={buttonStyles('primary', 'md', 'mt-6')}>
           Open assigned reviews <ArrowRight className="h-4 w-4" />

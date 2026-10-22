@@ -17,6 +17,7 @@ import { verifyEngineRelease } from './engine/migrate.js';
 import { LearningEngine } from './engine/service.js';
 import { SandboxService } from './engine/sandbox.js';
 import { verifyGuardianHold } from './guardian/readiness.js';
+import { isAvailableClientPath } from './public-routes.js';
 import {
   ApiError,
   clearSessionCookies,
@@ -184,7 +185,7 @@ export async function buildApi(
 
   app.get('/api/health', async () => {
     if (config.enabled && db) await db.query('SELECT 1');
-    return { ok: true, mode: config.enabled ? 'adult-internal-pilot' : 'demo-only' };
+    return { ok: true, mode: config.enabled ? 'adult-internal-pilot' : 'inactive' };
   });
   app.get('/api/pilot/status', async () => ({
     enabled: config.enabled,
@@ -453,7 +454,9 @@ export async function buildApi(
         !request.headers.accept?.includes('text/html')
       )
         return reply.code(404).send({ error: 'NOT_FOUND', message: 'No such endpoint.' });
-      return reply.type('text/html').sendFile('index.html');
+      // Unknown and decommissioned simulated routes still render an honest client
+      // unavailable message, but must not receive a successful HTTP status.
+      return reply.code(isAvailableClientPath(request.url) ? 200 : 404).type('text/html').sendFile('index.html');
     });
   }
   return app;

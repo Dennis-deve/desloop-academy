@@ -1,0 +1,17 @@
+# Environment and external-service dependency register
+
+No credentials or final commercial terms are committed. Configure secrets only in an approved server-side secret store; never in `VITE_` variables, client bundles, logs or archived test reports. The existing Railway environment is **domainless, private and synthetic-only**. A local branch is not a Railway deployment.
+
+| Dependency | Current implementation / needed item | Feature gate and failure behaviour |
+|---|---|---|
+| PostgreSQL / Railway | Private `Postgres` in Amsterdam (`ams`) with app reference to its private `DATABASE_URL`; applied stage-one/second-stage IaC and migrations 001–003 verified on older GitHub `main`. | Production-named env has no approved public ingress, backups/restore drill or real data authorisation. `engine:migrate` fails deploy on error; no public DB proxy. |
+| GitHub push | `Dennis-deve/desloop-academy` repository has `main`; this work is on `work/phase1-no-demo-release`. GitHub CLI is not authenticated and the previous temporary PAT was slated for revocation. | **BLOCKED_EXTERNAL_DEPENDENCY:** need a new secure owner-approved push mechanism. Never reuse/print/store the old PAT. Until pushed, no updated Railway build exists. |
+| Private adult browser ingress | No approved identity-aware same-origin HTTPS path; `APP_ORIGIN=https://no-public-origin.invalid`. | Adult pilot API can be privately verified, but browser invitation/sign-in is intentionally unavailable. A generated public Railway domain is not an acceptable shortcut. |
+| Ghana legal/privacy/safeguarding | Qualified local counsel, privacy controller/processor, retention, consent/guardian authority, child incident operations. | **BLOCKED_DECISION:** no minors, guardian evidence, public child accounts or unrestricted community. |
+| AI provider | No approved vendor/key/data processing/moderation/usage budget. | No live tutor, generated lesson, recommendation or language service. Design server-side provider interface and human review only after approval. |
+| Payments, MoMo/cards and partner finance | No authorised provider, signing secrets, plans, prices, commissions, refunds/payout rules. | No checkout, subscriptions, entitlements, receipts or earnings; later require signature validation/idempotency/reconciliation against real provider events. |
+| Email/SMS/push | No verified sender, provider credentials, consent preferences or delivery reporting. | No account recovery/notification delivery claims. Messaging must report provider-confirmed states and respect opt-outs. |
+| Object storage / safe execution | No approved object ACL/malware scanning or isolated arbitrary-code runner. | No user uploads or arbitrary JS/Python/SQL execution. Current bounded declarative visual studio is not a general code sandbox. |
+| Electron signing/updates | No desktop package, signing identity, update channel or shared-device policy. | Desktop/offline sync feature not started; old public-shell service worker is retired rather than presented as sync. |
+
+Local setup: Node 22, npm, PostgreSQL 17+ for opt-in adult integration tests, `python3` for curriculum projection tests. Use `.env.example` as a **server-side** template and the [runbooks](LEARNING_ENGINE_RUNBOOK.md). Do not copy test DB URLs into Railway or run migrations against an unreviewed live database. More detailed statuses are in [FEATURE_REGISTER.md](FEATURE_REGISTER.md).

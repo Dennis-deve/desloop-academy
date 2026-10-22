@@ -41,7 +41,7 @@ npm run dev               # Vite :5173; same-origin /api proxy → :4000
 # Open http://127.0.0.1:5173/pilot
 ```
 
-`ENGINE_V2_ENABLED=true` needs both the adult pilot and `ENGINE_DRAFT_ACKNOWLEDGED=true`. All flags default to off; `APP_ORIGIN` must match the **exact** origin in the browser, without a trailing slash. `/api/health` checks the DB when the pilot is on. The public demo remains a separate browser-only simulation.
+`ENGINE_V2_ENABLED=true` needs both the adult pilot and `ENGINE_DRAFT_ACKNOWLEDGED=true`. All flags default to off; `APP_ORIGIN` must match the **exact** origin in the browser, without a trailing slash. `/api/health` checks the DB when the pilot is on. The current local release branch removes simulated public workspaces; the existing Railway deployment still tracks the earlier GitHub main until this branch is separately authorised and pushed.
 
 ## Step 2 — invite, enrol and review in the restricted shell
 
@@ -82,7 +82,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Browser tests run serially when either E2E URL is set. Both browser suites reset the same **E2E-only** account tables and reseed the candidate. The auth-limit increase is refused unless `NODE_ENV=test` **and** both `APP_ORIGIN` and `DATABASE_URL` use `127.0.0.1`; **never set** `PILOT_LOCAL_E2E_AUTH_LIMIT` in Railway. Leave it unset in ordinary local use. Playwright/axe checks are accessibility regression aids, not WCAG certification.
+Browser tests run serially when either E2E URL is set. Each browser suite resets **its own disposable E2E-only database** and reseeds the candidate; never point either at Railway or a shared database. The auth-limit increase is refused unless `NODE_ENV=test` **and** both `APP_ORIGIN` and `DATABASE_URL` use `127.0.0.1`; **never set** `PILOT_LOCAL_E2E_AUTH_LIMIT` in Railway. Leave it unset in ordinary local use. Playwright/axe checks are accessibility regression aids, not WCAG certification.
 
 ## Step 4 — private Railway engine rollout; **verified internally**
 

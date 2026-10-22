@@ -5,7 +5,7 @@ export const site = {
   name: 'Desloop Academy',
   shortName: 'Desloop',
   tagline: 'Learn it. Build it. Make it yours.',
-  description: 'Practical learning, thoughtful AI guidance, and people in your corner.',
+  description: 'Draft information about a 44-course digital-skills pathway; public enrolment is closed.',
   locale: 'en-GH',
   currency: 'GHS',
   contactEmail: null as string | null, // Owner must provide and configure delivery.
@@ -17,7 +17,6 @@ export const site = {
     appIcon: '/brand/app-icon.webp',
     favicon: '/favicon.png',
   },
-  mode: 'demo' as const, // No environment flag can turn the mock services into production services.
   legal: { operator: 'To be confirmed', privacyReviewed: false, childSafetyReviewed: false },
 } as const;
 

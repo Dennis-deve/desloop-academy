@@ -1,0 +1,1347 @@
+{
+  "version": "draft-1",
+  "reviewStatus": "unreviewed-draft",
+  "stages": [
+    {
+      "number": 1,
+      "title": "Digital foundations",
+      "subtitle": "Begin with safe, useful everyday skills.",
+      "first": 1,
+      "last": 6
+    },
+    {
+      "number": 2,
+      "title": "Computational thinking",
+      "subtitle": "Think in steps, build with blocks and make the bridge to code.",
+      "first": 7,
+      "last": 11
+    },
+    {
+      "number": 3,
+      "title": "Creative digital production",
+      "subtitle": "Design, make and share with care.",
+      "first": 12,
+      "last": 15
+    },
+    {
+      "number": 4,
+      "title": "Web foundations",
+      "subtitle": "Understand, build and improve the web.",
+      "first": 16,
+      "last": 21
+    },
+    {
+      "number": 5,
+      "title": "Programming and software development",
+      "subtitle": "Turn ideas into tested, accessible software.",
+      "first": 22,
+      "last": 27
+    },
+    {
+      "number": 6,
+      "title": "Data and AI",
+      "subtitle": "Understand evidence and use intelligent tools responsibly.",
+      "first": 28,
+      "last": 32
+    },
+    {
+      "number": 7,
+      "title": "Networks, cybersecurity and cloud",
+      "subtitle": "Connect, protect and operate digital systems.",
+      "first": 33,
+      "last": 37
+    },
+    {
+      "number": 8,
+      "title": "Interactive technology",
+      "subtitle": "Create physical and interactive experiences safely.",
+      "first": 38,
+      "last": 40
+    },
+    {
+      "number": 9,
+      "title": "Career and capstone",
+      "subtitle": "Use your skills for people and explain what you made.",
+      "first": 41,
+      "last": 44
+    }
+  ],
+  "courses": [
+    {
+      "id": "course-01",
+      "number": 1,
+      "slug": "getting-started-with-learning-and-digital-confidence",
+      "title": "Getting Started with Learning and Digital Confidence",
+      "purpose": "Introduce the learning space, safe learning habits, goal setting and confidence with technology.",
+      "stage": "Digital foundations",
+      "guidedHours": 2,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a fictional classroom routine with picture cards to explore welcome to desloop and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with welcome to desloop before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about goals and routines in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a mock study or workplace task and document how digital wellbeing improves your result."
+      },
+      "modules": [
+        {
+          "title": "Welcome to Desloop"
+        },
+        {
+          "title": "How learning works"
+        },
+        {
+          "title": "Goals and routines"
+        },
+        {
+          "title": "Digital wellbeing"
+        }
+      ]
+    },
+    {
+      "id": "course-02",
+      "number": 2,
+      "slug": "devices-hardware-and-operating-systems",
+      "title": "Devices, Hardware and Operating Systems",
+      "purpose": "Build practical understanding of common devices, hardware, software and safe device handling.",
+      "stage": "Digital foundations",
+      "guidedHours": 4,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a fictional classroom routine with picture cards to explore digital devices and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with digital devices before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about operating systems in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a mock study or workplace task and document how care and basic troubleshooting improves your result."
+      },
+      "modules": [
+        {
+          "title": "Digital devices"
+        },
+        {
+          "title": "Parts and peripherals"
+        },
+        {
+          "title": "Operating systems"
+        },
+        {
+          "title": "Care and basic troubleshooting"
+        }
+      ]
+    },
+    {
+      "id": "course-03",
+      "number": 3,
+      "slug": "files-folders-and-digital-organisation",
+      "title": "Files, Folders and Digital Organisation",
+      "purpose": "Create, name, find and safely manage digital files and backup copies.",
+      "stage": "Digital foundations",
+      "guidedHours": 3,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a fictional classroom routine with picture cards to explore files and folders and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with files and folders before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about saving and exporting in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a mock study or workplace task and document how backup and recovery improves your result."
+      },
+      "modules": [
+        {
+          "title": "Files and folders"
+        },
+        {
+          "title": "Naming and organisation"
+        },
+        {
+          "title": "Saving and exporting"
+        },
+        {
+          "title": "Backup and recovery"
+        }
+      ]
+    },
+    {
+      "id": "course-04",
+      "number": 4,
+      "slug": "typing-accessibility-and-productivity-basics",
+      "title": "Typing, Accessibility and Productivity Basics",
+      "purpose": "Develop efficient input skills and introduce accessible everyday productivity tools.",
+      "stage": "Digital foundations",
+      "guidedHours": 4,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a fictional classroom routine with picture cards to explore keyboard and input and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with keyboard and input before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about accessibility tools in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a mock study or workplace task and document how productivity habits improves your result."
+      },
+      "modules": [
+        {
+          "title": "Keyboard and input"
+        },
+        {
+          "title": "Documents"
+        },
+        {
+          "title": "Accessibility tools"
+        },
+        {
+          "title": "Productivity habits"
+        }
+      ]
+    },
+    {
+      "id": "course-05",
+      "number": 5,
+      "slug": "internet-search-and-digital-research",
+      "title": "Internet, Search and Digital Research",
+      "purpose": "Browse responsibly, search effectively, evaluate sources and recognise misleading claims.",
+      "stage": "Digital foundations",
+      "guidedHours": 4,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a fictional classroom routine with picture cards to explore the web and browsers and explain a small result. Use a fictional or supervised scenario and do not share identifying details.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with the web and browsers before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about trust and evidence in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a mock study or workplace task and document how misinformation and scams improves your result."
+      },
+      "modules": [
+        {
+          "title": "The web and browsers"
+        },
+        {
+          "title": "Search strategies"
+        },
+        {
+          "title": "Trust and evidence"
+        },
+        {
+          "title": "Misinformation and scams"
+        }
+      ]
+    },
+    {
+      "id": "course-06",
+      "number": 6,
+      "slug": "digital-communication-collaboration-and-citizenship",
+      "title": "Digital Communication, Collaboration and Citizenship",
+      "purpose": "Communicate respectfully, collaborate safely and recognise privacy and reporting boundaries.",
+      "stage": "Digital foundations",
+      "guidedHours": 4,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a fictional classroom routine with picture cards to explore communication choices and explain a small result. Use a fictional or supervised scenario and do not share identifying details.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with communication choices before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about collaboration in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a mock study or workplace task and document how digital citizenship improves your result."
+      },
+      "modules": [
+        {
+          "title": "Communication choices"
+        },
+        {
+          "title": "Clear digital writing"
+        },
+        {
+          "title": "Collaboration"
+        },
+        {
+          "title": "Digital citizenship"
+        }
+      ]
+    },
+    {
+      "id": "course-07",
+      "number": 7,
+      "slug": "computational-thinking-and-algorithms",
+      "title": "Computational Thinking and Algorithms",
+      "purpose": "Introduce decomposition, pattern recognition, abstraction and ordered problem-solving.",
+      "stage": "Computational thinking",
+      "guidedHours": 4,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a paper instruction game and an approved coding sandbox to explore decomposition and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with decomposition before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about algorithms in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a small documented coding exercise and document how tracing and improvement improves your result."
+      },
+      "modules": [
+        {
+          "title": "Decomposition"
+        },
+        {
+          "title": "Patterns and abstraction"
+        },
+        {
+          "title": "Algorithms"
+        },
+        {
+          "title": "Tracing and improvement"
+        }
+      ]
+    },
+    {
+      "id": "course-08",
+      "number": 8,
+      "slug": "creative-coding-with-blocks",
+      "title": "Creative Coding with Blocks",
+      "purpose": "Create visual programs using events, sequences, repetition and interaction.",
+      "stage": "Computational thinking",
+      "guidedHours": 6,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a paper instruction game and an approved coding sandbox to explore first visual program and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with first visual program before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about loops and conditions in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a small documented coding exercise and document how variables and interaction improves your result."
+      },
+      "modules": [
+        {
+          "title": "First visual program"
+        },
+        {
+          "title": "Events and sequences"
+        },
+        {
+          "title": "Loops and conditions"
+        },
+        {
+          "title": "Variables and interaction"
+        }
+      ]
+    },
+    {
+      "id": "course-09",
+      "number": 9,
+      "slug": "logic-conditions-and-repetition",
+      "title": "Logic, Conditions and Repetition",
+      "purpose": "Develop decisions and repetition as foundations for programming.",
+      "stage": "Computational thinking",
+      "guidedHours": 5,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a paper instruction game and an approved coding sandbox to explore boolean thinking and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with boolean thinking before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about loops in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a small documented coding exercise and document how combining logic improves your result."
+      },
+      "modules": [
+        {
+          "title": "Boolean thinking"
+        },
+        {
+          "title": "Decisions"
+        },
+        {
+          "title": "Loops"
+        },
+        {
+          "title": "Combining logic"
+        }
+      ]
+    },
+    {
+      "id": "course-10",
+      "number": 10,
+      "slug": "debugging-testing-and-problem-solving",
+      "title": "Debugging, Testing and Problem Solving",
+      "purpose": "Teach systematic investigation and testing instead of random code changes.",
+      "stage": "Computational thinking",
+      "guidedHours": 4,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a paper instruction game and an approved coding sandbox to explore what is a bug and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with what is a bug before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about test a hypothesis in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a small documented coding exercise and document how regression checks improves your result."
+      },
+      "modules": [
+        {
+          "title": "What is a bug"
+        },
+        {
+          "title": "Reproduce the problem"
+        },
+        {
+          "title": "Test a hypothesis"
+        },
+        {
+          "title": "Regression checks"
+        }
+      ]
+    },
+    {
+      "id": "course-11",
+      "number": 11,
+      "slug": "first-steps-in-text-based-programming",
+      "title": "First Steps in Text-Based Programming",
+      "purpose": "Move from visual instructions to beginner-friendly text code.",
+      "stage": "Computational thinking",
+      "guidedHours": 6,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a paper instruction game and an approved coding sandbox to explore code environment and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with code environment before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about input and decisions in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a small documented coding exercise and document how translate and debug improves your result."
+      },
+      "modules": [
+        {
+          "title": "Code environment"
+        },
+        {
+          "title": "Output and variables"
+        },
+        {
+          "title": "Input and decisions"
+        },
+        {
+          "title": "Translate and debug"
+        }
+      ]
+    },
+    {
+      "id": "course-12",
+      "number": 12,
+      "slug": "visual-design-foundations",
+      "title": "Visual Design Foundations",
+      "purpose": "Create readable designs using hierarchy, alignment, contrast, spacing and type.",
+      "stage": "Creative digital production",
+      "guidedHours": 5,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a fictional poster or storyboard without identifiable people to explore audience and purpose and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with audience and purpose before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about typography and colour in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to an accessible campaign concept with cleared assets and document how critique and iteration improves your result."
+      },
+      "modules": [
+        {
+          "title": "Audience and purpose"
+        },
+        {
+          "title": "Hierarchy and layout"
+        },
+        {
+          "title": "Typography and colour"
+        },
+        {
+          "title": "Critique and iteration"
+        }
+      ]
+    },
+    {
+      "id": "course-13",
+      "number": 13,
+      "slug": "digital-graphics-and-illustration",
+      "title": "Digital Graphics and Illustration",
+      "purpose": "Work with raster and vector artwork, layers, exports and permitted assets.",
+      "stage": "Creative digital production",
+      "guidedHours": 6,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a fictional poster or storyboard without identifiable people to explore image types and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with image types before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about editing and export in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to an accessible campaign concept with cleared assets and document how licensing improves your result."
+      },
+      "modules": [
+        {
+          "title": "Image types"
+        },
+        {
+          "title": "Shapes and layers"
+        },
+        {
+          "title": "Editing and export"
+        },
+        {
+          "title": "Licensing"
+        }
+      ]
+    },
+    {
+      "id": "course-14",
+      "number": 14,
+      "slug": "photography-audio-and-video-basics",
+      "title": "Photography, Audio and Video Basics",
+      "purpose": "Plan, capture and edit a short media story with captions and consent.",
+      "stage": "Creative digital production",
+      "guidedHours": 6,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a fictional poster or storyboard without identifiable people to explore plan a story and explain a small result. Use a fictional or supervised scenario and do not share identifying details.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with plan a story before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about edit in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to an accessible campaign concept with cleared assets and document how accessibility and rights improves your result."
+      },
+      "modules": [
+        {
+          "title": "Plan a story"
+        },
+        {
+          "title": "Capture"
+        },
+        {
+          "title": "Edit"
+        },
+        {
+          "title": "Accessibility and rights"
+        }
+      ]
+    },
+    {
+      "id": "course-15",
+      "number": 15,
+      "slug": "content-creation-copyright-and-online-reputation",
+      "title": "Content Creation, Copyright and Online Reputation",
+      "purpose": "Plan responsible publishing with attribution, privacy and audience awareness.",
+      "stage": "Creative digital production",
+      "guidedHours": 4,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a fictional poster or storyboard without identifiable people to explore who owns content and explain a small result. Use a fictional or supervised scenario and do not share identifying details.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with who owns content before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about reputation and privacy in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to an accessible campaign concept with cleared assets and document how content planning improves your result."
+      },
+      "modules": [
+        {
+          "title": "Who owns content"
+        },
+        {
+          "title": "Attribution"
+        },
+        {
+          "title": "Reputation and privacy"
+        },
+        {
+          "title": "Content planning"
+        }
+      ]
+    },
+    {
+      "id": "course-16",
+      "number": 16,
+      "slug": "how-the-web-works",
+      "title": "How the Web Works",
+      "purpose": "Introduce browsers, servers, URLs, domains and request-response concepts.",
+      "stage": "Web foundations",
+      "guidedHours": 4,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use paper page cards and a supervised offline browser sandbox to explore web basics and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with web basics before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about client and server in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a fictional service website with accessible components and document how trust and performance improves your result."
+      },
+      "modules": [
+        {
+          "title": "Web basics"
+        },
+        {
+          "title": "URLs and domains"
+        },
+        {
+          "title": "Client and server"
+        },
+        {
+          "title": "Trust and performance"
+        }
+      ]
+    },
+    {
+      "id": "course-17",
+      "number": 17,
+      "slug": "html-structure-and-meaning",
+      "title": "HTML: Structure and Meaning",
+      "purpose": "Create semantic, accessible pages with appropriate content elements.",
+      "stage": "Web foundations",
+      "guidedHours": 7,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use paper page cards and a supervised offline browser sandbox to explore html document and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with html document before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about semantic structure in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a fictional service website with accessible components and document how accessibility and validation improves your result."
+      },
+      "modules": [
+        {
+          "title": "HTML document"
+        },
+        {
+          "title": "Content elements"
+        },
+        {
+          "title": "Semantic structure"
+        },
+        {
+          "title": "Accessibility and validation"
+        }
+      ]
+    },
+    {
+      "id": "course-18",
+      "number": 18,
+      "slug": "css-styling-and-layout",
+      "title": "CSS: Styling and Layout",
+      "purpose": "Use selectors, the box model and layout to communicate consistently.",
+      "stage": "Web foundations",
+      "guidedHours": 8,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use paper page cards and a supervised offline browser sandbox to explore selectors and cascade and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with selectors and cascade before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about layout in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a fictional service website with accessible components and document how polish and states improves your result."
+      },
+      "modules": [
+        {
+          "title": "Selectors and cascade"
+        },
+        {
+          "title": "Box model"
+        },
+        {
+          "title": "Layout"
+        },
+        {
+          "title": "Polish and states"
+        }
+      ]
+    },
+    {
+      "id": "course-19",
+      "number": 19,
+      "slug": "responsive-web-design-and-accessibility",
+      "title": "Responsive Web Design and Accessibility",
+      "purpose": "Design mobile-first layouts and test accessibility at different widths.",
+      "stage": "Web foundations",
+      "guidedHours": 6,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use paper page cards and a supervised offline browser sandbox to explore mobile-first thinking and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with mobile-first thinking before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about accessible interaction in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a fictional service website with accessible components and document how responsive qa improves your result."
+      },
+      "modules": [
+        {
+          "title": "Mobile-first thinking"
+        },
+        {
+          "title": "Breakpoints and fluid layout"
+        },
+        {
+          "title": "Accessible interaction"
+        },
+        {
+          "title": "Responsive QA"
+        }
+      ]
+    },
+    {
+      "id": "course-20",
+      "number": 20,
+      "slug": "javascript-fundamentals",
+      "title": "JavaScript Fundamentals",
+      "purpose": "Introduce interactive browser behaviour and readable basic code.",
+      "stage": "Web foundations",
+      "guidedHours": 10,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use paper page cards and a supervised offline browser sandbox to explore values and expressions and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with values and expressions before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about dom and events in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a fictional service website with accessible components and document how debugging improves your result."
+      },
+      "modules": [
+        {
+          "title": "Values and expressions"
+        },
+        {
+          "title": "Control flow and functions"
+        },
+        {
+          "title": "DOM and events"
+        },
+        {
+          "title": "Debugging"
+        }
+      ]
+    },
+    {
+      "id": "course-21",
+      "number": 21,
+      "slug": "git-github-and-version-control",
+      "title": "Git, GitHub and Version Control",
+      "purpose": "Track changes, collaborate and protect secrets in repositories.",
+      "stage": "Web foundations",
+      "guidedHours": 5,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use paper page cards and a supervised offline browser sandbox to explore version control concepts and explain a small result. Use a fictional or supervised scenario and do not share identifying details.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with version control concepts before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about branches and collaboration in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a fictional service website with accessible components and document how repository hygiene improves your result."
+      },
+      "modules": [
+        {
+          "title": "Version control concepts"
+        },
+        {
+          "title": "Repositories and commits"
+        },
+        {
+          "title": "Branches and collaboration"
+        },
+        {
+          "title": "Repository hygiene"
+        }
+      ]
+    },
+    {
+      "id": "course-22",
+      "number": 22,
+      "slug": "programming-fundamentals-and-problem-solving",
+      "title": "Programming Fundamentals and Problem Solving",
+      "purpose": "Translate requirements into functions, collections, validation and tests.",
+      "stage": "Programming and software development",
+      "guidedHours": 10,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use input-output cards and an approved code editor to explore requirements and pseudocode and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with requirements and pseudocode before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about input and errors in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a synthetic-data software tool with tests and document how testing and readability improves your result."
+      },
+      "modules": [
+        {
+          "title": "Requirements and pseudocode"
+        },
+        {
+          "title": "Functions and collections"
+        },
+        {
+          "title": "Input and errors"
+        },
+        {
+          "title": "Testing and readability"
+        }
+      ]
+    },
+    {
+      "id": "course-23",
+      "number": 23,
+      "slug": "data-structures-and-algorithmic-thinking",
+      "title": "Data Structures and Algorithmic Thinking",
+      "purpose": "Choose collections and reason about search, sort and edge cases.",
+      "stage": "Programming and software development",
+      "guidedHours": 8,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use input-output cards and an approved code editor to explore collections and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with collections before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about sorting in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a synthetic-data software tool with tests and document how complexity intuition improves your result."
+      },
+      "modules": [
+        {
+          "title": "Collections"
+        },
+        {
+          "title": "Searching"
+        },
+        {
+          "title": "Sorting"
+        },
+        {
+          "title": "Complexity intuition"
+        }
+      ]
+    },
+    {
+      "id": "course-24",
+      "number": 24,
+      "slug": "ui-ux-design-and-prototyping",
+      "title": "UI/UX Design and Prototyping",
+      "purpose": "Understand user needs, map a task and revise after usability feedback.",
+      "stage": "Programming and software development",
+      "guidedHours": 7,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use input-output cards and an approved code editor to explore users and needs and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with users and needs before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about prototype in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a synthetic-data software tool with tests and document how usability testing improves your result."
+      },
+      "modules": [
+        {
+          "title": "Users and needs"
+        },
+        {
+          "title": "Flows and wireframes"
+        },
+        {
+          "title": "Prototype"
+        },
+        {
+          "title": "Usability testing"
+        }
+      ]
+    },
+    {
+      "id": "course-25",
+      "number": 25,
+      "slug": "apis-and-data-exchange",
+      "title": "APIs and Data Exchange",
+      "purpose": "Exchange structured information and handle request states safely.",
+      "stage": "Programming and software development",
+      "guidedHours": 8,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use input-output cards and an approved code editor to explore api concepts and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with api concepts before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about requests and responses in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a synthetic-data software tool with tests and document how error handling improves your result."
+      },
+      "modules": [
+        {
+          "title": "API concepts"
+        },
+        {
+          "title": "JSON"
+        },
+        {
+          "title": "Requests and responses"
+        },
+        {
+          "title": "Error handling"
+        }
+      ]
+    },
+    {
+      "id": "course-26",
+      "number": 26,
+      "slug": "software-engineering-and-testing",
+      "title": "Software Engineering and Testing",
+      "purpose": "Turn requirements into modular, tested and reviewable software.",
+      "stage": "Programming and software development",
+      "guidedHours": 8,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use input-output cards and an approved code editor to explore requirements and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with requirements before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about testing in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a synthetic-data software tool with tests and document how review and delivery improves your result."
+      },
+      "modules": [
+        {
+          "title": "Requirements"
+        },
+        {
+          "title": "Design and modules"
+        },
+        {
+          "title": "Testing"
+        },
+        {
+          "title": "Review and delivery"
+        }
+      ]
+    },
+    {
+      "id": "course-27",
+      "number": 27,
+      "slug": "frontend-application-development",
+      "title": "Frontend Application Development",
+      "purpose": "Bring HTML, CSS, JavaScript and UX into a multi-page application.",
+      "stage": "Programming and software development",
+      "guidedHours": 12,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use input-output cards and an approved code editor to explore app structure and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with app structure before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about forms and state in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a synthetic-data software tool with tests and document how quality and polish improves your result."
+      },
+      "modules": [
+        {
+          "title": "App structure"
+        },
+        {
+          "title": "Reusable components"
+        },
+        {
+          "title": "Forms and state"
+        },
+        {
+          "title": "Quality and polish"
+        }
+      ]
+    },
+    {
+      "id": "course-28",
+      "number": 28,
+      "slug": "data-literacy-and-responsible-data-use",
+      "title": "Data Literacy and Responsible Data Use",
+      "purpose": "Interpret information carefully and respect privacy and limitations.",
+      "stage": "Data and AI",
+      "guidedHours": 6,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use colour-coded pretend records and simple charts to explore data in daily life and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with data in daily life before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about interpretation in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a synthetic-data analysis with clear limitations and document how ethics and privacy improves your result."
+      },
+      "modules": [
+        {
+          "title": "Data in daily life"
+        },
+        {
+          "title": "Quality"
+        },
+        {
+          "title": "Interpretation"
+        },
+        {
+          "title": "Ethics and privacy"
+        }
+      ]
+    },
+    {
+      "id": "course-29",
+      "number": 29,
+      "slug": "spreadsheets-and-practical-analytics",
+      "title": "Spreadsheets and Practical Analytics",
+      "purpose": "Use formulas, organisation and charts to draw responsible conclusions.",
+      "stage": "Data and AI",
+      "guidedHours": 7,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use colour-coded pretend records and simple charts to explore spreadsheet structure and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with spreadsheet structure before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about analysis in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a synthetic-data analysis with clear limitations and document how visualisation improves your result."
+      },
+      "modules": [
+        {
+          "title": "Spreadsheet structure"
+        },
+        {
+          "title": "Formulas"
+        },
+        {
+          "title": "Analysis"
+        },
+        {
+          "title": "Visualisation"
+        }
+      ]
+    },
+    {
+      "id": "course-30",
+      "number": 30,
+      "slug": "databases-and-sql-foundations",
+      "title": "Databases and SQL Foundations",
+      "purpose": "Model relational data and ask practical questions with basic SQL.",
+      "stage": "Data and AI",
+      "guidedHours": 8,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use colour-coded pretend records and simple charts to explore database concepts and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with database concepts before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about sql querying in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a synthetic-data analysis with clear limitations and document how data safety improves your result."
+      },
+      "modules": [
+        {
+          "title": "Database concepts"
+        },
+        {
+          "title": "Keys and constraints"
+        },
+        {
+          "title": "SQL querying"
+        },
+        {
+          "title": "Data safety"
+        }
+      ]
+    },
+    {
+      "id": "course-31",
+      "number": 31,
+      "slug": "ai-literacy-generative-ai-and-responsible-use",
+      "title": "AI Literacy, Generative AI and Responsible Use",
+      "purpose": "Recognise AI limits, write careful prompts, verify output and protect privacy.",
+      "stage": "Data and AI",
+      "guidedHours": 6,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use colour-coded pretend records and simple charts to explore ai basics and explain a small result. Use a fictional or supervised scenario and do not share identifying details.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with ai basics before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about prompting and verification in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a synthetic-data analysis with clear limitations and document how responsible use improves your result."
+      },
+      "modules": [
+        {
+          "title": "AI basics"
+        },
+        {
+          "title": "Generative systems"
+        },
+        {
+          "title": "Prompting and verification"
+        },
+        {
+          "title": "Responsible use"
+        }
+      ]
+    },
+    {
+      "id": "course-32",
+      "number": 32,
+      "slug": "practical-ai-applications-and-automation",
+      "title": "Practical AI Applications and Automation",
+      "purpose": "Apply bounded AI or rules to a problem with tests and human oversight.",
+      "stage": "Data and AI",
+      "guidedHours": 8,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use colour-coded pretend records and simple charts to explore workflow design and explain a small result. Use a fictional or supervised scenario and do not share identifying details.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with workflow design before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about evaluation in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a synthetic-data analysis with clear limitations and document how human oversight improves your result."
+      },
+      "modules": [
+        {
+          "title": "Workflow design"
+        },
+        {
+          "title": "AI-assisted task"
+        },
+        {
+          "title": "Evaluation"
+        },
+        {
+          "title": "Human oversight"
+        }
+      ]
+    },
+    {
+      "id": "course-33",
+      "number": 33,
+      "slug": "computer-networks-and-internet-fundamentals",
+      "title": "Computer Networks and Internet Fundamentals",
+      "purpose": "Understand how devices connect and investigate connectivity safely.",
+      "stage": "Networks, cybersecurity and cloud",
+      "guidedHours": 6,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a printed network map and defensive safety scenarios to explore network basics and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with network basics before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about network equipment in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a fictional team system and safe deployment simulation and document how troubleshooting improves your result."
+      },
+      "modules": [
+        {
+          "title": "Network basics"
+        },
+        {
+          "title": "Addressing and DNS"
+        },
+        {
+          "title": "Network equipment"
+        },
+        {
+          "title": "Troubleshooting"
+        }
+      ]
+    },
+    {
+      "id": "course-34",
+      "number": 34,
+      "slug": "cybersecurity-and-digital-safety",
+      "title": "Cybersecurity and Digital Safety",
+      "purpose": "Build defensive habits, account protection and safe incident reporting.",
+      "stage": "Networks, cybersecurity and cloud",
+      "guidedHours": 7,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a printed network map and defensive safety scenarios to explore threats and trust and explain a small result. Use a fictional or supervised scenario and do not share identifying details.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with threats and trust before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about device and data safety in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a fictional team system and safe deployment simulation and document how incident response improves your result."
+      },
+      "modules": [
+        {
+          "title": "Threats and trust"
+        },
+        {
+          "title": "Account protection"
+        },
+        {
+          "title": "Device and data safety"
+        },
+        {
+          "title": "Incident response"
+        }
+      ]
+    },
+    {
+      "id": "course-35",
+      "number": 35,
+      "slug": "privacy-digital-footprints-and-online-safety",
+      "title": "Privacy, Digital Footprints and Online Safety",
+      "purpose": "Protect personal information and recognise unsafe contact and manipulation.",
+      "stage": "Networks, cybersecurity and cloud",
+      "guidedHours": 5,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a printed network map and defensive safety scenarios to explore personal data and explain a small result. Use a fictional or supervised scenario and do not share identifying details.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with personal data before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about consent and contact in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a fictional team system and safe deployment simulation and document how support and reporting improves your result."
+      },
+      "modules": [
+        {
+          "title": "Personal data"
+        },
+        {
+          "title": "Digital footprints"
+        },
+        {
+          "title": "Consent and contact"
+        },
+        {
+          "title": "Support and reporting"
+        }
+      ]
+    },
+    {
+      "id": "course-36",
+      "number": 36,
+      "slug": "cloud-computing-foundations",
+      "title": "Cloud Computing Foundations",
+      "purpose": "Understand remote services, identity, reliability and cost trade-offs.",
+      "stage": "Networks, cybersecurity and cloud",
+      "guidedHours": 5,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a printed network map and defensive safety scenarios to explore what is cloud and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with what is cloud before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about storage and identity in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a fictional team system and safe deployment simulation and document how reliability and cost improves your result."
+      },
+      "modules": [
+        {
+          "title": "What is cloud"
+        },
+        {
+          "title": "Service models"
+        },
+        {
+          "title": "Storage and identity"
+        },
+        {
+          "title": "Reliability and cost"
+        }
+      ]
+    },
+    {
+      "id": "course-37",
+      "number": 37,
+      "slug": "deployment-hosting-and-operations",
+      "title": "Deployment, Hosting and Operations",
+      "purpose": "Introduce build, release, configuration, monitoring and rollback.",
+      "stage": "Networks, cybersecurity and cloud",
+      "guidedHours": 7,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a printed network map and defensive safety scenarios to explore build and release and explain a small result. Use a fictional or supervised scenario and do not share identifying details.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with build and release before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about configuration and secrets in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a fictional team system and safe deployment simulation and document how monitoring and rollback improves your result."
+      },
+      "modules": [
+        {
+          "title": "Build and release"
+        },
+        {
+          "title": "Hosting"
+        },
+        {
+          "title": "Configuration and secrets"
+        },
+        {
+          "title": "Monitoring and rollback"
+        }
+      ]
+    },
+    {
+      "id": "course-38",
+      "number": 38,
+      "slug": "game-design-and-interactive-experiences",
+      "title": "Game Design and Interactive Experiences",
+      "purpose": "Use game rules, feedback and playtesting to create a usable interaction.",
+      "stage": "Interactive technology",
+      "guidedHours": 8,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a paper game, simulation or approved low-voltage kit to explore game concepts and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with game concepts before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about prototype in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a controlled prototype with a stop and test plan and document how playtesting improves your result."
+      },
+      "modules": [
+        {
+          "title": "Game concepts"
+        },
+        {
+          "title": "Interaction and state"
+        },
+        {
+          "title": "Prototype"
+        },
+        {
+          "title": "Playtesting"
+        }
+      ]
+    },
+    {
+      "id": "course-39",
+      "number": 39,
+      "slug": "robotics-and-physical-computing-concepts",
+      "title": "Robotics and Physical Computing Concepts",
+      "purpose": "Model sensors, control logic, outputs and low-voltage safety.",
+      "stage": "Interactive technology",
+      "guidedHours": 8,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a paper game, simulation or approved low-voltage kit to explore physical computing and explain a small result. Use a fictional or supervised scenario and do not share identifying details.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with physical computing before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about control logic in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a controlled prototype with a stop and test plan and document how safety and testing improves your result."
+      },
+      "modules": [
+        {
+          "title": "Physical computing"
+        },
+        {
+          "title": "Sensors and actuators"
+        },
+        {
+          "title": "Control logic"
+        },
+        {
+          "title": "Safety and testing"
+        }
+      ]
+    },
+    {
+      "id": "course-40",
+      "number": 40,
+      "slug": "automation-and-digital-workflows",
+      "title": "Automation and Digital Workflows",
+      "purpose": "Map triggers, conditions, exceptions and safe failure in repeatable tasks.",
+      "stage": "Interactive technology",
+      "guidedHours": 6,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a paper game, simulation or approved low-voltage kit to explore find the task and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with find the task before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about build and test in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a controlled prototype with a stop and test plan and document how reliability and ethics improves your result."
+      },
+      "modules": [
+        {
+          "title": "Find the task"
+        },
+        {
+          "title": "Workflow maps"
+        },
+        {
+          "title": "Build and test"
+        },
+        {
+          "title": "Reliability and ethics"
+        }
+      ]
+    },
+    {
+      "id": "course-41",
+      "number": 41,
+      "slug": "entrepreneurship-problem-discovery-and-product-thinking",
+      "title": "Entrepreneurship, Problem Discovery and Product Thinking",
+      "purpose": "Connect technical work to ethical user needs and test assumptions.",
+      "stage": "Career and capstone",
+      "guidedHours": 6,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a private skills scrapbook or small classroom idea to explore problem discovery and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with problem discovery before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about business model basics in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a privacy-aware portfolio or practical community proposal and document how validation improves your result."
+      },
+      "modules": [
+        {
+          "title": "Problem discovery"
+        },
+        {
+          "title": "Value proposition"
+        },
+        {
+          "title": "Business model basics"
+        },
+        {
+          "title": "Validation"
+        }
+      ]
+    },
+    {
+      "id": "course-42",
+      "number": 42,
+      "slug": "communication-teamwork-and-professional-practice",
+      "title": "Communication, Teamwork and Professional Practice",
+      "purpose": "Plan work, communicate clearly, credit contributions and revise from feedback.",
+      "stage": "Career and capstone",
+      "guidedHours": 5,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a private skills scrapbook or small classroom idea to explore planning and commitments and explain a small result. Use familiar objects, pictures and a facilitator-guided example.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with planning and commitments before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about collaboration and feedback in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a privacy-aware portfolio or practical community proposal and document how professional integrity improves your result."
+      },
+      "modules": [
+        {
+          "title": "Planning and commitments"
+        },
+        {
+          "title": "Communication"
+        },
+        {
+          "title": "Collaboration and feedback"
+        },
+        {
+          "title": "Professional integrity"
+        }
+      ]
+    },
+    {
+      "id": "course-43",
+      "number": 43,
+      "slug": "professional-portfolio-and-career-readiness",
+      "title": "Professional Portfolio and Career Readiness",
+      "purpose": "Present authentic skill evidence privately or publicly with appropriate permissions.",
+      "stage": "Career and capstone",
+      "guidedHours": 7,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a private skills scrapbook or small classroom idea to explore evidence selection and explain a small result. Use a fictional or supervised scenario and do not share identifying details.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with evidence selection before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about professional presentation in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a privacy-aware portfolio or practical community proposal and document how next-step planning improves your result."
+      },
+      "modules": [
+        {
+          "title": "Evidence selection"
+        },
+        {
+          "title": "Project storytelling"
+        },
+        {
+          "title": "Professional presentation"
+        },
+        {
+          "title": "Next-step planning"
+        }
+      ]
+    },
+    {
+      "id": "course-44",
+      "number": 44,
+      "slug": "final-integrated-capstone-build-test-and-present",
+      "title": "Final Integrated Capstone: Build, Test and Present",
+      "purpose": "Integrate planning, making, testing, safety, documentation and presentation.",
+      "stage": "Career and capstone",
+      "guidedHours": 16,
+      "ageAdaptation": {
+        "early": "Use short, supervised activities, pictures, oral explanation and breaks. A facilitator may record a dictated response; never require a public child profile. Use a private skills scrapbook or small classroom idea to explore proposal and planning and explain a small result. Use a fictional or supervised scenario and do not share identifying details.",
+        "junior": "Use visual examples and checklists, then a short independent task in approved, moderated tools. For this course, practise with proposal and planning before making the project.",
+        "teen": "Invite deeper reasoning and documented decisions; collaboration and publishing remain moderated and privacy-aware. Explain decisions about test and improve in your own words.",
+        "adult": "Apply the same competency to a practical study, work or community context with clear documentation. Apply the final module to a privacy-aware portfolio or practical community proposal and document how present and reflect improves your result."
+      },
+      "modules": [
+        {
+          "title": "Proposal and planning"
+        },
+        {
+          "title": "Build and document"
+        },
+        {
+          "title": "Test and improve"
+        },
+        {
+          "title": "Present and reflect"
+        }
+      ]
+    }
+  ]
+}

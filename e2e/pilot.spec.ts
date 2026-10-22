@@ -71,9 +71,10 @@ test('browser: private invite, first course, assigned human approval and next-co
   page,
   browser,
 }) => {
-  // The demo role switch never signs into the pilot.
-  await page.goto('/demo');
-  await page.getByRole('link', { name: /Private pilot portal/ }).click();
+  // A retired browser-only workspace cannot sign into, or impersonate, an adult pilot user.
+  await page.goto('/app');
+  await expect(page.getByText('This page is not available')).toBeVisible();
+  await page.goto('/pilot');
   await expect(page.getByRole('heading', { name: 'Adult learning pilot' })).toBeVisible();
   await expectAxeClean(page);
   const learnerEmail = `casey-${randomUUID().slice(0, 7)}@example.invalid`;

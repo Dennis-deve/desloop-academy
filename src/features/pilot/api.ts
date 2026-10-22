@@ -119,7 +119,7 @@ async function request<T>(path: string, body?: object): Promise<T> {
     throw new PilotApiError(
       0,
       'NOT_CONNECTED',
-      'The private pilot API is not connected. The separate public demo is still available.',
+      'The private pilot API could not be reached. No account or work has been saved; check your connection and try again.',
     );
   }
   const result: unknown = await response.json().catch(() => null);

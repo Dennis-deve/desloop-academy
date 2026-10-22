@@ -1,0 +1,16 @@
+# Phased delivery and dependency gates
+
+This plan preserves all 19 areas in [product requirements](PRODUCT_REQUIREMENTS.md). It is sequencing, **not scope deletion**. An area is not verified by a plan, route or compiled interface. Continue one atomic feature at a time with the [feature register's](FEATURE_REGISTER.md) understand→design→implement→integrate→secure→test→review gate. When a required external approval is absent, mark its feature blocked and work on an independent unblocked slice.
+
+| Phase | Work after dependencies | Required exit evidence |
+|---|---|---|
+| 1 — Foundation | Existing React/Fastify/PostgreSQL preserved; FND-01 honest no-demo release boundary/public metadata first, then adult identity/session/recovery, shared accessibility tokens, registry and CI. | Real routes no fake success/answer leakage, database authorisation tests, manual usability/AT for public slice, reviewed migrations. |
+| 2 — Core learning | Expert review 44 ordered courses/lesson accessibility; learner dashboard, lesson player, policy-controlled assessments/progression, assigned facilitator review. | End-to-end learner fail/revise/pass/unlock; no direct URL/forged client bypass, published version/approved question bank. |
+| 3 — AI and projects | Approved AI provider/interface/privacy/moderation/human review; isolated safe coding and tools, rubrics/portfolio/Skill Passport. | Real-provider failure/usage/safety checks; isolated execution and rubric/reviewer permission tests. |
+| 4 — Schools/guardians | Verified school applications, tenant-isolated classes/import/reporting, teacher flows, separately approved guardian authority/consent and safeguarding operations. | Cross-school denial, data minimisation, revocation and qualified legal/privacy/safety sign-off before any minor account. |
+| 5 — Commercial | Approved plans and MoMo/card provider, signed webhooks/idempotency, entitlements/refunds, partner ledger/attribution/payout/disputes. | Provider sandbox plus approved live verification/reconciliation, no browser-redirect authority or invented rates. |
+| 6 — Desktop/offline | Hardened Electron shell/signing/update, approved downloads, local projects/queue/conflict resolution and data protection. | Offline→reconnect reconciliation, shared-device/privacy, IPC/CSP and secure auto-update tests. |
+| 7 — Community/expansion | Moderated consent-aware age-separated spaces, career/entrepreneurship, vetted opportunities, privacy-conscious learning analytics. | Trained moderation incident flow, guardian consent where needed, genuine consented social proof. |
+| 8 — Readiness | Independent security/accessibility/legal reviews, backups/restore, monitoring/incident/rollback and full regression. | Whole-platform definition of done; blocked required modules prevent a production-ready claim. |
+
+**Current stop point:** Phase 1 FND-01 automated verification complete locally; manual representative usability/screen-reader and authorised GitHub/deployment gates remain. Do not move to the next independent feature as `VERIFIED_COMPLETE` until applicable gates pass. The earlier private adult engine remains internal/synthetic. Exact blocker ownership and next action are in [integrations](INTEGRATIONS.md) and [operations](OPERATIONS.md).

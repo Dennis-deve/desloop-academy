@@ -1,23 +1,23 @@
-# Desloop brand assets
+# Desloop brand assets and provenance
 
-The user supplied [their Desloop Academy GitHub repository](https://github.com/Dennis-deve/desloop-academy) as the source of the images for this frontend. On integration, its `main` branch at commit `880f334` contained five JPEG brand files and no application code. Originals are preserved unchanged in `assets/brand-originals/`; website-friendly local WebP/PNG derivatives live in `public/brand/`, `public/favicon.png` and `public/apple-touch-icon.png`. The earlier AI-generated hero image and synthetic infinity SVG were removed.
+The owner's [existing Desloop Academy GitHub repository](https://github.com/Dennis-deve/desloop-academy) supplied the five original JPEGs at the first integration (then commit `880f334`). They remain unchanged in `assets/brand-originals/`. Locally optimized WebP/PNG derivatives are in `public/brand/`, `public/favicon.png` and `public/apple-touch-icon.png`; no generated hero image or synthetic infinity logo replaces them. The FND-01 release displays the original identity via these local derivatives, **not** a hosted external image or a misleading school/partner logo.
 
-| Original file in repo         | Derivative                              | Where it appears                             |
-| ----------------------------- | --------------------------------------- | -------------------------------------------- |
-| `dl-academy.jpg`              | `wordmark-dark.webp`                    | Branded homepage hero                        |
-| `dl-white background.jpg`     | `wordmark-light.webp`                   | About-page identity panel                    |
-| `monochrome-version.jpg`      | `wordmark-mono.webp`                    | Public footer                                |
-| `standalone-brandmark.jpg`    | `brandmark-dark.webp`, `favicon.png`    | Public/workspace navigation and browser icon |
-| `desloop-mobile-app-icon.jpg` | `app-icon.webp`, `apple-touch-icon.png` | Demo workspace selector and touch icon       |
+| Preserved original | Local derivative | Current use |
+|---|---|---|
+| `dl-academy.jpg` | `wordmark-dark.webp` | Available as a configurable approved brand asset; not a fabricated hero. |
+| `dl-white background.jpg` | `wordmark-light.webp` | Available for a light-surface identity treatment after visual review. |
+| `monochrome-version.jpg` | `wordmark-mono.webp` | Footer identity in the public release. |
+| `standalone-brandmark.jpg` | `brandmark-dark.webp`, `favicon.png` | Header and home identity card, browser icon. |
+| `desloop-mobile-app-icon.jpg` | `app-icon.webp`, `apple-touch-icon.png` | Touch icon and local asset; no released mobile app is implied. |
 
-Image paths used in React are configured centrally in `src/config/site.ts`. The app ships them locally rather than hotlinking GitHub; the narrow offline shell also caches visited `/brand/` assets. Surrounding navy, violet and spectrum accent styling takes its direction from the supplied artwork, with text contrast maintained independently of the rainbow mark. The source JPEGs have opaque backgrounds: show the dark logos on dark surfaces and the light logo on light surfaces, without stretching or pretending they have transparency.
+React image paths are centrally configured in `src/config/site.ts`. Navy, violet and spectrum-accent styling follows the supplied artwork, but body text and status use independent contrast. JPEGs have opaque backgrounds; preserve aspect ratio and check the actual light/dark surface before using an alternative wordmark. The **old static offline shell is retired** because it could replay obsolete simulated routes; the current public guide does **not** claim offline caching or sync.
 
-To regenerate optimised assets after a brand update, replace the five original JPEGs with owner-approved versions and run:
+To regenerate derivatives after an **owner-approved** brand update:
 
 ```bash
 python3 -m pip install Pillow
 python3 scripts/prepare_brand.py
-npm run build
+npm run build:all
 ```
 
-Check the resulting crops on desktop and mobile, and rerun accessibility, image-loading and offline tests. The visible artwork says “by Destech Solutions”; that is source-image text, **not independent verification of legal ownership, commercial terms or a deployed service**. Confirm media rights, the official logo master files, minimum sizes and legal/operator wording with the brand owner before release.
+Review resulting crops on desktop/mobile and rerun image-loading, accessibility and release-bundle checks. The visible artwork says “by Destech Solutions”; that text in an original image is **not** independent verification of legal ownership, commercial terms, sponsor status or a deployed service. Confirm media rights, logo masters, minimum sizes and legal/operator wording with the owner before a public launch.

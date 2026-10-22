@@ -1,6 +1,6 @@
 # Run, verify and hand off the adult pilot
 
-**Status (22 October 2026):** The original `draft-1` PostgreSQL adult pilot, separately gated `draft-2-candidate` engine and no-child-data `003_guardian_groundwork.sql` hold have been exercised locally. Verified: 32 frontend tests, 16 server tests including separate local PostgreSQL integrations and blocked minor access, 5 PDF-candidate tests, 49 passing desktop/mobile browser journeys with one intentional desktop-only skip, full typecheck/lint/build and zero-vulnerability npm audit. **The owner's existing domainless Railway app now has private Amsterdam PostgreSQL; migrations 001–003, adult/internal API readiness and anonymous-denial checks were verified via its private runtime. No public domain, tester browser access or minor account exists.** GitHub `main` now includes the draft-2 engine, simplified previews and disabled guardian-safety groundwork; verify the current remote SHA before deployment. A GitHub push is not a Railway migration or hosted release. All public, child, partner, school, billing, AI and community journeys are browser-only demonstrations. `/pilot` and `/pilot/engine` are invitation-only **adult/internal draft rehearsals**, not official credit or verified identity. For the **new migration, flags and operator commands** use the [draft-2 runbook](LEARNING_ENGINE_RUNBOOK.md); this page retains the original pilot details.
+**Status (22 October 2026):** The original `draft-1` PostgreSQL adult pilot, separately gated `draft-2-candidate` engine and no-child-data `003_guardian_groundwork.sql` hold have been exercised locally. Verified: 32 frontend tests, 16 server tests including separate local PostgreSQL integrations and blocked minor access, 5 PDF-candidate tests, 49 passing desktop/mobile browser journeys with one intentional desktop-only skip, full typecheck/lint/build and zero-vulnerability npm audit. **The owner's existing domainless Railway app now has private Amsterdam PostgreSQL; migrations 001–003, adult/internal API readiness and anonymous-denial checks were verified via its private runtime. No public domain, tester browser access or minor account exists.** GitHub `main` now includes the draft-2 engine, simplified previews and disabled guardian-safety groundwork; verify the current remote SHA before deployment. A GitHub push is not a Railway migration or hosted release. The **older deployed main** contains browser-only demonstrations for public, child, partner, school, billing, AI and community journeys; the **new local FND-01 branch** retires these routes, retains a read-only public course guide and has not been pushed/deployed. See [feature status](FEATURE_REGISTER.md). `/pilot` and `/pilot/engine` are invitation-only **adult/internal draft rehearsals**, not official credit or verified identity. For the **new migration, flags and operator commands** use the [draft-2 runbook](LEARNING_ENGINE_RUNBOOK.md); this page retains the original pilot details.
 
 ## Local development (Node 22)
 
@@ -12,7 +12,7 @@ node --version                 # Node 22.x
 npm ci                         # pinned package-lock.json
 npm run typecheck
 npm run lint
-npm run test                   # public/frontend demo policy tests
+npm run test                   # current public route and retained adult-engine unit tests
 npm run build:all              # static Vite bundle + compiled server/dist
 npm audit --audit-level=low
 ```
@@ -31,7 +31,7 @@ npm start                      # Fastify 0.0.0.0:4000; serves built app at :4000
 # Open http://127.0.0.1:5173/pilot
 ```
 
-If `PILOT_ENABLED=false` or the API is unavailable, `/pilot` shows an unavailable state and the ordinary sample demo remains usable. The API checks the exact `APP_ORIGIN`; use the same origin in the browser. For an HTTPS deployment it sets Secure `__Host-` cookies. **Do not collect real child data or present this draft as published education.**
+If `PILOT_ENABLED=false` or the API is unavailable, `/pilot` shows an unavailable state and the read-only course guide remains usable; no sample demonstration is exposed on the new branch. The API checks the exact `APP_ORIGIN`; use the same origin in the browser. For an HTTPS deployment it sets Secure `__Host-` cookies. **Do not collect real child data or present this draft as published education.**
 
 ### Restricted operator shell
 

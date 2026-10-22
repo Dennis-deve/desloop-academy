@@ -193,7 +193,7 @@ export function PilotReviewsPage() {
     return (
       <EmptyState
         title="Assigned reviewers only"
-        description="This server queue cannot be opened by a learner or a browser-only demo role."
+        description="Only an assigned reviewer account can open this server-owned queue."
         action={
           <Link to="/pilot" className={buttonStyles('primary')}>
             Back to your pathway

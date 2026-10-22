@@ -1,6 +1,6 @@
 # Railway private adult engine — verified deployment record
 
-**22 October 2026 · internal/synthetic use only.** This records an actual Railway configuration and private runtime smoke test, **not** a public product launch or a browser-ready tester portal.
+**22 October 2026 · internal/synthetic use only.** This records an actual Railway configuration and private runtime smoke test, **not** a public product launch or a browser-ready tester portal. A later documentation-only deployment on GitHub `main` at `784b0ed16675186ee20d9c7400ba4541853a15e1` was also reported `SUCCESS`. The **new** no-demo release branch is local and has **not** been pushed or deployed; this record must not be used as its hosted verification.
 
 | Item | Verified state |
 |---|---|
