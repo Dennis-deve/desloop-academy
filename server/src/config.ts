@@ -15,6 +15,16 @@ export interface PilotConfig {
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): PilotConfig {
+  // No runtime switch may activate a child account, collect guardian evidence or grant minor
+  // learning access. These require a new reviewed policy, migration and safety implementation.
+  for (const key of [
+    'CHILD_ACCOUNTS_ENABLED',
+    'GUARDIAN_EVIDENCE_COLLECTION_ENABLED',
+    'MINOR_LEARNING_ENABLED',
+  ]) {
+    if (env[key] !== undefined && env[key] !== 'false')
+      throw new Error(`${key} is not supported; minor accounts and evidence capture are disabled`);
+  }
   const enabled = env.PILOT_ENABLED === 'true';
   const engineV2Enabled = env.ENGINE_V2_ENABLED === 'true';
   if (engineV2Enabled && (!enabled || env.ENGINE_DRAFT_ACKNOWLEDGED !== 'true'))

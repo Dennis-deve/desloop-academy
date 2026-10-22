@@ -4,7 +4,7 @@
     "buildCommand": "npm run build:all"
   },
   "deploy": {
-    "preDeployCommand": ["npm run pilot:migrate"],
+    "preDeployCommand": ["npm run engine:migrate"],
     "startCommand": "npm start",
     "healthcheckPath": "/api/health",
     "healthcheckTimeout": 120

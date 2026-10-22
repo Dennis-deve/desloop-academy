@@ -19,7 +19,7 @@ npm ci
 npm run dev                    # http://127.0.0.1:5173
 ```
 
-Visit `/courses` for all 44 required courses and `/demo` for illustrative role workspaces. Optional standalone workshops are under `/sample-courses`. The `/sign-in` and `/register` routes outside `/pilot` are **not** real accounts. Do not enter a real password there.
+Visit `/courses` for all 44 required courses. The public header no longer advertises signup or a demo-first path; `/demo` remains an explicitly labelled **developer preview** with illustrative role workspaces. Its learner workspace has four primary destinations—Home, Learn, Make and My work—with Help/Settings separate and no learner role-switch control. Optional standalone workshops are under `/sample-courses`. The `/sign-in` and `/register` routes outside `/pilot` remain directly available as **simulated preview routes**, not real accounts. Do not enter a real password there.
 
 For the **separate adult pilot**, create a dedicated local PostgreSQL database, build the server, migrate, enable the explicit draft gate and start the API. `npm run dev` proxies same-origin `/api` to port 4000:
 
@@ -34,7 +34,7 @@ npm start                      # API and built site at :4000
 # Visit http://127.0.0.1:5173/pilot
 ```
 
-An operator issues one-time adult/reviewer invitations and assigns projects using `npm run pilot:admin -- ...` from a restricted shell. The browser cannot choose a pilot role. **For the new additive draft-2 release**, follow the [engine migration, operator and Railway runbook](docs/LEARNING_ENGINE_RUNBOOK.md): `npm run engine:migrate` installs both migrations only after explicit draft acknowledgment, and `npm run engine:admin -- engine-enrol ...` separately enrols invited adults. The new engine routes also require `ENGINE_V2_ENABLED=true`; they are otherwise unavailable. The [original pilot handoff](docs/DEPLOYMENT.md) documents the unchanged draft-1 flow. Never commit `.env`, a database connection string, credentials, an invitation code or a personal record. All `VITE_` values are public.
+An operator issues one-time adult/reviewer invitations and assigns projects using `npm run pilot:admin -- ...` from a restricted shell. The browser cannot choose a pilot role. **For the new additive draft-2 release**, follow the [engine migration, operator and Railway runbook](docs/LEARNING_ENGINE_RUNBOOK.md): `npm run engine:migrate` installs/verifies all three migrations, including the **hard-disabled child-access hold**, only after explicit draft acknowledgment; `npm run engine:admin -- engine-enrol ...` separately enrols invited adults. The new engine routes also require `ENGINE_V2_ENABLED=true`; they are otherwise unavailable. See the [guardian-consent/child-identity design](docs/GUARDIAN_CONSENT_AND_IDENTITY.md) and [private Railway checklist](docs/RAILWAY_PRIVATE_ADULT_SETUP.md)—neither enables minor accounts. The [original pilot handoff](docs/DEPLOYMENT.md) documents the unchanged draft-1 flow. Never commit `.env`, a database connection string, credentials, an invitation code or a personal record. All `VITE_` values are public.
 
 ## The required pathway
 
@@ -58,7 +58,7 @@ See [curriculum guide](docs/CURRICULUM.md) and the [44-course Word reference](De
 
 ```bash
 npm run typecheck && npm run lint
-npm run test                   # 30 frontend/demo/block-editor Vitest tests
+npm run test                   # 32 frontend/demo/navigation/block-editor Vitest tests
 python3 -m unittest discover -s scripts/tests -v
 npm run build:all             # Vite + compiled Fastify API/CLI
 npm audit --audit-level=low
@@ -73,7 +73,7 @@ ENGINE_TEST_DATABASE_URL='postgresql://.../desloop_engine_test' npm run test:ser
 # ENGINE_E2E_DATABASE_URL/PILOT_E2E_DATABASE_URL browser test DB setup.
 ```
 
-**Verified locally under Node 22:** 5/5 Python source-reconciliation tests, 30/30 frontend Vitest tests, 14/14 server/policy tests including both separate disposable PostgreSQL databases, typecheck, zero-warning lint, full static/server builds and `npm audit --audit-level=low` with zero reported vulnerabilities. Desktop/mobile Playwright was run against a disposable E2E database and local API: **48 passed, 2 intentionally desktop-only skips**, including old pilot and new engine browser flows; a later extended guided visual Course 08 browser check also passed 2/2 on desktop/mobile. This is local verification, **not Railway deployment, assessment validity or security certification**. Automated axe A/AA-tag checks assist accessibility review but **do not certify WCAG 2.2 AA**. A previously visited static shell may load offline; cold-first-visit offline and pilot account API usage are not available offline. The service worker does not cache API requests.
+**Verified locally under Node 22:** 5/5 Python source-reconciliation tests, 32/32 frontend Vitest tests and 16/16 server/policy tests including two separate disposable PostgreSQL databases and database-enforced minor-access denial; typecheck, zero-warning lint, full static/server builds and `npm audit --audit-level=low` reported zero vulnerabilities. Desktop/mobile Playwright against a third disposable database and local API: **49 passed, one intentional desktop-only skip**, including draft-1 and draft-2 browser flows, Course 08 guided visual assessment and the simplified learner navigation. This is local verification, **not Railway deployment, assessment validity or security certification**. Automated axe A/AA-tag checks assist accessibility review but **do not certify WCAG 2.2 AA**. A previously visited static shell may load offline; cold-first-visit offline and pilot account API usage are not available offline. The service worker does not cache API requests.
 
 ## Key directories and source of truth
 
@@ -85,14 +85,15 @@ src/curriculum/master.json  One 44-course, nine-stage unreviewed source document
 src/curriculum/             Browser-only demo policy and local practice state
 src/features/pilot/         Isolated API-backed adult learner/reviewer experience
 server/src/                 Fastify, release policy, sessions/CSRF, progression and operator CLI
-server/migrations/          Additive 001 adult pilot + 002 unpublished learning engine
+server/migrations/          Additive 001 adult pilot + 002 engine + 003 blocked guardian groundwork
 server/src/engine/          Draft-2 version/policy, PostgreSQL progression, review and visual interpreter
+server/src/guardian/        No-PII safeguarding hold verification for the adult engine
 server/tests/               Real-Postgres API/policy integration tests (opt-in disposable DBs)
 e2e/                        Desktop/mobile/demo and opt-in live-pilot/engine browser/axe journeys
 docs/                       Curriculum, brand, architecture, local and Railway runbooks
 ```
 
-See [architecture and trust boundaries](docs/ARCHITECTURE.md), [draft-2 operator/Railway runbook](docs/LEARNING_ENGINE_RUNBOOK.md), [original-pilot handoff](docs/DEPLOYMENT.md) and [brand usage](docs/BRAND.md). No final prices, commissions, contacts, legal terms, partner claims or outcomes have been invented. Keep them centrally configured and subject to approval.
+See [architecture and trust boundaries](docs/ARCHITECTURE.md), [draft-2 operator runbook](docs/LEARNING_ENGINE_RUNBOOK.md), [private Railway steps](docs/RAILWAY_PRIVATE_ADULT_SETUP.md), [guardian safety hold](docs/GUARDIAN_CONSENT_AND_IDENTITY.md), [original-pilot handoff](docs/DEPLOYMENT.md) and [brand usage](docs/BRAND.md). No final prices, commissions, contacts, legal terms, partner claims or outcomes have been invented. Keep them centrally configured and subject to approval.
 
 ## Not yet done
 

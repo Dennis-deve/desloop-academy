@@ -16,6 +16,7 @@ import { loadEngineCatalog } from './engine/catalog.js';
 import { verifyEngineRelease } from './engine/migrate.js';
 import { LearningEngine } from './engine/service.js';
 import { SandboxService } from './engine/sandbox.js';
+import { verifyGuardianHold } from './guardian/readiness.js';
 import {
   ApiError,
   clearSessionCookies,
@@ -351,8 +352,13 @@ export async function buildApi(
       return progression.review(auth.user.id, submissionId, parse(review, request.body));
     });
     if (config.engineV2Enabled) {
+      await verifyGuardianHold(db); // A missing/altered safeguarding hold blocks the adult engine.
       const engineCatalog = loadEngineCatalog();
       const releaseId = await verifyEngineRelease(db, engineCatalog); // Fail startup closed on drift.
+      app.get('/api/pilot/guardian-readiness', async (request) => {
+        await requireUser(request, db, config, 'reviewer');
+        return verifyGuardianHold(db);
+      });
       const engine = new LearningEngine(db, engineCatalog, releaseId);
       const studio = new SandboxService(db, engineCatalog, releaseId, engine);
       app.get('/api/pilot/engine/pathway', async (request) => {

@@ -7,6 +7,7 @@ import { loadConfig } from '../server/src/config';
 import { createDatabase, migrate } from '../server/src/db';
 import { migrateEngine, verifyEngineRelease } from '../server/src/engine/migrate';
 import { LearningEngine } from '../server/src/engine/service';
+import { migrateGuardianGroundwork } from '../server/src/guardian/readiness';
 import { hexHash } from '../server/src/security';
 
 const dbUrl = process.env.ENGINE_E2E_DATABASE_URL;
@@ -29,6 +30,7 @@ test('draft-2 adult learner: private playground stays ungraded; guided visual ru
       'TRUNCATE pilot.users,pilot.invitations,pilot.audit_events RESTART IDENTITY CASCADE',
     );
     await migrateEngine(db, catalog);
+    await migrateGuardianGroundwork(db);
     const releaseId = await verifyEngineRelease(db, catalog);
     const invitation = randomUUID() + randomUUID();
     const email = `visual-${randomUUID().slice(0, 8)}@example.invalid`;

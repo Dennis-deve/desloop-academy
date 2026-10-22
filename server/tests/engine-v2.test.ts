@@ -8,6 +8,7 @@ import { createDatabase, migrate } from '../src/db.js';
 import { loadEngineCatalog } from '../src/engine/catalog.js';
 import { migrateEngine, verifyEngineRelease } from '../src/engine/migrate.js';
 import { LearningEngine } from '../src/engine/service.js';
+import { migrateGuardianGroundwork, verifyGuardianHold } from '../src/guardian/readiness.js';
 import { hexHash } from '../src/security.js';
 
 const url = process.env.ENGINE_TEST_DATABASE_URL;
@@ -37,6 +38,24 @@ test(
     );
     await migrateEngine(db, candidate);
     await migrateEngine(db, candidate); // Safe to re-run, never overwrite the old pilot release.
+    await migrateGuardianGroundwork(db);
+    await migrateGuardianGroundwork(db); // Additive and idempotent; no child records created.
+    assert.equal((await verifyGuardianHold(db)).childAccountsEnabled, false);
+    for (const column of [
+      'child_accounts_enabled',
+      'child_data_collection_enabled',
+      'minor_learning_enabled',
+    ]) {
+      await assert.rejects(
+        db.query(`UPDATE safeguarding.release_gate SET ${column}=true WHERE id='minor_access'`),
+        { code: '23514' },
+      );
+    }
+    const noChildRecords = await db.query<{ count: number }>(
+      `SELECT count(*)::int AS count FROM information_schema.tables
+       WHERE table_schema='safeguarding' AND table_name NOT IN ('release_gate','required_controls')`,
+    );
+    assert.equal(noChildRecords.rows[0].count, 0);
     const releaseId = await verifyEngineRelease(db, candidate);
     const engine = new LearningEngine(db, candidate, releaseId);
     const app = await buildApi(config, db, pilot);
@@ -131,6 +150,28 @@ test(
       return approved.json();
     }
     try {
+      const unsafeInvitation = randomUUID() + randomUUID();
+      const unsafeAddress = `blocked-${randomUUID().slice(0, 8)}@example.invalid`;
+      await db.query(
+        "INSERT INTO pilot.invitations(email,role,token_hash,expires_at,created_by) VALUES($1,'learner',$2,now()+interval '1 day','test')",
+        [unsafeAddress, hexHash(unsafeInvitation)],
+      );
+      const notAnAdult = await app.inject({
+        method: 'POST',
+        url: '/api/pilot/auth/register',
+        headers: { origin, 'content-type': 'application/json' },
+        payload: {
+          invitation: unsafeInvitation,
+          name: 'Fictional child',
+          password,
+          adultAttested: false,
+        },
+      });
+      assert.equal(notAnAdult.statusCode, 422);
+      assert.equal(
+        (await db.query('SELECT 1 FROM pilot.users WHERE email=$1', [unsafeAddress])).rowCount,
+        0,
+      );
       assert.equal((await get('/api/pilot/engine/pathway')).statusCode, 401);
       assert.equal(
         (await get('/api/pilot/engine/pathway', await createActor('reviewer', 'Queue'))).statusCode,
@@ -139,6 +180,18 @@ test(
       const learner = await createActor('learner', 'Casey');
       const reviewer = await createActor('reviewer', 'Morgan');
       const other = await createActor('learner', 'Taylor');
+      assert.equal((await get('/api/pilot/guardian-readiness')).statusCode, 401);
+      assert.equal((await get('/api/pilot/guardian-readiness', learner)).statusCode, 403);
+      const readiness = await get('/api/pilot/guardian-readiness', reviewer);
+      assert.equal(readiness.statusCode, 200);
+      assert.equal(readiness.json().childAccountsEnabled, false);
+      assert.equal(readiness.json().childDataCollectionEnabled, false);
+      assert.equal(readiness.json().minorLearningEnabled, false);
+      assert.equal(readiness.json().requirements.length, 8);
+      const childAttempt = await post('/api/pilot/guardian-consent', learner, {
+        childName: 'do-not-collect',
+      });
+      assert.equal(childAttempt.statusCode, 404);
       assert.equal((await get('/api/pilot/engine/pathway', learner)).statusCode, 403);
       assert.equal((await get('/api/pilot/engine/studio', learner)).statusCode, 403);
       await engine.enroll(learner.id, 'Local Integration Operator');

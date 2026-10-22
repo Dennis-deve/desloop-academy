@@ -5,6 +5,7 @@ import { appendAudit, createDatabase, inTransaction, migrate, verifyRelease } fr
 import { loadEngineCatalog } from './engine/catalog.js';
 import { migrateEngine, verifyEngineRelease } from './engine/migrate.js';
 import { LearningEngine } from './engine/service.js';
+import { migrateGuardianGroundwork, verifyGuardianHold } from './guardian/readiness.js';
 
 const [command, ...args] = process.argv.slice(2);
 const usage =
@@ -150,6 +151,7 @@ try {
     await migrate(db, catalog);
     const candidate = loadEngineCatalog();
     await migrateEngine(db, candidate);
+    await migrateGuardianGroundwork(db);
     await inTransaction(db, async (client) => {
       await appendAudit(client, null, 'learning.release.migrated', candidate.version, {
         operator: actor,
@@ -164,6 +166,7 @@ try {
     if (process.env.ENGINE_DRAFT_ACKNOWLEDGED !== 'true')
       throw new Error('Set ENGINE_DRAFT_ACKNOWLEDGED=true for draft-2 operator actions.');
     const actor = operatorRequired();
+    await verifyGuardianHold(db);
     const candidate = loadEngineCatalog();
     const releaseId = await verifyEngineRelease(db, candidate);
     const engine = new LearningEngine(db, candidate, releaseId);
