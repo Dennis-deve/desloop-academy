@@ -1,6 +1,6 @@
 # Draft-2 learning engine — operator runbook
 
-**22 October 2026 · internal adult rehearsal only.** The additive `learning.*` engine, simplified learner preview and `003_guardian_groundwork.sql` safety hold are present locally, but **no Railway resource, deployment, hosted migration, official completion or GitHub update for draft-2 has been verified**. Read [the PDF reconciliation](BLUEPRINT_RECONCILIATION.md), [the private Railway steps](RAILWAY_PRIVATE_ADULT_SETUP.md), [the guardian safety design](GUARDIAN_CONSENT_AND_IDENTITY.md) and [the architecture](ARCHITECTURE.md). Do not enter child data or represent this as a published curriculum.
+**22 October 2026 · internal adult rehearsal only.** The additive `learning.*` engine, simplified learner preview and `003_guardian_groundwork.sql` safety hold have been tested locally and pushed to GitHub `main`; **no Railway resource, deployment, hosted migration or official completion exists**. Verify the current remote SHA before any deployment. Read [the PDF reconciliation](BLUEPRINT_RECONCILIATION.md), [the private Railway steps](RAILWAY_PRIVATE_ADULT_SETUP.md), [the guardian safety design](GUARDIAN_CONSENT_AND_IDENTITY.md) and [the architecture](ARCHITECTURE.md). Do not enter child data or represent this as a published curriculum.
 
 ## What is actually implemented
 
