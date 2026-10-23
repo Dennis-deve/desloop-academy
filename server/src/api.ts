@@ -18,6 +18,8 @@ import { LearningEngine } from './engine/service.js';
 import { SandboxService } from './engine/sandbox.js';
 import { verifyGuardianHold } from './guardian/readiness.js';
 import { isAvailableClientPath } from './public-routes.js';
+import { registerAIRoutes } from './ai/routes.js';
+import type { AIProviders } from './ai/gateway.js';
 import {
   ApiError,
   clearSessionCookies,
@@ -128,6 +130,7 @@ export async function buildApi(
   db?: Database,
   catalog: PilotCatalog = loadCatalog(),
   logRequests = false,
+  aiOptions: { providers?: AIProviders; cacheSecret?: string } = {},
 ) {
   const app = Fastify({
     logger: !logRequests
@@ -138,6 +141,8 @@ export async function buildApi(
             'req.headers.authorization',
             'req.body.password',
             'req.body.invitation',
+            'req.body.input', // Private synthetic AI requests must not enter application logs.
+            'req.body.decisionReference',
             'res.headers.set-cookie',
           ],
         },
@@ -443,6 +448,10 @@ export async function buildApi(
       });
     }
   }
+  if (config.aiGatewayEnabled) {
+    if (!config.enabled || !db) throw new Error('AI gateway requires the private adult database');
+    await registerAIRoutes(app,db,config,aiOptions);
+  }
 
   const dir = resolve(process.cwd(), config.staticDir);
   if (existsSync(resolve(dir, 'index.html'))) {
@@ -456,7 +465,9 @@ export async function buildApi(
         return reply.code(404).send({ error: 'NOT_FOUND', message: 'No such endpoint.' });
       // Unknown and decommissioned simulated routes still render an honest client
       // unavailable message, but must not receive a successful HTTP status.
-      return reply.code(isAvailableClientPath(request.url) ? 200 : 404).type('text/html').sendFile('index.html');
+      const privateAdminPath = config.aiGatewayEnabled && config.aiAdminUiEnabled &&
+        new URL(request.url, 'http://internal.invalid').pathname === '/pilot/ai/admin';
+      return reply.code(isAvailableClientPath(request.url) || privateAdminPath ? 200 : 404).type('text/html').sendFile('index.html');
     });
   }
   return app;

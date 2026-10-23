@@ -11,7 +11,7 @@ const links = [
   { label: 'Availability', href: '/availability' },
 ] as const;
 
-export function ReleaseLayout() {
+export function ReleaseLayout({ notice }: { notice?: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   useEffect(() => {
@@ -19,15 +19,12 @@ export function ReleaseLayout() {
     // Move focus into a newly rendered route; do not leave a keyboard user on a replaced menu item.
     document.getElementById('main-content')?.focus();
   }, [location.pathname]);
-  const isPilot = location.pathname === '/pilot' || location.pathname.startsWith('/pilot/');
   return (
     <div className="public-bg min-h-screen text-heading">
       <a href="#main-content" className="skip-link">Skip to main content</a>
       <div className="border-b border-line bg-ink-900 text-center text-xs font-semibold text-white">
         <Container className="py-2">
-          {isPilot
-            ? 'Private invited-adult draft · No official course credit · No minor accounts'
-            : 'Read-only draft course information · No public enrolment or child accounts'}
+          {notice ?? 'Read-only draft course information · No public enrolment or child accounts'}
         </Container>
       </div>
       <header className="sticky top-0 z-40 border-b border-line bg-panel">

@@ -35,12 +35,14 @@ const pilotNotice =
 export function PilotLayout() {
   const [status, setStatus] = useState<PilotStatus | null>(null);
   const [user, setUser] = useState<PilotUser | null>(null);
+  const [aiAdmin, setAiAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [revision, setRevision] = useState(0);
   useEffect(() => {
     let active = true;
     setLoading(true);
+    setAiAdmin(false);
     pilotApi
       .status()
       .then(async (result) => {
@@ -50,6 +52,14 @@ export function PilotLayout() {
           try {
             const session = await pilotApi.me();
             if (active) setUser(session.user);
+            if (session.user.role === 'reviewer') {
+              try {
+                const access = await pilotApi.aiAdminAccess();
+                if (active) setAiAdmin(access.allowed);
+              } catch {
+                // A missing/denied admin route is an expected closed feature, not an AI success.
+              }
+            }
           } catch (reason) {
             if (active && !(reason instanceof PilotApiError && reason.status === 401))
               setError(reason instanceof Error ? reason.message : 'Could not check your session.');
@@ -71,6 +81,7 @@ export function PilotLayout() {
     try {
       await pilotApi.logout();
       setUser(null);
+      setAiAdmin(false);
     } catch (reason) {
       if (reason instanceof PilotApiError && reason.status === 401) setUser(null);
       else
@@ -126,6 +137,7 @@ export function PilotLayout() {
             onAuthenticated={(next) => {
               setUser(next);
               setError('');
+              setRevision((current) => current + 1); // Refresh server-authorised navigation after sign-in.
             }}
           />
         ) : (
@@ -137,6 +149,11 @@ export function PilotLayout() {
               {user.role === 'reviewer' && (
                 <Link to="/pilot/reviews" className={buttonStyles('outline', 'sm')}>
                   Assigned reviews
+                </Link>
+              )}
+              {aiAdmin && (
+                <Link to="/pilot/ai/admin" className={buttonStyles('outline', 'sm')}>
+                  AI provider operations
                 </Link>
               )}
               {status.engineV2Enabled && (

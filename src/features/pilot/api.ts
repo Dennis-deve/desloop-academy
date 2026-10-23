@@ -138,6 +138,7 @@ export { request as pilotRequest };
 export const pilotApi = {
   status: () => request<PilotStatus>('/status'),
   me: () => request<{ user: PilotUser }>('/me'),
+  aiAdminAccess: () => request<{allowed:boolean}>('/ai/admin/access'),
   login: (email: string, password: string) =>
     request<{ user: PilotUser }>('/auth/login', { email, password }),
   register: (invitation: string, name: string, password: string, adultAttested: boolean) =>

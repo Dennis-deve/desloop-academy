@@ -8,7 +8,7 @@ const ReleaseHome = lazy(() => import('@/features/public/ReleasePages').then((m)
 const ReleaseCatalog = lazy(() => import('@/features/public/ReleasePages').then((m) => ({ default: m.ReleaseCatalog })));
 const ReleaseCourse = lazy(() => import('@/features/public/ReleasePages').then((m) => ({ default: m.ReleaseCourse })));
 const ReleaseMethod = lazy(() => import('@/features/public/ReleasePages').then((m) => ({ default: m.ReleaseMethod })));
-const ReleaseAvailability = lazy(() => import('@/features/public/ReleasePages').then((m) => ({ default: m.ReleaseAvailability })));
+const ReleaseAvailability = lazy(() => import('@/features/public/PrivateAvailability').then((m) => ({ default: m.ReleaseAvailability })));
 const ReleaseUnavailable = lazy(() => import('@/features/public/ReleasePages').then((m) => ({ default: m.ReleaseUnavailable })));
 
 // The only private workflow retained is the existing same-origin PostgreSQL adult pilot.
@@ -16,12 +16,21 @@ const PilotLayout = lazy(() => import('@/features/pilot/PilotPortal').then((m) =
 const PilotHome = lazy(() => import('@/features/pilot/PilotPortal').then((m) => ({ default: m.PilotHome })));
 const PilotCoursePage = lazy(() => import('@/features/pilot/PilotCourse').then((m) => ({ default: m.PilotCoursePage })));
 const PilotReviewsPage = lazy(() => import('@/features/pilot/PilotReviews').then((m) => ({ default: m.PilotReviewsPage })));
+const AIAdminPage = lazy(() => import('@/features/pilot/ai/AIAdminPage').then((m) => ({ default: m.AIAdminPage })));
 const EngineHome = lazy(() => import('@/features/pilot/engine/EnginePages').then((m) => ({ default: m.EngineHome })));
 const EngineCoursePage = lazy(() => import('@/features/pilot/engine/EnginePages').then((m) => ({ default: m.EngineCoursePage })));
 const EngineReviewsPage = lazy(() => import('@/features/pilot/engine/EnginePages').then((m) => ({ default: m.EngineReviewsPage })));
 const EngineStudioList = lazy(() => import('@/features/pilot/engine/StudioPages').then((m) => ({ default: m.EngineStudioList })));
 const EngineStudioProjectPage = lazy(() => import('@/features/pilot/engine/StudioPages').then((m) => ({ default: m.EngineStudioProjectPage })));
 const EngineGuidedGateway = lazy(() => import('@/features/pilot/engine/StudioPages').then((m) => ({ default: m.EngineGuidedGateway })));
+
+function CombinedLayout() {
+  const { pathname } = useLocation();
+  const notice = pathname === '/pilot' || pathname.startsWith('/pilot/')
+    ? 'Private invited-adult draft · No official course credit · No minor accounts'
+    : undefined;
+  return <ReleaseLayout notice={notice} />;
+}
 
 function PageTitle() {
   const { pathname } = useLocation();
@@ -31,7 +40,8 @@ function PageTitle() {
         : pathname.startsWith('/courses/') ? 'Draft course outline'
           : pathname === '/how-it-works' ? 'How learning works'
             : pathname === '/availability' ? 'Availability'
-              : pathname.startsWith('/pilot') ? 'Private adult learning'
+              : pathname === '/pilot/ai/admin' ? 'Private AI provider operations'
+                : pathname.startsWith('/pilot') ? 'Private adult learning'
                 : 'Page unavailable';
     document.title = `${title} · ${site.name}`;
   }, [pathname]);
@@ -42,7 +52,7 @@ export function ReleaseRouter() {
   return <>
     <PageTitle />
     <Routes>
-      <Route element={<ReleaseLayout />}>
+      <Route element={<CombinedLayout />}>
         <Route path="/" element={<ReleaseHome />} />
         <Route path="/courses" element={<ReleaseCatalog />} />
         <Route path="/courses/:slug" element={<ReleaseCourse />} />
@@ -52,6 +62,7 @@ export function ReleaseRouter() {
           <Route index element={<PilotHome />} />
           <Route path="courses/:courseId" element={<PilotCoursePage />} />
           <Route path="reviews" element={<PilotReviewsPage />} />
+          <Route path="ai/admin" element={<AIAdminPage />} />
           <Route path="engine" element={<EngineHome />} />
           <Route path="engine/courses/:courseId" element={<EngineCoursePage />} />
           <Route path="engine/reviews" element={<EngineReviewsPage />} />

@@ -25,12 +25,23 @@
 | Networking | **0** app public/custom domains; **0** DB public TCP proxies; private DB reference | ______ | ______ |
 | Runtime | `NODE_ENV=production`; `APP_ORIGIN` still closed; both adult flags and draft acknowledgments on | ______ | ______ |
 | Child hold | All three minor feature flags **false**; DB gate fields **false**, eight controls `not_ready` | ______ | ______ |
+| AI-01 hold (if source includes it) | `AI_GATEWAY_ENABLED=false`, `AI_ADMIN_UI_ENABLED=false`, `AI_LIVE_TESTS_APPROVED=false`; **no** migration 004, real provider key/call, enabled AI route or public AI endpoint | ______ | ______ |
 | Synthetic database | 44 courses; previously zero adult accounts—record actual count, investigate any change without deletion | ______ | ______ |
 | Public routes (GET) | Real course outline 200; retired `/demo` and `/register` 404; unknown course 404 | ______ | ______ |
-| Private API (GET) | Health 200 + `adult-internal-pilot`; status enabled; anonymous pathway and guardian readiness **401** | ______ | ______ |
+| Private API (GET) | Health 200 + `adult-internal-pilot`; status enabled; anonymous pathway and guardian readiness **401**; AI admin access and `/pilot/ai/admin` **404 while AI flags are off** | ______ | ______ |
 | Access hygiene | No personal records/invitations created; CLI/SSH access inventoried and closed afterwards | ______ | ______ |
 
 **Outcome of this private verification:** ☐ evidence reviewed and matches plan ☐ mismatch—access stays closed ☐ not attempted. Mismatch, incident owner, ticket and safe next step: ______. A match does **not** authorise public or real-user access.
+
+## B2. Render-only observation (blank; use only after an owner actually creates services)
+
+- Render workspace owner, linked repo/branch and reviewed GitHub SHA: ______
+- Static site ID/actual `onrender.com` URL, deploy SHA/time and build command: ______ / ______ / ______ / ______
+- Actual guide 200 checks, forbidden private/unknown 404 checks, published asset scan and headers: ______ / ______ / ______
+- Public copy/legal/AT/security and usage-cost approval: ______
+- Optional private Blueprint approval (region/paid compute and DB), pserv service ID, `ipAllowList: []`, no public/private-browser bypass: ______
+- Optional approved migration 001–003 / AI 004 result and backup/restore proof; all AI/child flags closed until further gate: ______
+- **If blank, do not claim Render hosted or the private admin browser-ready.** [Procedure](RENDER_DEPLOYMENT.md).
 
 ## C. Controls before any personal-data or public stage
 

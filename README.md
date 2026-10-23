@@ -12,6 +12,20 @@ The real `/pilot` API-backed adult draft-1 and additive `draft-2-candidate` engi
 
 The owner's five original GitHub JPEGs are preserved in `assets/brand-originals/`; optimized local assets are in `public/brand/`. The supplied curriculum and alignment PDFs informed a separately unpublished candidate; [source reconciliation](docs/BLUEPRINT_RECONCILIATION.md) keeps draft supplements and standards hints distinct from approved content. No final prices, contacts, commissions, terms, testimonials or qualifications have been invented.
 
+## Separate Render public site (source prepared; not deployed)
+
+The owner chose GitHub `main` and **both** a Render public guide and separate private adult/internal staging. The root `render.yaml` contains **only** a public static site; `npm run build:render-public` creates a different `dist/render-public` artifact with no `/pilot` or `/api` code. Its availability page honestly says the private service status is unknown, and its deep-link rules are exact, not a wildcard. No Render service/URL, paid database, GitHub push for this new source, real AI provider request, or private ingress has been verified. The adult service/database path is a deliberately non-deployable opt-in template until regional, cost, legal and secure-access decisions are made; Render private services have no public browser URL. See the [step-by-step Render guide](docs/RENDER_DEPLOYMENT.md) and [single authoritative feature register](docs/FEATURE_REGISTER.md).
+
+```bash
+npm ci --ignore-scripts
+npm run build:render-public      # Node 22 only; separate static artifact and source/bundle gates
+npm run test:render-public       # local HTTP 200/404 assertions, not Render observations
+npm run test:e2e:render-public   # optional desktop/mobile Chromium, needs Playwright browser/deps
+node scripts/serve_render_public.mjs  # optional read-only local browser inspection :4173
+```
+
+**Main-push warning:** the existing Railway adult/internal project also watches GitHub `main`. Any authorised push may trigger Railway; confirm its actual SHA, closed domain/origin and AI/child holds after pushing. No old GitHub token may be reused. Do not connect the public Render URL to the Railway or Render private service as a shortcut.
+
 ## Run the real read-only guide locally
 
 Requirements: **Node 22**, npm, Python 3 for catalogue validation; PostgreSQL 17+ only for **opt-in adult** integration.

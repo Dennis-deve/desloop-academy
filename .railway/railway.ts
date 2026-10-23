@@ -35,6 +35,10 @@ export default defineRailway(() => {
       CHILD_ACCOUNTS_ENABLED: 'false',
       GUARDIAN_EVIDENCE_COLLECTION_ENABLED: 'false',
       MINOR_LEARNING_ENABLED: 'false',
+      // AI-01 is source-only until reviewed schema, terms, credentials, budgets and real provider tests.
+      AI_GATEWAY_ENABLED: 'false',
+      AI_ADMIN_UI_ENABLED: 'false',
+      AI_LIVE_TESTS_APPROVED: 'false',
     },
   });
   return project('glorious-inspiration', { resources: [db, app] });

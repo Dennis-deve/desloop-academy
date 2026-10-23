@@ -1,0 +1,55 @@
+# OPTIONAL, NON-DEPLOYABLE TEMPLATE. It is NOT the root render.yaml.
+# Do not link it as a Blueprint until an owner has approved a paid plan, legal data region,
+# private networking, backup/restore and a synthetic-only test environment. Replace all
+# REPLACE_ fields; an accidental application of this file must not provision resources.
+# Render private services have NO public URL and cannot be browsed directly.
+services:
+  - type: pserv
+    name: desloop-adult-synthetic-internal
+    runtime: node
+    branch: main
+    region: REPLACE_WITH_APPROVED_RENDER_REGION
+    plan: REPLACE_WITH_APPROVED_PAID_PRIVATE_PLAN
+    autoDeployTrigger: 'off'
+    buildCommand: npm ci --ignore-scripts && npm run build:all
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: '22'
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: PORT
+        value: '10000'
+      - key: DATABASE_URL
+        fromDatabase:
+          name: desloop-adult-synthetic-db
+          property: connectionString
+      - key: APP_ORIGIN
+        value: https://no-public-origin.invalid
+      - key: PILOT_ENABLED
+        value: 'false'
+      - key: PILOT_DRAFT_ACKNOWLEDGED
+        value: 'false'
+      - key: ENGINE_V2_ENABLED
+        value: 'false'
+      - key: ENGINE_DRAFT_ACKNOWLEDGED
+        value: 'false'
+      - key: CHILD_ACCOUNTS_ENABLED
+        value: 'false'
+      - key: GUARDIAN_EVIDENCE_COLLECTION_ENABLED
+        value: 'false'
+      - key: MINOR_LEARNING_ENABLED
+        value: 'false'
+      - key: AI_GATEWAY_ENABLED
+        value: 'false'
+      - key: AI_ADMIN_UI_ENABLED
+        value: 'false'
+      - key: AI_LIVE_TESTS_APPROVED
+        value: 'false'
+databases:
+  - name: desloop-adult-synthetic-db
+    region: REPLACE_WITH_APPROVED_RENDER_REGION
+    plan: REPLACE_WITH_APPROVED_PAID_DATABASE_PLAN
+    ipAllowList: [] # Only Render private-network connections; no public database proxy.

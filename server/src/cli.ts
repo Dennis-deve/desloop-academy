@@ -6,17 +6,19 @@ import { loadEngineCatalog } from './engine/catalog.js';
 import { migrateEngine, verifyEngineRelease } from './engine/migrate.js';
 import { LearningEngine } from './engine/service.js';
 import { migrateGuardianGroundwork, verifyGuardianHold } from './guardian/readiness.js';
+import { grantAIAdmin, migrateAI } from './ai/store.js';
 
 const [command, ...args] = process.argv.slice(2);
 const usage =
-  'Commands: migrate | invite <email> learner|reviewer | submissions | assign <submission-uuid> <reviewer-email> | disable <email> | engine-migrate | engine-enrol <adult-learner-email> | engine-submissions | engine-assign <submission-uuid> <reviewer-email>';
+  'Commands: migrate | invite <email> learner|reviewer | submissions | assign <submission-uuid> <reviewer-email> | disable <email> | engine-migrate | engine-enrol <adult-learner-email> | engine-submissions | engine-assign <submission-uuid> <reviewer-email> | ai-migrate | ai-admin-grant <active-reviewer-email>';
 if (command === 'help') {
   console.log(usage);
   process.exit(0);
 }
 if (!process.env.DATABASE_URL)
   throw new Error('DATABASE_URL must be set in the server environment');
-const config = loadConfig({ ...process.env, PILOT_ENABLED: 'false', ENGINE_V2_ENABLED: 'false' });
+const config = loadConfig({ ...process.env, PILOT_ENABLED: 'false', ENGINE_V2_ENABLED: 'false',
+  AI_GATEWAY_ENABLED: 'false', AI_ADMIN_UI_ENABLED: 'false', AI_LIVE_TESTS_APPROVED: 'false' });
 const db = createDatabase(config);
 const catalog = loadCatalog();
 const operator = process.env.PILOT_OPERATOR?.trim();
@@ -142,6 +144,25 @@ try {
       });
     });
     console.log('Account disabled and all sessions revoked.');
+  } else if (command === 'ai-migrate') {
+    if (process.env.AI_SCHEMA_MIGRATION_APPROVED !== 'true')
+      throw new Error('AI schema migration requires an operator-reviewed private database and AI_SCHEMA_MIGRATION_APPROVED=true');
+    const actor = operatorRequired();
+    await verifyGuardianHold(db); // This cannot create child records or bypass the existing hold.
+    await migrateAI(db);
+    await inTransaction(db, async (client) => {
+      await appendAudit(client,null,'ai.schema.migrated_closed','004',{operator:actor});
+    });
+    console.log('Installed private AI schema with every provider/model and quota closed. No remote API call or public ingress was made.');
+  } else if (command === 'ai-admin-grant') {
+    if (process.env.AI_ADMIN_GRANT_APPROVED !== 'true')
+      throw new Error('Explicit AI_ADMIN_GRANT_APPROVED=true is required; reviewer MFA remains a release blocker.');
+    const address = args[0]?.trim().toLowerCase();
+    if (!address || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address))
+      throw new Error('Usage: ai-admin-grant active-reviewer@example.invalid');
+    await verifyGuardianHold(db);
+    await grantAIAdmin(db,address,operatorRequired());
+    console.log('Restricted AI admin membership recorded for this existing active adult reviewer; still synthetic/private only.');
   } else if (command === 'engine-migrate') {
     if (process.env.ENGINE_DRAFT_ACKNOWLEDGED !== 'true')
       throw new Error(

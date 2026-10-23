@@ -12,6 +12,11 @@ export interface PilotConfig {
   databaseTls: boolean;
   /** Raised only for opt-in E2E on a loopback API and loopback disposable PostgreSQL. */
   localE2eAuthLimit: boolean;
+  aiGatewayEnabled: boolean;
+  aiAdminUiEnabled: boolean;
+  aiLiveTestsApproved: boolean;
+  aiTimeoutMs: number;
+  aiRetries: number;
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): PilotConfig {
@@ -27,6 +32,17 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): PilotConfig {
   }
   const enabled = env.PILOT_ENABLED === 'true';
   const engineV2Enabled = env.ENGINE_V2_ENABLED === 'true';
+  const aiGatewayEnabled = env.AI_GATEWAY_ENABLED === 'true';
+  const aiAdminUiEnabled = env.AI_ADMIN_UI_ENABLED === 'true';
+  const aiLiveTestsApproved = env.AI_LIVE_TESTS_APPROVED === 'true';
+  if (aiGatewayEnabled && !enabled) throw new Error('AI gateway requires the private adult pilot');
+  if ((aiAdminUiEnabled || aiLiveTestsApproved) && !aiGatewayEnabled)
+    throw new Error('AI administration and live verification require AI_GATEWAY_ENABLED=true');
+  const aiTimeoutMs = Number(env.AI_TIMEOUT_MS ?? '8000');
+  const aiRetries = Number(env.AI_RETRIES ?? '1');
+  if (!Number.isInteger(aiTimeoutMs) || aiTimeoutMs < 1000 || aiTimeoutMs > 30000 ||
+      !Number.isInteger(aiRetries) || aiRetries < 0 || aiRetries > 2)
+    throw new Error('AI_TIMEOUT_MS must be 1000–30000 and AI_RETRIES must be 0–2');
   if (engineV2Enabled && (!enabled || env.ENGINE_DRAFT_ACKNOWLEDGED !== 'true'))
     throw new Error(
       'Engine v2 requires the enabled adult pilot and explicit ENGINE_DRAFT_ACKNOWLEDGED=true',
@@ -61,5 +77,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): PilotConfig {
     staticDir: env.STATIC_DIR || 'dist',
     databaseTls: env.DATABASE_TLS === 'verify',
     localE2eAuthLimit,
+    aiGatewayEnabled,
+    aiAdminUiEnabled,
+    aiLiveTestsApproved,
+    aiTimeoutMs,
+    aiRetries,
   };
 }

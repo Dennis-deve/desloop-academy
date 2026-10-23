@@ -19,5 +19,5 @@
     "paths": { "@/*": ["./src/*"] },
     "types": ["vite/client", "vitest/globals"]
   },
-  "include": ["src", "vite.config.ts", "playwright.config.ts"]
+  "include": ["src", "vite.config.ts", "vite.render-public.config.ts", "playwright.config.ts", "playwright.render-public.config.ts"]
 }
