@@ -44,7 +44,7 @@
 - Public copy/legal/AT/security and usage-cost approval: ______
 - Optional private Blueprint approval (region/paid compute and DB), pserv service ID, `ipAllowList: []`, no public/private-browser bypass: ______
 - Optional approved migration 001–003 / AI 004 result and backup/restore proof; all AI/child flags closed until further gate: ______
-- **If blank, do not claim Render hosted or the private admin browser-ready.** [Procedure](RENDER_DEPLOYMENT.md).
+- **A blank copy is not evidence for a *new* deployment.** The first read-only public guide was independently observed on 29 October; use the feature register for that historical result. Never infer that a private adult/AI admin browser is ready from this public-site check. [Procedure](RENDER_DEPLOYMENT.md).
 
 ## C. Controls before any personal-data or public stage
 

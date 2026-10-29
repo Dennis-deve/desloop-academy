@@ -1,47 +1,33 @@
 # Render setup — public guide + separate private adult staging
 
-**Source-only instructions, updated 29 October 2026. No Render service or database was created, deployed, billed, or verified by writing this guide.** The owner chose GitHub `main` and now clarified that the **functioning searchable read-only course guide** goes public first, with continuous verification and **manual** public promotion; paid private adult staging is deferred. Follow the [CI/CD owner handoff](CONTINUOUS_DELIVERY.md) for the deploy-key, Action/environment and later feature workflow. This is **not** approval for new paid resources, personal data, external adult/child access, real AI calls, or public full-platform launch. [Feature register](FEATURE_REGISTER.md) remains authoritative; [AI runbook](AI_GATEWAY_RUNBOOK.md) describes separate provider gates. The last known Railway source must be checked separately: a push to `main` can trigger its existing auto-deploy, even though all AI flags stay false.
+**Updated 29 October 2026. The owner has now created the public-only static service; its real [Render URL](https://desloop-readonly-guide.onrender.com), Git SHA, hosted 200/404 checks and desktop/mobile browser checks were independently observed. No private Render service/database or paid private stage was created. Owner account usage and the future GitHub environment/deploy hook have not been verified.** The owner chose GitHub `main` and now clarified that the **functioning searchable read-only course guide** goes public first, with continuous verification and **manual** public promotion; paid private adult staging is deferred. Follow the [CI/CD owner handoff](CONTINUOUS_DELIVERY.md) for the deploy-key, Action/environment and later feature workflow. This is **not** approval for new paid resources, personal data, external adult/child access, real AI calls, or public full-platform launch. [Feature register](FEATURE_REGISTER.md) remains authoritative; [AI runbook](AI_GATEWAY_RUNBOOK.md) describes separate provider gates. The last known Railway source must be checked separately: a push to `main` can trigger its existing auto-deploy, even though all AI flags stay false.
 
 ## 1. What is actually safe to look at
 
 | Render component | Artifact/endpoint | Audience and status |
 |---|---|---|
-| **Public guide** | Root `render.yaml` → static `dist/render-public` from `npm run build:render-public` | A real branded read-only guide to 44 **draft** course outlines. No account, lesson unlock, answers, `/api` request, private `/pilot` chunk or child flow. Render assigns a **public** `onrender.com` URL after an owner actually creates the site; the URL is not a private preview. Copy/legal/AT review still applies before exposing it. |
+| **Public guide** | Root `render.yaml` → static `dist/render-public` from `npm run build:render-public` | A real branded read-only guide to 44 **draft** course outlines. No account, lesson unlock, answers, `/api` request, private `/pilot` chunk or child flow. The owner-created [public URL](https://desloop-readonly-guide.onrender.com) now serves source SHA `62cbf7b…`; it is not a private preview. Owner-approved public exposure is recorded, but independent legal/manual accessibility and representative-user checks remain open. Do not treat this as the full platform. |
 | **Adult/internal** | `docs/RENDER_PRIVATE_STAGING.example.yaml` → optional **private service** (`pserv`) + distinct PostgreSQL | The template is deliberately non-deployable until paid plan and lawful data region are approved. It is **not** in root `render.yaml`. Even after approval, a private service has **no public browser URL**: the internal dashboard cannot be viewed in a normal browser without a separately approved identity-aware, same-origin HTTPS ingress. All adult/AI/child flags begin false; synthetic-only. |
 | **AI-01** | Optional migration 004 and model verification (neither automatic) | No live provider. Leave `AI_GATEWAY_ENABLED`, `AI_ADMIN_UI_ENABLED`, and `AI_LIVE_TESTS_APPROVED` false. See the [AI runbook](AI_GATEWAY_RUNBOOK.md) before any approved synthetic call; do not paste a provider key into chat or source. |
 
 Render documents static sites as public CDN services, while private services have no external address; static-site bandwidth and build minutes count against the workspace's included amounts, and private compute/databases can incur charges: [1](https://render.com/docs/static-sites) [8](https://render.com/docs/private-services) [1](https://render.com/docs/blueprint-spec). A free database is short-lived; it is not an approved backup policy: [18](https://render.com/docs/free).
 
-## 2. GitHub source handoff (main requested)
+## 2. GitHub source and future safe pushes
 
-1. Have a trusted repo owner review the exact pending commit(s), the unchanged child holds and the `render.yaml` diff. The earlier shared GitHub token must be revoked and **never reused**. Use your own GitHub browser/SSH/credential manager; never paste a token in this chat, shell transcript or README. If the workspace has no authenticated GitHub client, **the push has not happened**.
-2. Confirm the remote main branch has not moved; fetch rather than force-push. On the reviewed local checkout, after authentication on your own device:
+**Observed on 29 October:** `work/ai-gateway-v1` and then `main` were non-force pushed/read back as `62cbf7b95afce2768c368f824e35b3f3064330e8` after the [real work-branch CI](https://github.com/Dennis-deve/desloop-academy/actions/runs/40923040670) passed. The [new main CI](https://github.com/Dennis-deve/desloop-academy/actions/runs/40925689449) also passed. The temporary private SSH deploy key was immediately destroyed; its **public key must still be removed by the owner** in GitHub → repository Settings → Deploy keys. Neither retired PAT may be reused. The old workspace bundle contains these **already published** commits; do not replay it or assume it authorises future pushes.
 
-   ```bash
-   git remote -v                               # expect Dennis-deve/desloop-academy
-   git fetch origin main
-   git merge-base --is-ancestor origin/main HEAD || { echo 'Main changed: review/rebase; do not force'; exit 1; }
-   git status --short
-   git log -1 --oneline
-   git push origin HEAD:main                   # non-force, only after owner review
-   git ls-remote origin refs/heads/main        # compare the SHA with HEAD
-   ```
-
-3. **Existing Railway impact:** GitHub `main` is connected to a domainless Railway app. A push may trigger a build/deploy there; its exact outcome is unknown until observed. Before and after pushing, check Railway deployment SHA, zero app domains/public DB proxies, closed `APP_ORIGIN`, child flags false, three AI flags false, status/404 smoke and any IaC drift per [deployment guide](DEPLOYMENT_GUIDE.md). This GitHub push is not proof of a Railway or Render deployment.
-
-If you cannot authenticate in the Arena workspace, download the accompanying **`/home/user/desloop-ai-render-handoff.bundle`** (not tracked in Git), which contains the unpublished commits at the time it was regenerated and requires the last published `main` commit. On an **authenticated** computer, in a fresh clone of `https://github.com/Dennis-deve/desloop-academy.git`, after reviewing the bundle and source:
+For **future** finished features, use the owner's own authenticated Git client or a newly reviewed temporary push method, protect main with the `verify` check, review the diff/child holds, and check that remote main has not diverged before any non-force push:
 
 ```bash
 git fetch origin main
-git fetch /path/to/downloaded/desloop-ai-render-handoff.bundle refs/heads/work/ai-gateway-v1
-git log --oneline origin/main..FETCH_HEAD
-git merge-base --is-ancestor origin/main FETCH_HEAD || { echo 'Remote moved: stop and review'; exit 1; }
-git push --dry-run origin FETCH_HEAD:refs/heads/main
-git push origin FETCH_HEAD:refs/heads/main   # non-force, triggers a possible Railway auto-deploy
-git ls-remote origin refs/heads/main         # compare with the bundle's latest SHA
+git merge-base --is-ancestor origin/main HEAD || { echo 'Main changed: stop and review'; exit 1; }
+git status --short
+git push --dry-run origin HEAD:refs/heads/main
+git push origin HEAD:refs/heads/main
+# Compare git rev-parse HEAD with git ls-remote origin refs/heads/main.
 ```
 
-A changed `main`, rejected push or failed Railway deploy requires review; never force-push or interpret these commands as Render deployment. The bundle is a handoff, **not** a backup of any private database.
+**Existing Railway impact:** GitHub `main` has a separate private Railway source with `checkSuites:false` in IaC, so it may deploy before CI passes. GitHub's deployment status reported success for this new SHA, but the owner's private health/flags/other domains/DB proxies are not verified here. The owner briefly added a public Railway domain to the combined adult service, then removed it; its former URL returned Railway **edge 404** on `/`, `/pilot` and `/api/health`. This is not proof that all other networking and hold settings are correct. Inspect Railway's actual deployment SHA, zero app domains/public DB proxies, closed `APP_ORIGIN`, child and AI flags false, and migration/health per [deployment guide](DEPLOYMENT_GUIDE.md) before widening access. Never generate another public domain to test the adult service.
 
 ## 3. Owner-only Render public static-site setup
 
@@ -65,6 +51,8 @@ A changed `main`, rejected push or failed Railway deploy requires review; never 
 
 6. Check desktop/mobile branding, logo, 44 ordered outlines, course deep links, search/reset, age examples, keyboard navigation/skip link, 200–400% zoom and representative screen-reader tasks. The public page must **not** imply enrolment, credit, provider status or accreditation. Confirm the public `/release.json` contains the exact built source SHA; it is a **non-secret verification receipt**, not a login or completion record. If a forbidden route responds 200, a bundle leaks private chunks, or a status looks fabricated, stop and roll back/review. Automated checks are not a WCAG 2.2 AA sign-off. Render lets you redeploy a prior commit but rewrite/config differences still need inspection: [13](https://render.com/docs/rollbacks).
 7. For **later** releases, keep auto-deploy off and use the owner-reviewed GitHub `public-guide` environment with the Render static service ID, onrender.com origin and environment-only secret deploy hook. An explicit Actions dispatch re-runs CI, requests that exact SHA, waits for the hosted receipt, checks 200/404/headers and runs desktop/mobile tests. A deploy-hook reply only means queued/started; see [continuous-delivery steps](CONTINUOUS_DELIVERY.md). GitHub and Render credentials must never be pasted here.
+
+**Observed first deployment, 29 October:** GitHub `main` and the live `/release.json` matched `62cbf7b95afce2768c368f824e35b3f3064330e8`; both [work CI](https://github.com/Dennis-deve/desloop-academy/actions/runs/40923040670) and [main CI](https://github.com/Dennis-deve/desloop-academy/actions/runs/40925689449) passed. Direct hosted acceptance checked **5 guide 200 / 9 forbidden-or-unknown 404**, CSP and no-store receipt; actual Render Chromium desktop/mobile **6/6** passed. This is hosted evidence for the **read-only guide**, not paid private staging, live AI, adult browser onboarding, manual WCAG conformance or a later manual CD promotion. The former owner-added Railway domain returned edge 404 after removal; owner must still inspect its other network/flag/health settings. The temporary GitHub private deploy key was deleted locally; owner must remove its no-longer-useful public counterpart from repository settings.
 
 ### Local checks before any Render change
 
