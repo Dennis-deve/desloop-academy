@@ -7,7 +7,7 @@ export const registerSchema = z.object({
   name: z.string().trim().min(2, 'Enter your name'),
   email: emailSchema,
   password: passwordSchema,
-  agree: z.literal(true, { errorMap: () => ({ message: 'Please acknowledge the demo terms' }) }),
+  agree: z.literal(true, { error: 'Please acknowledge the demo terms' }),
 });
 export const teacherApplicationSchema = z.object({
   name: z.string().trim().min(2, 'Enter your name'),
@@ -16,7 +16,7 @@ export const teacherApplicationSchema = z.object({
   expertise: z.string().trim().min(3, 'Tell us your subject areas'),
   audience: z.string().min(1, 'Select an audience'),
   agree: z.literal(true, {
-    errorMap: () => ({ message: 'Please acknowledge the programme terms' }),
+    error: 'Please acknowledge the programme terms',
   }),
 });
 export const schoolApplicationSchema = z.object({
@@ -30,7 +30,7 @@ export const schoolApplicationSchema = z.object({
   programmes: z.string().trim().min(5, 'Tell us which programmes interest you'),
   connectivity: z.string().min(1, 'Select a connectivity option'),
   agree: z.literal(true, {
-    errorMap: () => ({ message: 'Please acknowledge the privacy information' }),
+    error: 'Please acknowledge the privacy information',
   }),
 });
 export const facilitatorApplicationSchema = z.object({
@@ -39,7 +39,7 @@ export const facilitatorApplicationSchema = z.object({
   expertise: z.string().trim().min(3, 'Enter your subject area'),
   experience: z.string().trim().min(20, 'Please describe your experience'),
   agree: z.literal(true, {
-    errorMap: () => ({ message: 'Please acknowledge the review process' }),
+    error: 'Please acknowledge the review process',
   }),
 });
 export const contactSchema = z.object({

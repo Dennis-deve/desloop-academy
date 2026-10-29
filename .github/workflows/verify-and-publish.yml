@@ -1,0 +1,132 @@
+name: Verify source and approve public guide
+
+# CI has no production credentials. Only a human-dispatched, main-only job can
+# access the separate public-guide environment's Render deploy hook.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, 'work/**']
+  workflow_dispatch:
+    inputs:
+      publish_public:
+        description: 'I reviewed the public guide, current main and Render plan; request a manual public-site promotion'
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+# Never cancel verification for main; the existing private Railway source may
+# watch its GitHub checks. No PR/branch push may trigger a Render deployment.
+concurrency:
+  group: desloop-verify-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' && github.event_name != 'workflow_dispatch' }}
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: postgres
+          # Synthetic, ephemeral CI-only fixture. No real data or provider keys.
+          POSTGRES_PASSWORD: ci-disposable-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d postgres"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      CI: 'true'
+      PILOT_TEST_DATABASE_URL: postgres://postgres:ci-disposable-only@127.0.0.1:5432/desloop_pilot_disposable_ci
+      ENGINE_TEST_DATABASE_URL: postgres://postgres:ci-disposable-only@127.0.0.1:5432/desloop_engine_disposable_ci
+      AI_TEST_DATABASE_URL: postgres://postgres:ci-disposable-only@127.0.0.1:5432/desloop_ai_disposable_ci
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Reproducible install, no lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Independently verify safe catalogue and exact Render routes
+        run: |
+          python3 scripts/build_public_catalog.py --check
+          python3 scripts/generate_render_routes.py --check
+          python3 -m unittest discover -s scripts/tests -v
+      - name: Check source, audit dependencies and exercise UI
+        run: |
+          npm run typecheck
+          npm run lint
+          npm audit --audit-level=low
+          npm test
+      - name: Build both isolated public and private release artifacts
+        run: |
+          npm run build:all
+          npm run build:render-public
+          npm run test:render-public
+          npm run test:render-deploy
+      - name: Create three distinct disposable databases in CI's ephemeral container
+        env:
+          PG_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          for db in desloop_pilot_disposable_ci desloop_engine_disposable_ci desloop_ai_disposable_ci; do
+            docker exec "$PG_CONTAINER" psql -v ON_ERROR_STOP=1 -U postgres -d postgres -c "CREATE DATABASE $db"
+          done
+      - name: Real local PostgreSQL permission, migration and failure tests
+        run: npm run test:server
+      - name: Install Chromium with system dependencies
+        run: npx playwright install --with-deps chromium
+      - name: Existing browser regression (adult opt-in flows remain skipped)
+        run: npm run test:e2e
+      - name: Isolated public browser and 404 regressions
+        run: npm run test:e2e:render-public
+
+  publish_public:
+    name: owner-approved Render public promotion
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.publish_public == true
+    needs: verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    # Configure this environment *before* storing its hook URL. If the plan
+    # supports required reviewers, enable them; dispatch itself is still manual.
+    environment: public-guide
+    env:
+      RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+      RENDER_PUBLIC_SERVICE_ID: ${{ vars.RENDER_PUBLIC_SERVICE_ID }}
+      RENDER_PUBLIC_SITE_URL: ${{ vars.RENDER_PUBLIC_SITE_URL }}
+      EXPECTED_PUBLIC_SHA: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Decline stale or unreviewed main ref
+        run: |
+          remote_main="$(git ls-remote https://github.com/${{ github.repository }}.git refs/heads/main | cut -f1)"
+          test -n "$remote_main"
+          test "$remote_main" = "$EXPECTED_PUBLIC_SHA" || { echo 'Main moved; review and dispatch again'; exit 1; }
+      - name: Request pinned commit on the exact approved Render static service
+        run: node scripts/trigger_render_public.mjs
+      - name: Independently wait for hosted commit receipt and public/private HTTP boundaries
+        run: node scripts/smoke_render_public.mjs
+      - name: Install browser test dependencies
+        run: |
+          npm ci --ignore-scripts
+          npx playwright install --with-deps chromium
+      - name: Verify actual hosted public site in desktop/mobile Chromium
+        run: npm run test:e2e:render-hosted
+      - name: Report verification only (manual WCAG and legal gates remain)
+        run: |
+          printf '### Hosted read-only public guide\n\n' >> "$GITHUB_STEP_SUMMARY"
+          printf 'Commit `%s` was observed at the approved Render URL; HTTP and desktop/mobile browser checks passed. Manual copy, accessibility and privacy reviews remain separate.\n' "$EXPECTED_PUBLIC_SHA" >> "$GITHUB_STEP_SUMMARY"

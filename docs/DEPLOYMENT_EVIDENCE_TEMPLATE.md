@@ -37,7 +37,10 @@
 
 - Render workspace owner, linked repo/branch and reviewed GitHub SHA: ______
 - Static site ID/actual `onrender.com` URL, deploy SHA/time and build command: ______ / ______ / ______ / ______
-- Actual guide 200 checks, forbidden private/unknown 404 checks, published asset scan and headers: ______ / ______ / ______
+- GitHub Actions `verify` run URL/status, main protection and source SHA: ______ / ______ / ______
+- Owner manual `public-guide` dispatch/run URL, requested SHA, hook request status (**not** deploy proof): ______ / ______ / ______
+- Independently fetched hosted `/release.json` SHA vs requested SHA, actual Render deploy state/time: ______ / ______ / ______
+- Actual guide 200 checks, forbidden private/unknown 404 checks, published asset scan, headers and hosted browser results: ______ / ______ / ______ / ______
 - Public copy/legal/AT/security and usage-cost approval: ______
 - Optional private Blueprint approval (region/paid compute and DB), pserv service ID, `ipAllowList: []`, no public/private-browser bypass: ______
 - Optional approved migration 001–003 / AI 004 result and backup/restore proof; all AI/child flags closed until further gate: ______

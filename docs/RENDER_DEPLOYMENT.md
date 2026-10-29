@@ -1,6 +1,6 @@
 # Render setup — public guide + separate private adult staging
 
-**Source-only instructions, 23 October 2026. No Render service or database was created, deployed, billed, or verified by writing this guide.** The owner chose GitHub `main` and **both** a public course guide and an isolated private adult/internal path. This is **not** approval for new paid resources, personal data, external adult/child access, real AI calls, or public full-platform launch. [Feature register](FEATURE_REGISTER.md) remains authoritative; [AI runbook](AI_GATEWAY_RUNBOOK.md) describes separate provider gates. The last known Railway source must be checked separately: a push to `main` can trigger its existing auto-deploy, even though all AI flags stay false.
+**Source-only instructions, updated 29 October 2026. No Render service or database was created, deployed, billed, or verified by writing this guide.** The owner chose GitHub `main` and now clarified that the **functioning searchable read-only course guide** goes public first, with continuous verification and **manual** public promotion; paid private adult staging is deferred. Follow the [CI/CD owner handoff](CONTINUOUS_DELIVERY.md) for the deploy-key, Action/environment and later feature workflow. This is **not** approval for new paid resources, personal data, external adult/child access, real AI calls, or public full-platform launch. [Feature register](FEATURE_REGISTER.md) remains authoritative; [AI runbook](AI_GATEWAY_RUNBOOK.md) describes separate provider gates. The last known Railway source must be checked separately: a push to `main` can trigger its existing auto-deploy, even though all AI flags stay false.
 
 ## 1. What is actually safe to look at
 
@@ -29,7 +29,7 @@ Render documents static sites as public CDN services, while private services hav
 
 3. **Existing Railway impact:** GitHub `main` is connected to a domainless Railway app. A push may trigger a build/deploy there; its exact outcome is unknown until observed. Before and after pushing, check Railway deployment SHA, zero app domains/public DB proxies, closed `APP_ORIGIN`, child flags false, three AI flags false, status/404 smoke and any IaC drift per [deployment guide](DEPLOYMENT_GUIDE.md). This GitHub push is not proof of a Railway or Render deployment.
 
-If you cannot authenticate in the Arena workspace, download the accompanying **`/home/user/desloop-ai-render-handoff.bundle`** (not tracked in Git), which contains the two unpublished commits and requires the last published `main` commit. On an **authenticated** computer, in a fresh clone of `https://github.com/Dennis-deve/desloop-academy.git`, after reviewing the bundle and source:
+If you cannot authenticate in the Arena workspace, download the accompanying **`/home/user/desloop-ai-render-handoff.bundle`** (not tracked in Git), which contains the unpublished commits at the time it was regenerated and requires the last published `main` commit. On an **authenticated** computer, in a fresh clone of `https://github.com/Dennis-deve/desloop-academy.git`, after reviewing the bundle and source:
 
 ```bash
 git fetch origin main
@@ -63,7 +63,8 @@ A changed `main`, rejected push or failed Railway deploy requires review; never 
    # Record actual response headers, commit SHA, time, owner and failures privately.
    ```
 
-6. Check desktop/mobile branding, logo, 44 ordered outlines, course deep links, search/reset, age examples, keyboard navigation/skip link, 200–400% zoom and representative screen-reader tasks. The public page must **not** imply enrolment, credit, provider status or accreditation. If a forbidden route responds 200, a bundle leaks private chunks, or a status looks fabricated, stop and roll back/review. Automated checks are not a WCAG 2.2 AA sign-off. Render lets you redeploy a prior commit but rewrite/config differences still need inspection: [13](https://render.com/docs/rollbacks).
+6. Check desktop/mobile branding, logo, 44 ordered outlines, course deep links, search/reset, age examples, keyboard navigation/skip link, 200–400% zoom and representative screen-reader tasks. The public page must **not** imply enrolment, credit, provider status or accreditation. Confirm the public `/release.json` contains the exact built source SHA; it is a **non-secret verification receipt**, not a login or completion record. If a forbidden route responds 200, a bundle leaks private chunks, or a status looks fabricated, stop and roll back/review. Automated checks are not a WCAG 2.2 AA sign-off. Render lets you redeploy a prior commit but rewrite/config differences still need inspection: [13](https://render.com/docs/rollbacks).
+7. For **later** releases, keep auto-deploy off and use the owner-reviewed GitHub `public-guide` environment with the Render static service ID, onrender.com origin and environment-only secret deploy hook. An explicit Actions dispatch re-runs CI, requests that exact SHA, waits for the hosted receipt, checks 200/404/headers and runs desktop/mobile tests. A deploy-hook reply only means queued/started; see [continuous-delivery steps](CONTINUOUS_DELIVERY.md). GitHub and Render credentials must never be pasted here.
 
 ### Local checks before any Render change
 
@@ -77,6 +78,7 @@ npm run typecheck && npm run lint && npm test
 npm run build:all                              # existing private build and safety gate
 npm run build:render-public                    # physically separate static artifact
 npm run test:render-public                     # exact-route local HTTP assertions
+npm run test:render-deploy                     # synthetic hook/receipt checks; no Render call
 npx playwright install chromium               # optional browser install
 # If Chromium lacks system libraries: npx playwright install-deps chromium (may require sudo)
 npm run test:e2e:render-public                 # local public artifact, desktop/mobile Chromium

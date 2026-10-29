@@ -54,6 +54,9 @@ def config() -> str:
         "      - path: /*\n"
         "        name: Content-Security-Policy\n"
         '        value: "default-src \'self\'; script-src \'self\'; style-src \'self\' \'unsafe-inline\'; img-src \'self\' data:; font-src \'self\' data:; connect-src \'none\'; object-src \'none\'; base-uri \'self\'; frame-ancestors \'none\'"\n'
+        "      - path: /release.json\n"
+        "        name: Cache-Control\n"
+        "        value: no-store\n"
         "    # Domain root is served directly by index.html. Other pages have exact rewrites.\n"
         "    routes:\n"
         + routes

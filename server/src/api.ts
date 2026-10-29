@@ -70,7 +70,7 @@ const project = z
 const review = z
   .object({
     decision: z.enum(['approved', 'revision_requested']),
-    rubric: z.record(z.number().int().min(0).max(100)),
+    rubric: z.record(z.string(), z.number().int().min(0).max(100)),
     safetyApproved: z.boolean(),
     feedback: z.string().trim().min(10).max(3000),
   })
@@ -106,7 +106,9 @@ const sandboxCreate = z
     requestId: uuid,
   })
   .strict();
-const sandboxRevision = z.object({ document: z.record(z.unknown()), requestId: uuid }).strict();
+const sandboxRevision = z
+  .object({ document: z.record(z.string(), z.unknown()), requestId: uuid })
+  .strict();
 const sandboxRun = z
   .object({ revisionNo: z.number().int().min(1).max(100), requestId: uuid })
   .strict();
@@ -450,7 +452,7 @@ export async function buildApi(
   }
   if (config.aiGatewayEnabled) {
     if (!config.enabled || !db) throw new Error('AI gateway requires the private adult database');
-    await registerAIRoutes(app,db,config,aiOptions);
+    await registerAIRoutes(app, db, config, aiOptions);
   }
 
   const dir = resolve(process.cwd(), config.staticDir);
@@ -465,9 +467,14 @@ export async function buildApi(
         return reply.code(404).send({ error: 'NOT_FOUND', message: 'No such endpoint.' });
       // Unknown and decommissioned simulated routes still render an honest client
       // unavailable message, but must not receive a successful HTTP status.
-      const privateAdminPath = config.aiGatewayEnabled && config.aiAdminUiEnabled &&
+      const privateAdminPath =
+        config.aiGatewayEnabled &&
+        config.aiAdminUiEnabled &&
         new URL(request.url, 'http://internal.invalid').pathname === '/pilot/ai/admin';
-      return reply.code(isAvailableClientPath(request.url) || privateAdminPath ? 200 : 404).type('text/html').sendFile('index.html');
+      return reply
+        .code(isAvailableClientPath(request.url) || privateAdminPath ? 200 : 404)
+        .type('text/html')
+        .sendFile('index.html');
     });
   }
   return app;

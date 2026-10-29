@@ -12,19 +12,20 @@ The real `/pilot` API-backed adult draft-1 and additive `draft-2-candidate` engi
 
 The owner's five original GitHub JPEGs are preserved in `assets/brand-originals/`; optimized local assets are in `public/brand/`. The supplied curriculum and alignment PDFs informed a separately unpublished candidate; [source reconciliation](docs/BLUEPRINT_RECONCILIATION.md) keeps draft supplements and standards hints distinct from approved content. No final prices, contacts, commissions, terms, testimonials or qualifications have been invented.
 
-## Separate Render public site (source prepared; not deployed)
+## Separate Render public site and continuous verification (hosted status unverified)
 
-The owner chose GitHub `main` and **both** a Render public guide and separate private adult/internal staging. The root `render.yaml` contains **only** a public static site; `npm run build:render-public` creates a different `dist/render-public` artifact with no `/pilot` or `/api` code. Its availability page honestly says the private service status is unknown, and its deep-link rules are exact, not a wildcard. No Render service/URL, paid database, GitHub push for this new source, real AI provider request, or private ingress has been verified. The adult service/database path is a deliberately non-deployable opt-in template until regional, cost, legal and secure-access decisions are made; Render private services have no public browser URL. See the [step-by-step Render guide](docs/RENDER_DEPLOYMENT.md) and [single authoritative feature register](docs/FEATURE_REGISTER.md).
+On 29 October the owner selected the **real searchable read-only guide first**, CI on changes, and a **manual public promotion**; paid private adult staging was deferred. The root `render.yaml` contains **only** a public static site with auto-deploy off. `npm run build:render-public` makes a different `dist/render-public` artifact with no `/pilot` or `/api` code, plus a public source-commit receipt for checking the actual hosted release. The availability page honestly says private status is unknown, and the 47 deep-link rewrites are exact, not a wildcard. At this revision **no Render service/URL, paid database, real AI provider request or private ingress has been verified**. GitHub/CI/Railway status must be checked independently after any push. The adult service/database path is a deliberately non-deployable opt-in template until regional, cost, legal and secure-access decisions are made; it has no public browser URL. A preview or CI build is not a hosted staging service. See the [CI/CD owner handoff](docs/CONTINUOUS_DELIVERY.md), [step-by-step Render guide](docs/RENDER_DEPLOYMENT.md) and [single authoritative feature register](docs/FEATURE_REGISTER.md).
 
 ```bash
 npm ci --ignore-scripts
 npm run build:render-public      # Node 22 only; separate static artifact and source/bundle gates
 npm run test:render-public       # local HTTP 200/404 assertions, not Render observations
+npm run test:render-deploy       # stubbed hook/receipt/boundary tests, no real deployment
 npm run test:e2e:render-public   # optional desktop/mobile Chromium, needs Playwright browser/deps
 node scripts/serve_render_public.mjs  # optional read-only local browser inspection :4173
 ```
 
-**Main-push warning:** the existing Railway adult/internal project also watches GitHub `main`. Any authorised push may trigger Railway; confirm its actual SHA, closed domain/origin and AI/child holds after pushing. No old GitHub token may be reused. Do not connect the public Render URL to the Railway or Render private service as a shortcut.
+**Main-push warning:** the existing Railway adult/internal project also watches GitHub `main` with `checkSuites: false` in source. A push can trigger Railway **before CI**; have the owner pause it or inspect its actual deployed SHA, closed domain/origin and AI/child holds after pushing. No old GitHub token may be reused. Do not connect the public Render URL to the Railway or Render private service as a shortcut. For future features, the Actions workflow tests work branches/PRs and only an owner dispatch after a green check may request the pinned public commit; an owner must first create/configure the Render site and GitHub `public-guide` environment. See [release gates](docs/CONTINUOUS_DELIVERY.md).
 
 ## Run the real read-only guide locally
 
@@ -52,13 +53,16 @@ npm audit --audit-level=low
 npx playwright install chromium
 npm run test:e2e              # desktop/mobile public guide + brand + axe; adult E2E skip by default
 
-# Destructive test resets permitted ONLY for four distinct disposable local PostgreSQL DBs.
-PILOT_TEST_DATABASE_URL='postgresql://LOCAL_USER@127.0.0.1:5432/desloop_pilot_test' \
-ENGINE_TEST_DATABASE_URL='postgresql://LOCAL_USER@127.0.0.1:5432/desloop_engine_test' npm run test:server
-# For adult browser tests, also use separate PILOT_E2E_DATABASE_URL and ENGINE_E2E_DATABASE_URL.
+# Test resets permitted ONLY on three distinct disposable loopback DBs; never Railway.
+PILOT_TEST_DATABASE_URL='postgresql://LOCAL_USER@127.0.0.1:5432/desloop_pilot_disposable_test' \
+ENGINE_TEST_DATABASE_URL='postgresql://LOCAL_USER@127.0.0.1:5432/desloop_engine_disposable_test' \
+AI_TEST_DATABASE_URL='postgresql://LOCAL_USER@127.0.0.1:5432/desloop_ai_disposable_test' npm run test:server
+# Adult browser opt-in also requires two further separate disposable E2E DBs.
 ```
 
 **Actual local results on this working branch (22 October 2026):** **9 Python**, **14 frontend** and **18 server tests** passed with two separate disposable PostgreSQL integrations; default browser run **24 desktop/mobile guide/brand/axe passes, 4 expected adult opt-in skips**. Separately, one adult draft-1 and one draft-2 full browser/database journey each passed against their **own disposable** PostgreSQL database. Node **22.23.4** typecheck/lint/build passed; `npm audit --audit-level=low` found **0 vulnerabilities**. The release verifier detected then eliminated a public draft-answer leak; generated exact static URL rewrites replaced a broad fallback. Automated accessibility scans are **not WCAG 2.2 AA certification**; manual screen-reader and representative-user testing remain open. These are **local** results, not a new Railway deployment. Full evidence/expected-versus-actual: [test strategy](docs/TEST_STRATEGY.md).
+
+**29 October follow-up on the unpublished CI/CD branch:** Node 22 build/typecheck/lint, **25/25** frontend, **28/28** server on three new disposable local DBs, **9/9** Python, **1/1** local public HTTP, **3/3** synthetic deploy-boundary tests, default Playwright **24 passed/4 expected opt-in adult skips**, isolated public Playwright **6/6**, and `npm audit --audit-level=low` **0 vulnerabilities** after upgrading Zod to patched v4 passed locally. `actionlint` parsed the new GitHub Actions workflow. **No remote Actions run, Render hosted smoke or real provider call is implied.** [CI/CD source and owner setup](docs/CONTINUOUS_DELIVERY.md).
 
 ## Working structure and feature control
 

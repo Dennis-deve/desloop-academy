@@ -8,13 +8,22 @@ import { resolve, join } from 'node:path';
 const root = resolve('dist/render-public');
 const catalog = JSON.parse(await readFile('src/curriculum/public-catalog.json', 'utf8'));
 const pages = new Set([
-  '/', '/courses', '/how-it-works', '/availability',
+  '/',
+  '/courses',
+  '/how-it-works',
+  '/availability',
   ...catalog.courses.map((course) => `/courses/${course.slug}`),
 ]);
 const individual = new Set([
-  '/favicon.png', '/apple-touch-icon.png', '/sw.js',
-  '/brand/app-icon.webp', '/brand/brandmark-dark.webp',
-  '/brand/wordmark-dark.webp', '/brand/wordmark-light.webp', '/brand/wordmark-mono.webp',
+  '/favicon.png',
+  '/apple-touch-icon.png',
+  '/sw.js',
+  '/release.json',
+  '/brand/app-icon.webp',
+  '/brand/brandmark-dark.webp',
+  '/brand/wordmark-dark.webp',
+  '/brand/wordmark-light.webp',
+  '/brand/wordmark-mono.webp',
 ]);
 const types = {
   '.js': 'text/javascript; charset=utf-8',
@@ -24,13 +33,15 @@ const types = {
   '.png': 'image/png',
   '.webp': 'image/webp',
   '.html': 'text/html; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
 };
 const headers = {
   'x-content-type-options': 'nosniff',
   'referrer-policy': 'strict-origin-when-cross-origin',
   // Local preview omits frame-ancestors so the sandbox's iframe can display it.
   // The actual Render Blueprint sets frame-ancestors 'none' for the public site.
-  'content-security-policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'self'",
+  'content-security-policy':
+    "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'self'",
 };
 export function createPublicServer() {
   return createServer(async (req, res) => {
@@ -47,7 +58,11 @@ export function createPublicServer() {
     }
     const isPage = pages.has(pathname);
     const file = isPage ? '/index.html' : pathname;
-    if (!isPage && !individual.has(file) && !/^\/assets\/[A-Za-z0-9._-]+\.(?:js|css|woff2?)$/.test(file)) {
+    if (
+      !isPage &&
+      !individual.has(file) &&
+      !/^\/assets\/[A-Za-z0-9._-]+\.(?:js|css|woff2?)$/.test(file)
+    ) {
       res.writeHead(404, headers).end('Page unavailable');
       return;
     }
