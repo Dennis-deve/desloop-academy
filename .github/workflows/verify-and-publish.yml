@@ -99,7 +99,6 @@ jobs:
     # supports required reviewers, enable them; dispatch itself is still manual.
     environment: public-guide
     env:
-      RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
       RENDER_PUBLIC_SERVICE_ID: ${{ vars.RENDER_PUBLIC_SERVICE_ID }}
       RENDER_PUBLIC_SITE_URL: ${{ vars.RENDER_PUBLIC_SITE_URL }}
       EXPECTED_PUBLIC_SHA: ${{ github.sha }}
@@ -117,6 +116,9 @@ jobs:
           test -n "$remote_main"
           test "$remote_main" = "$EXPECTED_PUBLIC_SHA" || { echo 'Main moved; review and dispatch again'; exit 1; }
       - name: Request pinned commit on the exact approved Render static service
+        env:
+          # The hook is available to this one step, never npm install or browser tests.
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: node scripts/trigger_render_public.mjs
       - name: Independently wait for hosted commit receipt and public/private HTTP boundaries
         run: node scripts/smoke_render_public.mjs
