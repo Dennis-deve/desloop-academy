@@ -21,6 +21,7 @@ import {
   type PilotStatus,
   type PilotUser,
 } from './api';
+import { projectCoreApi } from './project-core/api';
 
 interface PilotContext {
   user: PilotUser;
@@ -36,6 +37,7 @@ export function PilotLayout() {
   const [status, setStatus] = useState<PilotStatus | null>(null);
   const [user, setUser] = useState<PilotUser | null>(null);
   const [aiAdmin, setAiAdmin] = useState(false);
+  const [projectCoreAvailable, setProjectCoreAvailable] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [revision, setRevision] = useState(0);
@@ -43,6 +45,7 @@ export function PilotLayout() {
     let active = true;
     setLoading(true);
     setAiAdmin(false);
+    setProjectCoreAvailable(false);
     pilotApi
       .status()
       .then(async (result) => {
@@ -52,7 +55,16 @@ export function PilotLayout() {
           try {
             const session = await pilotApi.me();
             if (active) setUser(session.user);
-            if (session.user.role === 'reviewer') {
+            if (session.user.role === 'learner') {
+              try {
+                // Never advertise a default-off private route. A successful authenticated
+                // server list is discovery, not browser-side permission authority.
+                await projectCoreApi.projects();
+                if (active) setProjectCoreAvailable(true);
+              } catch {
+                // A missing/denied/unreachable local project API is not a usable feature.
+              }
+            } else {
               try {
                 const access = await pilotApi.aiAdminAccess();
                 if (active) setAiAdmin(access.allowed);
@@ -82,6 +94,7 @@ export function PilotLayout() {
       await pilotApi.logout();
       setUser(null);
       setAiAdmin(false);
+      setProjectCoreAvailable(false);
     } catch (reason) {
       if (reason instanceof PilotApiError && reason.status === 401) setUser(null);
       else
@@ -164,7 +177,11 @@ export function PilotLayout() {
                   Draft-2 learning engine
                 </Link>
               )}
-
+              {user.role === 'learner' && projectCoreAvailable && (
+                <Link to="/pilot/projects" className={buttonStyles('outline', 'sm')}>
+                  Private project documents
+                </Link>
+              )}
             </nav>
             <Outlet
               context={

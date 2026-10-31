@@ -23,6 +23,8 @@ const EngineReviewsPage = lazy(() => import('@/features/pilot/engine/EnginePages
 const EngineStudioList = lazy(() => import('@/features/pilot/engine/StudioPages').then((m) => ({ default: m.EngineStudioList })));
 const EngineStudioProjectPage = lazy(() => import('@/features/pilot/engine/StudioPages').then((m) => ({ default: m.EngineStudioProjectPage })));
 const EngineGuidedGateway = lazy(() => import('@/features/pilot/engine/StudioPages').then((m) => ({ default: m.EngineGuidedGateway })));
+const ProjectListPage = lazy(() => import('@/features/pilot/project-core/ProjectPages').then((m) => ({ default: m.ProjectListPage })));
+const ProjectDocumentPage = lazy(() => import('@/features/pilot/project-core/ProjectPages').then((m) => ({ default: m.ProjectDocumentPage })));
 
 function CombinedLayout() {
   const { pathname } = useLocation();
@@ -41,7 +43,8 @@ function PageTitle() {
           : pathname === '/how-it-works' ? 'How learning works'
             : pathname === '/availability' ? 'Availability'
               : pathname === '/pilot/ai/admin' ? 'Private AI provider operations'
-                : pathname.startsWith('/pilot') ? 'Private adult learning'
+                : pathname.startsWith('/pilot/projects') ? 'Private adult project documents'
+                  : pathname.startsWith('/pilot') ? 'Private adult learning'
                 : 'Page unavailable';
     document.title = `${title} · ${site.name}`;
   }, [pathname]);
@@ -68,6 +71,8 @@ export function ReleaseRouter() {
           <Route path="engine/reviews" element={<EngineReviewsPage />} />
           <Route path="engine/studio" element={<EngineStudioList />} />
           <Route path="engine/studio/projects/:projectId" element={<EngineStudioProjectPage />} />
+          <Route path="projects" element={<ProjectListPage />} />
+          <Route path="projects/:projectId" element={<ProjectDocumentPage />} />
           <Route path="engine/guided/:courseId/:lessonId" element={<EngineGuidedGateway />} />
         </Route>
         <Route path="*" element={<ReleaseUnavailable />} />

@@ -74,11 +74,11 @@ jobs:
           npm run build:render-public
           npm run test:render-public
           npm run test:render-deploy
-      - name: Create four distinct disposable databases in CI's ephemeral container
+      - name: Create five distinct disposable databases in CI's ephemeral container
         env:
           PG_CONTAINER: ${{ job.services.postgres.id }}
         run: |
-          for db in desloop_pilot_disposable_ci desloop_engine_disposable_ci desloop_ai_disposable_ci desloop_project_core_disposable_ci; do
+          for db in desloop_pilot_disposable_ci desloop_engine_disposable_ci desloop_ai_disposable_ci desloop_project_core_disposable_ci desloop_project_core_disposable_browser_ci; do
             docker exec "$PG_CONTAINER" psql -v ON_ERROR_STOP=1 -U postgres -d postgres -c "CREATE DATABASE $db"
           done
       - name: Real local PostgreSQL permission, migration and failure tests
@@ -89,6 +89,20 @@ jobs:
         run: npm run test:e2e
       - name: Isolated public browser and 404 regressions
         run: npm run test:e2e:render-public
+      - name: Real adult project-client browser round-trip on a fifth disposable loopback DB
+        env:
+          DATABASE_URL: postgres://postgres:ci-disposable-only@127.0.0.1:5432/desloop_project_core_disposable_browser_ci
+          PROJECT_CORE_E2E_DATABASE_URL: postgres://postgres:ci-disposable-only@127.0.0.1:5432/desloop_project_core_disposable_browser_ci
+          NODE_ENV: test
+          HOST: 127.0.0.1
+          APP_ORIGIN: http://127.0.0.1:5173
+          PILOT_OPERATOR: CI synthetic project-client test
+          ENGINE_DRAFT_ACKNOWLEDGED: 'true'
+          PROJECT_CORE_LOCAL_MIGRATION_APPROVED: 'true'
+        run: |
+          npm run engine:migrate
+          npm run project-core:migrate
+          npm run test:e2e:project-core
 
   publish_public:
     name: owner-approved Render public promotion

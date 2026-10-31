@@ -31,6 +31,7 @@
     "test:e2e": "playwright test",
     "test:e2e:render-public": "playwright test -c playwright.render-public.config.ts",
     "test:e2e:render-hosted": "playwright test -c playwright.render-hosted.config.ts",
+    "test:e2e:project-core": "playwright test -c playwright.project-core.config.ts",
     "lint": "eslint . --ext .ts,.tsx --max-warnings 0 && node scripts/check_lint_contract.mjs",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"*.{md,json,ts,js,cjs}\"",
     "typecheck": "tsc --noEmit && tsc -p server/tsconfig.json --noEmit"
