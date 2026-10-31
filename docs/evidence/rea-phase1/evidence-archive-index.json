@@ -1,0 +1,36 @@
+{
+  "purpose": "Lossless REA Phase 1 Evidence storage cleanup; restore JSON before invoking REA CLI",
+  "archive_format": "gzip,mtime=0,filename omitted",
+  "bundles": [
+    {
+      "name": "scratch-gui",
+      "original_path": "/home/user/references/rea-phase1/reports/scratch-gui-evidence.json",
+      "archive_path": "/home/user/references/rea-phase1/reports/scratch-gui-evidence.json.gz",
+      "original_sha256": "0e8dd2f1b7c5af337c3cea4196ce1800e963ab184e21a02fa03dbe51550c1941",
+      "original_bytes": 16390704,
+      "gzip_sha256": "dca1001823c6189567b085201cf4d013ff26be4e313206d5309157e75415199a",
+      "gzip_bytes": 2728980,
+      "parent_evidence_id": "ev_a5d55fd2990ab2431cd4ce006ba43cc0e346f025eb6924f2cf9be9cb5ba757b4"
+    },
+    {
+      "name": "gdevelop-newide",
+      "original_path": "/home/user/references/rea-phase1/reports/gdevelop-newide-evidence.json",
+      "archive_path": "/home/user/references/rea-phase1/reports/gdevelop-newide-evidence.json.gz",
+      "original_sha256": "36335b30702365b4dbfa325927c85863e1067148941322c985398683b20b3a91",
+      "original_bytes": 209922,
+      "gzip_sha256": "dc62d058618a538e95b84cc07837291c3384352420f453689be0f0900b73243a",
+      "gzip_bytes": 28968,
+      "parent_evidence_id": "ev_2693aa9c6eba1b619619ee9e473202cb866840057284dbb924f67a9f21dfb16c"
+    },
+    {
+      "name": "gdevelop-flow-stripped",
+      "original_path": "/home/user/references/rea-phase1/reports/gdevelop-flow-stripped-evidence.json",
+      "archive_path": "/home/user/references/rea-phase1/reports/gdevelop-flow-stripped-evidence.json.gz",
+      "original_sha256": "e76eb0f13e28135cd285757b192406d746b6f7e5641ba2394e8c01a074acc1db",
+      "original_bytes": 12585997,
+      "gzip_sha256": "fa9e65a41a14fc05765ac4a7acbbc6a5b5d4901cbce89bb57e3ed565221e001a",
+      "gzip_bytes": 2032683,
+      "parent_evidence_id": "ev_5d66c56b2eae764b8214e6d7085be01c31c7d181c874a01478fc262463dbd485"
+    }
+  ]
+}
