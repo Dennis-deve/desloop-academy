@@ -89,7 +89,7 @@ test('real local adult browser: save, reopen, stale-tab comparison, replay and c
   await page.getByRole('combobox', { name: 'Revision number' }).selectOption('2');
   await page.getByRole('button', { name: 'Open read-only revision' }).click();
   await expect(page.getByRole('heading', { name: 'Historical revision 2' })).toBeVisible();
-  await expect(page.getByText(/Changed in second tab/)).toBeVisible();
+  await expect(page.getByRole('textbox', { name: 'Historical revision 2 JSON document' })).toHaveValue(/Changed in second tab/);
   await page.getByRole('button', { name: 'Close historical view' }).click();
 
   // The real server commits, but Playwright intentionally drops the response once.
@@ -102,8 +102,75 @@ test('real local adult browser: save, reopen, stale-tab comparison, replay and c
   await page.getByRole('button', { name: 'Save new server revision' }).click();
   await expect(page.getByText(/Save outcome is unknown/)).toBeVisible();
   await expect(page.getByRole('textbox', { name: 'Data-only JSON document' })).toHaveAttribute('readonly');
+  await page.getByRole('link', { name: 'Your private projects' }).click();
+  await expect(page.getByRole('heading', { name: 'Private project documents' })).toBeVisible();
+  await page.getByRole('link', { name: 'Open saved document' }).click();
+  await expect(page.getByText(/last save outcome is unknown/)).toBeVisible();
+  await expect(page.getByRole('textbox', { name: 'Data-only JSON document' })).toHaveAttribute('readonly');
   await page.getByRole('button', { name: 'Retry identical save request' }).click();
   await expect(page.getByText(/Revision 4 was saved and reopened from the server \(identical request replay\)/)).toBeVisible();
+
+  // A same-pilot route transition keeps *unsaved* text only in this mounted tab.
+  // An independent tab can advance the real DB while this page is on the list.
+  await page.getByRole('textbox', { name: 'Data-only JSON document' }).fill('{"notes":"Unsent text held in this tab"}');
+  await page.getByRole('link', { name: 'Your private projects' }).click();
+  await expect(page.getByRole('heading', { name: 'Private project documents' })).toBeVisible();
+  await otherTab.reload();
+  await expect(otherTab.getByRole('heading', { name: 'Edit your document' })).toBeVisible();
+  await otherTab.getByRole('textbox', { name: 'Data-only JSON document' }).fill('{"notes":"Other tab saved revision five"}');
+  await otherTab.getByRole('button', { name: 'Save new server revision' }).click();
+  await expect(otherTab.getByText('Revision 5 was saved and reopened from the server.')).toBeVisible();
+  await page.getByRole('link', { name: 'Open saved document' }).click();
+  await expect(page.getByRole('heading', { name: 'Compare before resolving' })).toBeVisible();
+  await expect(page.getByText(/Unsaved text was restored from this tab, but the server has a different revision/)).toBeVisible();
+  await expect(page.getByRole('textbox', { name: 'Data-only JSON document' })).toHaveValue('{"notes":"Unsent text held in this tab"}');
+  await expect(page.getByRole('button', { name: 'Save my text as a new revision' })).toBeDisabled();
+  await expectNoAxeViolations(page);
+  const unsavedComparison = page.getByRole('textbox', { name: 'Your unsaved JSON document for comparison' });
+  await unsavedComparison.focus();
+  await expect(unsavedComparison).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('textbox', { name: 'Latest server JSON document for comparison' })).toBeFocused();
+  page.once('dialog', async (dialog) => { await dialog.accept(); });
+  await page.getByRole('button', { name: 'Discard my text and load latest' }).click();
+  await expect(page.getByRole('textbox', { name: 'Data-only JSON document' }))
+    .toHaveValue('{\n  "notes": "Other tab saved revision five"\n}');
+
+  // Sign-out with an unsaved draft asks first and clears the vault; signing back
+  // into the same account must open the real server copy, not the discarded text.
+  await page.getByRole('textbox', { name: 'Data-only JSON document' }).fill('{"notes":"Discard this on sign out"}');
+  page.once('dialog', async (dialog) => { await dialog.dismiss(); });
+  await page.getByRole('button', { name: 'Sign out of pilot' }).click();
+  await expect(page.getByRole('textbox', { name: 'Data-only JSON document' }))
+    .toHaveValue('{"notes":"Discard this on sign out"}');
+  page.once('dialog', async (dialog) => { await dialog.accept(); });
+  await page.getByRole('button', { name: 'Sign out of pilot' }).click();
+  await expect(page.getByRole('heading', { name: 'Pilot sign-in' })).toBeVisible();
+  await expect(page.getByLabel('Invited email')).toBeFocused();
+  await page.getByLabel('Invited email').fill(email);
+  await page.getByLabel('Password').fill(password);
+  await page.getByRole('button', { name: 'Sign in to pilot' }).click();
+  await expect(page.getByRole('heading', { name: 'Edit your document' })).toBeVisible();
+  await expect(page.getByRole('textbox', { name: 'Data-only JSON document' }))
+    .toHaveValue('{\n  "notes": "Other tab saved revision five"\n}');
+  await expect(page.getByText('Document matches the reopened server copy')).toBeVisible();
+
+  // A normal public-site link asks before discarding in-memory text. Once the
+  // user accepts, browser back must GET the saved server copy, not restore it.
+  await page.getByRole('textbox', { name: 'Data-only JSON document' }).fill('{"notes":"Unsaved before public navigation"}');
+  const publicCourses = page.getByRole('navigation', { name: 'Footer navigation' }).getByRole('link', { name: 'Courses' });
+  page.once('dialog', async (dialog) => {
+    expect(dialog.message()).toContain('Unsaved text in this tab will be discarded');
+    await dialog.dismiss();
+  });
+  await publicCourses.click();
+  await expect(page.getByRole('textbox', { name: 'Data-only JSON document' })).toHaveValue('{"notes":"Unsaved before public navigation"}');
+  page.once('dialog', async (dialog) => { await dialog.accept(); });
+  await publicCourses.click();
+  await expect(page.getByRole('searchbox', { name: 'Search course outlines' })).toBeVisible();
+  await page.goBack();
+  await expect(page.getByRole('textbox', { name: 'Data-only JSON document' }))
+    .toHaveValue('{\n  "notes": "Other tab saved revision five"\n}');
 
   const foreignContext = await browser.newContext();
   try {
@@ -120,7 +187,7 @@ test('real local adult browser: save, reopen, stale-tab comparison, replay and c
     'SELECT count(*)::text AS revisions FROM project_core.revisions WHERE project_id=$1 AND owner_id=$2',
     [projectId, owner.rows[0].id],
   );
-  expect(count.rows[0].revisions).toBe('4');
+  expect(count.rows[0].revisions).toBe('5');
   const credit = await db.query<{ total: string }>(
     'SELECT count(*)::text AS total FROM pilot.course_completions WHERE learner_id=$1', [owner.rows[0].id],
   );

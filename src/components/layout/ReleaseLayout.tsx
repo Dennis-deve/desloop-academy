@@ -70,7 +70,9 @@ export function ReleaseLayout({ notice }: { notice?: string }) {
             </div>
         </nav>
       </header>
-      <main id="main-content" tabIndex={-1} className="min-h-[58vh] outline-none" key={location.pathname}>
+      {/* Keep the nested adult pilot mounted across its own routes. The pathname-keyed main
+          discarded all in-tab drafts; the focus effect above still moves focus on navigation. */}
+      <main id="main-content" tabIndex={-1} className="min-h-[58vh] outline-none">
         <Suspense fallback={<Container className="py-20" role="status">Loading this page…</Container>}>
           <Outlet />
         </Suspense>

@@ -1,20 +1,15 @@
-import { useEffect, useRef, useState, type FormEvent, type MouseEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, FileJson2, FolderLock, Save } from 'lucide-react';
 import { Badge, Button, Card, EmptyState, Eyebrow, Field, InfoBox, Input, buttonStyles } from '@/components/ui';
 import { PilotApiError } from '../api';
 import { usePilotContext } from '../PilotPortal';
 import { projectCoreApi, type ProjectDetail, type ProjectSummary } from './api';
+import type { ProjectSaveIntent as SaveIntent } from './draft-vault';
 import { parseDocument, prettyDocument } from './document';
 
 const initialDocument = '{\n  "notes": ""\n}';
 type CreateIntent = { title: string; document: Record<string, unknown>; requestId: string };
-type SaveIntent = {
-  baseRevisionNo: number;
-  document: Record<string, unknown>;
-  assetIds: string[];
-  requestId: string;
-};
 function message(reason: unknown, fallback: string) {
   return reason instanceof Error ? reason.message : fallback;
 }
@@ -114,7 +109,10 @@ export function ProjectListPage() {
       </p>
       <InfoBox tone="amber" className="mt-4">
         Local synthetic adult testing only. There is no approved retention/erasure or real-user
-        ingress. Your unsaved text lives only in this tab; sign-out or navigation discards it.
+        ingress. Unsaved edits to an existing document can be recovered while this pilot stays open
+        in the same tab, after a server check. Creating a new document is different: leaving this
+        form discards its unsent title/text. Sign-out, reload or leaving the pilot discards all
+        in-memory drafts; this is not offline or durable backup.
       </InfoBox>
     </Card>
     {loading ? <Card className="p-6" role="status">Checking private project storage…</Card>
@@ -168,7 +166,7 @@ export function ProjectListPage() {
 }
 
 export function ProjectDocumentPage() {
-  const { user } = usePilotContext();
+  const { user, projectDrafts } = usePilotContext();
   const { projectId = '' } = useParams();
   const [detail, setDetail] = useState<ProjectDetail | null>(null);
   const [draft, setDraft] = useState('');
@@ -186,6 +184,7 @@ export function ProjectDocumentPage() {
   const [historical, setHistorical] = useState<ProjectDetail | null>(null);
   const [historyLoading, setHistoryLoading] = useState(false);
   const sending = useRef(false);
+  const inFlightSave = useRef<SaveIntent | null>(null);
   const [refresh, setRefresh] = useState(0);
 
   useEffect(() => {
@@ -193,15 +192,50 @@ export function ProjectDocumentPage() {
     let active = true;
     setDetail(null);
     setDraft('');
+    setUncertainSave(null);
+    setNeedsReopen(false);
+    setConflict(null);
+    setCompared(false);
+    setHistorical(null);
+    setError('');
+    setNotice('');
     setLoading(true);
     setLoadError('');
     setClosed(false);
+    const remembered = projectDrafts.read(user.id, projectId);
+    // Never surface an in-memory copy before the real server authorises this GET.
     projectCoreApi.project(projectId)
-      .then((result) => {
-        if (active) {
-          setDetail(result);
-          setDraft(prettyDocument(result.revision.document));
-          setRevisionChoice(result.revision.revisionNo);
+      .then((latest) => {
+        if (!active) return;
+        setRevisionChoice(latest.revision.revisionNo);
+        if (!remembered) {
+          setDetail(latest);
+          setDraft(prettyDocument(latest.revision.document));
+          return;
+        }
+        const changed = remembered.base.revision.revisionNo !== latest.revision.revisionNo ||
+          remembered.base.revision.contentSha256 !== latest.revision.contentSha256;
+        const sameText = remembered.text === prettyDocument(latest.revision.document);
+        if (remembered.uncertainSave) {
+          setDetail(remembered.base);
+          setDraft(remembered.text);
+          setUncertainSave(remembered.uncertainSave);
+          setNotice(`Unsaved text was restored from this tab. The server reports revision ${latest.revision.revisionNo}, but the last save outcome is unknown. Retry the identical request or check latest.`);
+        } else if (changed && !sameText) {
+          setDetail(remembered.base);
+          setDraft(remembered.text);
+          setConflict(latest);
+          setNotice('Unsaved text was restored from this tab, but the server has a different revision. Compare before saving; nothing was merged.');
+        } else if (!sameText) {
+          setDetail(latest);
+          setDraft(remembered.text);
+          setNeedsReopen(remembered.needsReopen);
+          setNotice('Unsaved text was restored from this tab, not the server. Sign-out, reload or leaving the pilot discards it.');
+        } else {
+          setDetail(latest);
+          setDraft(prettyDocument(latest.revision.document));
+          setNotice(`Reopened server revision ${latest.revision.revisionNo}; its text matches the in-tab copy. This does not prove which tab saved it.`);
+          projectDrafts.forget(user.id, projectId);
         }
       })
       .catch((reason) => { if (active) {
@@ -210,23 +244,50 @@ export function ProjectDocumentPage() {
       } })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
-  }, [projectId, user.role, refresh]);
+  }, [projectId, user.id, user.role, refresh, projectDrafts]);
 
   const dirty = !!detail && draft !== prettyDocument(detail.revision.document);
   useEffect(() => {
-    if (!dirty && !uncertainSave) return;
+    if (!detail || user.role !== 'learner' || detail.project.id !== projectId) return;
+    const unresolved = uncertainSave ?? (pending ? inFlightSave.current : null);
+    if (dirty || unresolved || needsReopen || conflict)
+      projectDrafts.write(user.id, projectId, {
+        base: detail, text: draft, uncertainSave: unresolved, needsReopen,
+      });
+    else projectDrafts.forget(user.id, projectId);
+  }, [detail, draft, dirty, uncertainSave, pending, needsReopen, conflict, projectId, user.id, user.role, projectDrafts]);
+
+  useEffect(() => {
+    if (!dirty && !uncertainSave && !needsReopen) return;
     const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ''; };
     window.addEventListener('beforeunload', warn);
     return () => window.removeEventListener('beforeunload', warn);
-  }, [dirty, uncertainSave]);
-  function leaveWithDraft(event: MouseEvent<HTMLAnchorElement>) {
-    if ((dirty || uncertainSave) && !window.confirm('Leave this page? Your unsaved text is only in this tab and will be lost.'))
-      event.preventDefault();
-  }
+  }, [dirty, uncertainSave, needsReopen]);
+  useEffect(() => {
+    if (!dirty && !uncertainSave && !needsReopen) return;
+    // React Router links do not fire beforeunload. Guard ordinary links out of the
+    // adult pilot, but don't claim to block all programmatic/history navigation.
+    const guard = (event: MouseEvent) => {
+      if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey ||
+          !(event.target instanceof Element)) return;
+      const link = event.target.closest('a[href]');
+      if (!link || (link instanceof HTMLAnchorElement && link.target === '_blank')) return;
+      const destination = new URL(link.getAttribute('href')!, window.location.href);
+      if ((destination.origin !== window.location.origin ||
+           !(destination.pathname === '/pilot' || destination.pathname.startsWith('/pilot/'))) &&
+          !window.confirm('Leave the adult pilot? Unsaved text in this tab will be discarded; it has not been saved to the server.')) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+    };
+    document.addEventListener('click', guard, true);
+    return () => document.removeEventListener('click', guard, true);
+  }, [dirty, uncertainSave, needsReopen]);
 
   async function sendSave(intent: SaveIntent) {
     if (sending.current) return;
     sending.current = true;
+    inFlightSave.current = intent;
     setPending(true);
     setError('');
     setNotice('');
@@ -276,6 +337,7 @@ export function ProjectDocumentPage() {
         setError(`Not saved: ${message(reason, 'The private server rejected the revision.')}`);
       }
     } finally {
+      inFlightSave.current = null;
       sending.current = false;
       setPending(false);
     }
@@ -348,7 +410,7 @@ export function ProjectDocumentPage() {
   }
   if (user.role !== 'learner') return ownerOnly();
   return <div className="space-y-6">
-    <Link to="/pilot/projects" onClick={leaveWithDraft}
+    <Link to="/pilot/projects"
       className="inline-flex items-center gap-2 text-sm font-bold text-brand-600 dark:text-brand-200">
       <ArrowLeft className="h-4 w-4" /> Your private projects
     </Link>
@@ -374,7 +436,7 @@ export function ProjectDocumentPage() {
         </Card>
         <Card className="p-6 sm:p-8">
           <h3 className="font-display text-2xl text-heading">Edit your document</h3>
-          <p className="mt-2 text-sm text-body">Text changes stay in this tab until the server confirms a new revision. A lost connection is not a saved project.</p>
+          <p className="mt-2 text-sm text-body">Unsaved edits stay only in this adult pilot tab and can be recovered when you return to this document, after checking the server. Sign-out, reload or leaving the pilot discards them. A lost connection is not a saved project.</p>
           <form onSubmit={save} className="mt-5 space-y-4">
             <Field label="Data-only JSON document" id="private-project-document"
               hint="One JSON object, up to 16 KiB after parsing; invalid input remains here for correction.">
@@ -410,12 +472,14 @@ export function ProjectDocumentPage() {
           <div className="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
             <div className="min-w-0">
               <h4 className="font-bold text-heading">Your unsaved document</h4>
-              <pre className="mt-2 max-h-72 overflow-auto rounded-xl bg-raised p-3 text-xs text-body">{draft}</pre>
+              <textarea readOnly rows={10} wrap="off" aria-label="Your unsaved JSON document for comparison"
+                value={draft} className="mt-2 w-full min-w-0 resize-y overflow-auto rounded-xl bg-raised p-3 font-mono text-xs text-body focus-visible:outline-2 focus-visible:outline-brand-500" />
               <p className="mt-2 text-xs text-body">Base image count: {detail.revision.assets.length}</p>
             </div>
             <div className="min-w-0">
               <h4 className="font-bold text-heading">Latest server document</h4>
-              <pre className="mt-2 max-h-72 overflow-auto rounded-xl bg-raised p-3 text-xs text-body">{prettyDocument(conflict.revision.document)}</pre>
+              <textarea readOnly rows={10} wrap="off" aria-label="Latest server JSON document for comparison"
+                value={prettyDocument(conflict.revision.document)} className="mt-2 w-full min-w-0 resize-y overflow-auto rounded-xl bg-raised p-3 font-mono text-xs text-body focus-visible:outline-2 focus-visible:outline-brand-500" />
               <p className="mt-2 text-xs text-body">Latest image count: {conflict.revision.assets.length}</p>
             </div>
           </div>
@@ -453,7 +517,8 @@ export function ProjectDocumentPage() {
           {historical && <div className="mt-5 min-w-0 border-t border-line pt-5">
             <h4 className="font-bold text-heading">Historical revision {historical.revision.revisionNo}</h4>
             <p className="mt-2 break-all font-mono text-xs text-body">Server SHA-256: {historical.revision.contentSha256}</p>
-            <pre className="mt-3 max-h-72 overflow-auto rounded-xl bg-raised p-3 text-xs text-body">{prettyDocument(historical.revision.document)}</pre>
+            <textarea readOnly rows={10} wrap="off" aria-label={`Historical revision ${historical.revision.revisionNo} JSON document`}
+              value={prettyDocument(historical.revision.document)} className="mt-3 w-full min-w-0 resize-y overflow-auto rounded-xl bg-raised p-3 font-mono text-xs text-body focus-visible:outline-2 focus-visible:outline-brand-500" />
             <Button variant="outline" className="mt-3" onClick={() => setHistorical(null)}>Close historical view</Button>
           </div>}
         </Card>

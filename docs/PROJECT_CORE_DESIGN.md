@@ -1,11 +1,13 @@
-# STU-CORE-01 / STU-CORE-UI-01: private persistence and data-only client
+# STU-CORE-01 / STU-CORE-UI-01 / STU-CORE-UI-02: private persistence, data-only client and in-tab recovery
 
-**Scope decision (31 October 2026):** The owner approved a genuine, editor-agnostic **adult-only project-core API** on React/Vite + Fastify + PostgreSQL, then selected a real locally connected project document client. Separate approval is required for private adult staging. The JSON_V1 editor only changes **data-only JSON**; it is not a Scratch/GDevelop adapter, executable code/block editor, Supabase migration, preview or finished studio.
+**Scope decision (31 October 2026):** The owner approved a genuine, editor-agnostic **adult-only project-core API** on React/Vite + Fastify + PostgreSQL, then selected a real connected project document client. API/UI-01 source reached GitHub `main` `5641102…` with successful CI; GitHub reports a Railway deploy, **not** an inspected/approved private runtime. The later local-only UI-02 adds per-account **in-tab unsaved edit recovery** after an authorised server GET. Separate approval is required for private adult staging. The JSON_V1 client only changes **data-only JSON**; it is not a Scratch/GDevelop adapter, executable code/block editor, Supabase migration, preview, offline backup or finished studio.
 
 ## Trust and data flow
 
 ```text
 local adult-only JSON document client (real, untrusted data, no vendor adapter)
+  ↳ PilotLayout account-bound, in-memory unsaved UI text; never server authority.
+     Same-tab return → authenticated project GET → compare server revision → optionally restore.
   → bounded data-only JSON document; preserve existing PNG asset ID manifest on save
   → active adult learner session + exact Origin/CSRF + per-route body/rate limits
   → Fastify /api/pilot/project-core/v1 [local+flag only]
@@ -31,13 +33,14 @@ The `project_core` schema is separate from the course-coupled `learning.sandbox_
 | Loading/list/empty | Show owned project summaries only, with meaningful empty state. Protect privacy on shared devices; cache must be private/no-store. |
 | Upload/validation | **Not implemented in the client.** The server has bounded, normalized PNG intake tested separately. Future asset-management UI must show limits before selection, preserve unsent local work and explain metadata stripping, orphan/erasure policy and human recovery before real uploads. Existing server-attached image IDs are carried forward on JSON save. |
 | Saving a new revision | Show an in-progress state while the POST is pending, store one idempotency UUID per intent, and confirm the **server-assigned** new revision, never a fabricated timestamp. |
-| Uncertain network outcome | Keep local work, re-send the **same** UUID and bytes; a 200 replay verifies the earlier commit, while 201 verifies a new commit. Distinguish “unknown” from “saved”. |
+| Uncertain network outcome | Keep local work, re-send the **same** UUID and bytes; a 200 replay verifies the earlier commit, while 201 verifies a new commit. UI-02 preserves the exact intent across nested in-pilot navigation; it never calls an unknown outcome saved. |
+| Unsaved tab recovery | With the adult pilot still mounted, keep an existing document's raw edited text in an account-bound memory map; on return **first GET the server-owned project**. If latest differs, show explicit comparison; if the GET denies access, show no cached text. The new-project create form is not covered. Full reload, sign-out, switching account and leaving the pilot discard it. No durable device storage or router-wide history guard. |
 | Stale base (409) | Do not overwrite; load latest and historical revisions and let the owner compare/choose a new save. Do not automatically invent a merge. |
 | Quota / bad document / server error | Communicate accurate limit or temporary failure, leave local edits intact, offer a recovery path; no dead “retry” that silently loses work. |
 | Reopen older revision | Clearly label historical vs latest number; opening history is read-only until the owner explicitly creates a new revision from a current base. |
-| Logout/shared device | Clear in-memory project view, not the owner's server revisions; no localStorage project authority or offline cache until separate privacy/sync design. |
+| Logout/shared device | Warn and allow cancellation if unsaved text is held; confirmed sign-out/account switch clears the in-memory vault but not server revisions. No localStorage/sessionStorage/IndexedDB project authority or offline cache until separate privacy/sync design. |
 
-**Accessibility evidence and future obligations:** The data-only client has labelled fields, live save/error feedback, keyboard-usable controls, no automatic overwrite, local desktop/mobile Chromium **2/2** with tested axe A/AA-tagged states and a measured 320px reflow without page horizontal scroll. This is **not** manual keyboard/focus or NVDA/VoiceOver/TalkBack and representative Ghana-device/3G/200–400% zoom testing; browser router-wide unsaved-navigation prompts, PNG asset flow and genuine licensed editor/preview remain future work. An automated axe scan cannot certify WCAG 2.2 AA. A genuine editor must be independently usable at low RAM; the Phase 2 synthetic V8-heap probe is not proof.
+**Accessibility evidence and future obligations:** The data-only client has labelled fields, live save/error feedback, keyboard-usable controls, no automatic overwrite, local desktop/mobile Chromium **2/2** with tested axe A/AA-tagged states and a measured 320px reflow without page horizontal scroll. This is **not** manual keyboard/focus or NVDA/VoiceOver/TalkBack and representative Ghana-device/3G/200–400% zoom testing; a router-wide browser-history/programmatic unsaved-navigation guard, new-project form recovery, PNG asset flow and genuine licensed editor/preview remain future work. UI-02's extra long-comparison axe finding was fixed with labelled focusable read-only textareas and tested keyboard Tab order; scripted focus/axe cannot certify manual WCAG 2.2 AA. A genuine editor must be independently usable at low RAM; the Phase 2 synthetic V8-heap probe is not proof.
 
 ## Rejected implicit equivalences
 

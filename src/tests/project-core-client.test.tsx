@@ -4,6 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { ReleaseRouter } from '@/app/ReleaseRouter';
 import { parseDocument } from '@/features/pilot/project-core/document';
+import { createProjectDraftVault } from '@/features/pilot/project-core/draft-vault';
+import type { ProjectDetail } from '@/features/pilot/project-core/api';
 
 const id = '87a07fb1-963f-4a34-8ef2-89044a82217e';
 const learner = { id: 'd9c4a339-8d60-45a1-819a-31d708931cb3', displayName: 'Local Learner', email: 'learner@example.invalid', role: 'learner' };
@@ -29,6 +31,7 @@ function statefulApi(options: { rejectOnce?: boolean; conflictOnce?: boolean } =
   let latest = 0;
   let rejectOnce = options.rejectOnce ?? false;
   let conflictOnce = options.conflictOnce ?? false;
+  let denyNextOpen = false;
   const fetcher = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
     const base = baseFetch()(url);
@@ -46,7 +49,10 @@ function statefulApi(options: { rejectOnce?: boolean; conflictOnce?: boolean } =
       revision: { revisionNo, parentRevisionNo: revisionNo - 1, document: documents[revisionNo], contentSha256: `hash-${revisionNo}`, assets: [], createdAt: '2026-10-31T20:00:00Z' },
       authority: 'storage-only; never course completion or assessed credit',
     });
-    if (url === `${listPath}/${id}` && (!init || init.method === 'GET')) return detail(latest);
+    if (url === `${listPath}/${id}` && (!init || init.method === 'GET')) {
+      if (denyNextOpen) { denyNextOpen = false; return json({ error: 'NOT_FOUND' }, 404); }
+      return detail(latest);
+    }
     const history = url.match(new RegExp(`^${listPath}/${id}/revisions/([0-9]+)$`));
     if (history && (!init || init.method === 'GET')) return detail(Number(history[1]));
     if (url === `${listPath}/${id}/revisions` && init?.method === 'POST') {
@@ -71,7 +77,11 @@ function statefulApi(options: { rejectOnce?: boolean; conflictOnce?: boolean } =
   });
   vi.stubGlobal('fetch', fetcher);
   document.cookie = 'desloop_pilot_csrf=synthetic-test-token; SameSite=Lax';
-  return { fetcher, attempts, documents };
+  return {
+    fetcher, attempts, documents,
+    advance(document: Record<string, unknown>) { documents[++latest] = document; },
+    denyNextOpen() { denyNextOpen = true; },
+  };
 }
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -85,7 +95,7 @@ async function createProject(user: ReturnType<typeof userEvent.setup>) {
   open('/pilot/projects');
   expect(await screen.findByRole('heading', { name: 'Private project documents' })).toBeInTheDocument();
   expect(screen.getByRole('navigation', { name: 'Pilot navigation' })).toHaveTextContent('Private project documents');
-  await user.type(screen.getByRole('textbox', { name: 'Project title' }), 'Synthetic notebook');
+  await user.type(await screen.findByRole('textbox', { name: 'Project title' }), 'Synthetic notebook');
   await user.click(screen.getByRole('button', { name: 'Create and save revision 1' }));
   expect(await screen.findByRole('heading', { name: 'Edit your document' })).toBeInTheDocument();
 }
@@ -136,7 +146,7 @@ describe('adult project client: server evidence, not browser-made progress', () 
     await user.selectOptions(screen.getByRole('combobox', { name: 'Revision number' }), '1');
     await user.click(screen.getByRole('button', { name: 'Open read-only revision' }));
     expect(await screen.findByRole('heading', { name: 'Historical revision 1' })).toBeInTheDocument();
-    expect(screen.getByText(/"notes": ""/)).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'Historical revision 1 JSON document' })).toHaveValue('{\n  "notes": ""\n}');
     expect(screen.getAllByText(/No official course credit/i).length).toBeGreaterThan(0);
   });
   it('keeps a stale draft, compares the latest, and requires an explicit acknowledgement before saving', async () => {
@@ -147,8 +157,8 @@ describe('adult project client: server evidence, not browser-made progress', () 
     await user.click(screen.getByRole('button', { name: 'Save new server revision' }));
     expect(await screen.findByRole('heading', { name: 'Compare before resolving' })).toBeInTheDocument();
     expect(screen.getByText('Not saved: revision 2 is now latest. Compare it with your unsaved document; your earlier version remains in history.')).toBeInTheDocument();
-    expect(screen.getByText(/A second tab changed this/)).toBeInTheDocument();
-    expect(screen.getAllByText(/My local edits/).length).toBeGreaterThan(0);
+    expect(screen.getByRole('textbox', { name: 'Latest server JSON document for comparison' })).toHaveValue('{\n  "notes": "A second tab changed this"\n}');
+    expect(screen.getByRole('textbox', { name: 'Your unsaved JSON document for comparison' })).toHaveValue('{"notes":"My local edits"}');
     expect(attempts).toHaveLength(1);
     const resolve = screen.getByRole('button', { name: 'Save my text as a new revision' });
     expect(resolve).toBeDisabled();
@@ -171,5 +181,87 @@ describe('adult project client: server evidence, not browser-made progress', () 
     expect(await screen.findByText(/Revision 2 was saved and reopened from the server \(identical request replay\)/)).toBeInTheDocument();
     expect(attempts).toHaveLength(2);
     expect(attempts[0]).toEqual(attempts[1]);
+  });
+  it('restores an unsaved edit only after another authenticated GET within the same pilot tab', async () => {
+    const user = userEvent.setup();
+    const { attempts, documents } = statefulApi();
+    await createProject(user);
+    editJson('{"notes":"Unsaved edit survives an internal route"}');
+    await user.click(screen.getByRole('link', { name: 'Your private projects' }));
+    expect(await screen.findByRole('heading', { name: 'Private project documents' })).toBeInTheDocument();
+    await user.click(screen.getByRole('link', { name: 'Open saved document' }));
+    expect(await screen.findByText(/Unsaved text was restored from this tab, not the server/)).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'Data-only JSON document' })).toHaveValue('{"notes":"Unsaved edit survives an internal route"}');
+    expect(screen.getByText('Unsaved changes in this tab')).toBeInTheDocument();
+    expect(documents[1]).toEqual({ notes: '' });
+    expect(attempts).toHaveLength(0);
+  });
+  it('requires comparison if the server changes while an in-tab unsaved edit is held', async () => {
+    const user = userEvent.setup();
+    const { advance, attempts } = statefulApi();
+    await createProject(user);
+    editJson('{"notes":"Keep this unsent text"}');
+    await user.click(screen.getByRole('link', { name: 'Your private projects' }));
+    expect(await screen.findByRole('heading', { name: 'Private project documents' })).toBeInTheDocument();
+    advance({ notes: 'Server updated in another tab' });
+    await user.click(screen.getByRole('link', { name: 'Open saved document' }));
+    expect(await screen.findByRole('heading', { name: 'Compare before resolving' })).toBeInTheDocument();
+    expect(screen.getByText(/Unsaved text was restored from this tab, but the server has a different revision/)).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'Your unsaved JSON document for comparison' })).toHaveValue('{"notes":"Keep this unsent text"}');
+    expect(screen.getByText(/Server updated in another tab/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Save new server revision' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Save my text as a new revision' })).toBeDisabled();
+    expect(attempts).toHaveLength(0);
+  });
+  it('does not disclose an in-memory draft if the server refuses the return GET', async () => {
+    const user = userEvent.setup();
+    const { denyNextOpen } = statefulApi();
+    await createProject(user);
+    editJson('{"notes":"Private unsent text"}');
+    await user.click(screen.getByRole('link', { name: 'Your private projects' }));
+    expect(await screen.findByRole('heading', { name: 'Private project documents' })).toBeInTheDocument();
+    denyNextOpen();
+    await user.click(screen.getByRole('link', { name: 'Open saved document' }));
+    expect(await screen.findByText('This private document is unavailable')).toBeInTheDocument();
+    expect(screen.queryByRole('textbox', { name: 'Data-only JSON document' })).toBeNull();
+    expect(screen.queryByText('Private unsent text')).toBeNull();
+  });
+  it('keeps the identical unknown-outcome save intent after in-pilot navigation', async () => {
+    const user = userEvent.setup();
+    const { attempts } = statefulApi({ rejectOnce: true });
+    await createProject(user);
+    editJson('{"notes":"The reply was lost"}');
+    await user.click(screen.getByRole('button', { name: 'Save new server revision' }));
+    expect(await screen.findByText(/Save outcome is unknown/)).toBeInTheDocument();
+    await user.click(screen.getByRole('link', { name: 'Your private projects' }));
+    expect(await screen.findByRole('heading', { name: 'Private project documents' })).toBeInTheDocument();
+    await user.click(screen.getByRole('link', { name: 'Open saved document' }));
+    expect(await screen.findByText(/last save outcome is unknown/)).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'Data-only JSON document' })).toHaveAttribute('readonly');
+    expect(screen.queryByText(/saved and reopened/)).toBeNull();
+    await user.click(screen.getByRole('button', { name: 'Retry identical save request' }));
+    expect(await screen.findByText(/Revision 2 was saved and reopened from the server \(identical request replay\)/)).toBeInTheDocument();
+    expect(attempts).toHaveLength(2);
+    expect(attempts[0]).toEqual(attempts[1]);
+  });
+  it('keeps in-memory drafts owner-bound and clears them on sign-out or account switch', () => {
+    const vault = createProjectDraftVault();
+    const base: ProjectDetail = {
+      project: { id, title: 'Synthetic notebook', format: 'JSON_V1', visibility: 'private', latestRevisionNo: 1, createdAt: '', updatedAt: '' },
+      revision: { revisionNo: 1, parentRevisionNo: 0, document: { notes: '' }, contentSha256: 'hash-1', assets: [], createdAt: '' },
+      authority: 'storage-only; never course completion or assessed credit',
+    };
+    const saved = { base, text: '{"notes":"not saved"}', uncertainSave: null, needsReopen: false };
+    vault.setOwner(learner.id);
+    vault.write(learner.id, id, saved);
+    expect(vault.hasUnsaved(learner.id)).toBe(true);
+    expect(vault.read('another-adult', id)).toBeNull();
+    vault.setOwner('another-adult');
+    expect(vault.read(learner.id, id)).toBeNull();
+    vault.setOwner(learner.id);
+    expect(vault.read(learner.id, id)).toBeNull();
+    vault.write(learner.id, id, saved);
+    vault.setOwner(null);
+    expect(vault.hasUnsaved(learner.id)).toBe(false);
   });
 });

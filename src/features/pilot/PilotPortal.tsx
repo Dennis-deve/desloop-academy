@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, Outlet, useOutletContext } from 'react-router-dom';
 import { ArrowRight, Database, LockKeyhole, ShieldCheck } from 'lucide-react';
 import {
@@ -22,10 +22,13 @@ import {
   type PilotUser,
 } from './api';
 import { projectCoreApi } from './project-core/api';
+import { createProjectDraftVault, type ProjectDraftVault } from './project-core/draft-vault';
 
 interface PilotContext {
   user: PilotUser;
   refresh: () => void;
+  /** Ephemeral UI recovery only; server GET and authorization are required before restoration. */
+  projectDrafts: ProjectDraftVault;
 }
 export function usePilotContext() {
   return useOutletContext<PilotContext>();
@@ -41,6 +44,8 @@ export function PilotLayout() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [revision, setRevision] = useState(0);
+  const [projectDrafts] = useState(createProjectDraftVault);
+  const focusAfterSignOut = useRef(false);
   useEffect(() => {
     let active = true;
     setLoading(true);
@@ -54,7 +59,10 @@ export function PilotLayout() {
         if (result.enabled) {
           try {
             const session = await pilotApi.me();
-            if (active) setUser(session.user);
+            if (active) {
+              projectDrafts.setOwner(session.user.id); // Clear a prior account before its UI can reappear.
+              setUser(session.user);
+            }
             if (session.user.role === 'learner') {
               try {
                 // Never advertise a default-off private route. A successful authenticated
@@ -73,9 +81,16 @@ export function PilotLayout() {
               }
             }
           } catch (reason) {
-            if (active && !(reason instanceof PilotApiError && reason.status === 401))
+            if (active && reason instanceof PilotApiError && reason.status === 401) {
+              projectDrafts.setOwner(null);
+              setUser(null);
+            } else if (active) {
               setError(reason instanceof Error ? reason.message : 'Could not check your session.');
+            }
           }
+        } else if (active) {
+          projectDrafts.setOwner(null);
+          setUser(null);
         }
       })
       .catch((reason) => {
@@ -87,17 +102,32 @@ export function PilotLayout() {
     return () => {
       active = false;
     };
-  }, [revision]);
+  }, [revision, projectDrafts]);
+  useEffect(() => {
+    // Sign-out replaces the focused button without changing the route. Give the
+    // keyboard user a predictable focus target in the real access form.
+    if (!user && !loading && focusAfterSignOut.current) {
+      document.getElementById('pilot-email')?.focus();
+      focusAfterSignOut.current = false;
+    }
+  }, [user, loading]);
   const signOut = async () => {
+    if (user && projectDrafts.hasUnsaved(user.id) &&
+        !window.confirm('Sign out and discard unsaved project text held only in this tab? A save still being checked may or may not have reached the server.')) return;
     setError('');
     try {
       await pilotApi.logout();
+      projectDrafts.setOwner(null);
+      focusAfterSignOut.current = true;
       setUser(null);
       setAiAdmin(false);
       setProjectCoreAvailable(false);
     } catch (reason) {
-      if (reason instanceof PilotApiError && reason.status === 401) setUser(null);
-      else
+      if (reason instanceof PilotApiError && reason.status === 401) {
+        projectDrafts.setOwner(null);
+        focusAfterSignOut.current = true;
+        setUser(null);
+      } else
         setError(
           reason instanceof Error
             ? reason.message
@@ -148,6 +178,7 @@ export function PilotLayout() {
         ) : !user ? (
           <PilotAccess
             onAuthenticated={(next) => {
+              projectDrafts.setOwner(next.id);
               setUser(next);
               setError('');
               setRevision((current) => current + 1); // Refresh server-authorised navigation after sign-in.
@@ -188,6 +219,7 @@ export function PilotLayout() {
                 {
                   user,
                   refresh: () => setRevision((current) => current + 1),
+                  projectDrafts,
                 } satisfies PilotContext
               }
             />
