@@ -1,0 +1,117 @@
+{
+  "purpose": "REA static analysis of Flow-stripped GDevelop newIDE excerpt",
+  "source_head": "85ab0e40e00fdc775e22e014fb885d2390705827",
+  "input": "/home/user/references/rea-phase1/inputs/gdevelop-newide",
+  "output": "/home/user/references/rea-phase1/inputs/gdevelop-newide-flow-stripped",
+  "preset": "@babel/preset-flow",
+  "parser_plugin": "jsx",
+  "retain_lines": true,
+  "babel_core_version": "7.29.7",
+  "babel_preset_flow_version": "7.29.7",
+  "files": [
+    {
+      "original_path": "LICENSE.md",
+      "generated_path": "LICENSE.md",
+      "input_sha256": "e77fddfcbc2a3effb6ed52f3ee0405d6f328a8a815bf64e949110e0a41bbbdd0",
+      "output_sha256": "e77fddfcbc2a3effb6ed52f3ee0405d6f328a8a815bf64e949110e0a41bbbdd0",
+      "transformed": false,
+      "source_map": null
+    },
+    {
+      "original_path": "package.json",
+      "generated_path": "package.json",
+      "input_sha256": "f89c4acc859465feea08d7b1962865338b996f407385787146c7f537c5adff72",
+      "output_sha256": "f89c4acc859465feea08d7b1962865338b996f407385787146c7f537c5adff72",
+      "transformed": false,
+      "source_map": null
+    },
+    {
+      "original_path": "src/Course/TextBasedCourseChapterTaskItem.js",
+      "generated_path": "src/Course/TextBasedCourseChapterTaskItem.js",
+      "input_sha256": "6d932dd7982179e713fb167e5542b73a9ea414a6d299f1565e1d026974db0dc8",
+      "output_sha256": "fff82dcccc4243c9fb43386cad5ed32d7c42513c550035653d8095c9a671da91",
+      "transformed": true,
+      "source_map": "/home/user/references/rea-phase1/maps/gdevelop-newide-flow-stripped/src/Course/TextBasedCourseChapterTaskItem.js.map"
+    },
+    {
+      "original_path": "src/Course/TextBasedCourseChapterView.js",
+      "generated_path": "src/Course/TextBasedCourseChapterView.js",
+      "input_sha256": "88ea85de052e4d763866bfc15aa677f3800db4b9d11f24751e821baa5c4b8e47",
+      "output_sha256": "9a0786559b60c0d1519fafcc4e82b7110fda3201101d3ca27ae07e0e39768c30",
+      "transformed": true,
+      "source_map": "/home/user/references/rea-phase1/maps/gdevelop-newide-flow-stripped/src/Course/TextBasedCourseChapterView.js.map"
+    },
+    {
+      "original_path": "src/ProjectsStorage/CloudStorageProvider/CloudProjectWriter.js",
+      "generated_path": "src/ProjectsStorage/CloudStorageProvider/CloudProjectWriter.js",
+      "input_sha256": "094279290dfa08b72fd29baf3d26f0d265b385081f991781b933c59aa7c83d61",
+      "output_sha256": "36ad27872c9aab1db3887b0813486e880fd06371060d124c5a8209c3e89bb487",
+      "transformed": true,
+      "source_map": "/home/user/references/rea-phase1/maps/gdevelop-newide-flow-stripped/src/ProjectsStorage/CloudStorageProvider/CloudProjectWriter.js.map"
+    },
+    {
+      "original_path": "src/ProjectsStorage/CloudStorageProvider/CloudProjectOpener.js",
+      "generated_path": "src/ProjectsStorage/CloudStorageProvider/CloudProjectOpener.js",
+      "input_sha256": "4e43eb4554f27c24dd86850a14fc4f51a762664e9acfe19bd49ef4eabb042341",
+      "output_sha256": "43d0890b50f6aff095523866f2aaab689d142afc30dff2d8dba69f542d8c5639",
+      "transformed": true,
+      "source_map": "/home/user/references/rea-phase1/maps/gdevelop-newide-flow-stripped/src/ProjectsStorage/CloudStorageProvider/CloudProjectOpener.js.map"
+    },
+    {
+      "original_path": "src/ProjectsStorage/ProjectStorageProviders.js",
+      "generated_path": "src/ProjectsStorage/ProjectStorageProviders.js",
+      "input_sha256": "3eeb8203967442f02081cf149644d8aa57f67ca58972143629b12ec1a81e067e",
+      "output_sha256": "6ed96481d536a7f5cb0a7fc330f57f1c20a9ffe36f750a3154ead3fcde9619be",
+      "transformed": true,
+      "source_map": "/home/user/references/rea-phase1/maps/gdevelop-newide-flow-stripped/src/ProjectsStorage/ProjectStorageProviders.js.map"
+    },
+    {
+      "original_path": "src/ExportAndShare/BrowserExporters/BrowserHTML5Export.js",
+      "generated_path": "src/ExportAndShare/BrowserExporters/BrowserHTML5Export.js",
+      "input_sha256": "fb0c5c91aa903ff27aae9b71fe6e1059bebb664ce58a0521b6427f9a6c59ac0e",
+      "output_sha256": "5efea436bd8a2f26d46e6f13df68886a384897fe445094bbedc6923764b73cbd",
+      "transformed": true,
+      "source_map": "/home/user/references/rea-phase1/maps/gdevelop-newide-flow-stripped/src/ExportAndShare/BrowserExporters/BrowserHTML5Export.js.map"
+    },
+    {
+      "original_path": "src/ExportAndShare/BrowserExporters/BrowserSWPreviewLauncher/index.js",
+      "generated_path": "src/ExportAndShare/BrowserExporters/BrowserSWPreviewLauncher/index.js",
+      "input_sha256": "9245bf03619bd9a6675e1f54c5fc332e6f4f133326c4c5ae0d4b6905cf84f04f",
+      "output_sha256": "8acfa8e9461b4195f5e838ca79c1fa102dc803c4f64e295ed7f84d76bb8d8c0a",
+      "transformed": true,
+      "source_map": "/home/user/references/rea-phase1/maps/gdevelop-newide-flow-stripped/src/ExportAndShare/BrowserExporters/BrowserSWPreviewLauncher/index.js.map"
+    },
+    {
+      "original_path": "src/ExportAndShare/GenericExporters/HTML5Export.js",
+      "generated_path": "src/ExportAndShare/GenericExporters/HTML5Export.js",
+      "input_sha256": "8296bfe88e928f19011f1954513e93bfdf820f10e3a8f54dbc78b54493059906",
+      "output_sha256": "82e60c34c6b81a622a7ce1758e2b6c5589351f051dac4970492d46b94d34bc9e",
+      "transformed": true,
+      "source_map": "/home/user/references/rea-phase1/maps/gdevelop-newide-flow-stripped/src/ExportAndShare/GenericExporters/HTML5Export.js.map"
+    },
+    {
+      "original_path": "src/ExportAndShare/GenericExporters/OnlineCordovaExport.js",
+      "generated_path": "src/ExportAndShare/GenericExporters/OnlineCordovaExport.js",
+      "input_sha256": "47f63d91f5d978bb35b22d05bac06c0d05d7d441fb322dd37b96889a5626025a",
+      "output_sha256": "479516ae2d409be2ca16e7bf875f6aa0a7f2985f8bfbb7212b5a8a9cafbae12e",
+      "transformed": true,
+      "source_map": "/home/user/references/rea-phase1/maps/gdevelop-newide-flow-stripped/src/ExportAndShare/GenericExporters/OnlineCordovaExport.js.map"
+    },
+    {
+      "original_path": "src/ExportAndShare/Builds/BuildsWatcher.js",
+      "generated_path": "src/ExportAndShare/Builds/BuildsWatcher.js",
+      "input_sha256": "0191c649b579bd57496584f7a92e5e71cf7d942c0b44aaf1ab20e398c890c246",
+      "output_sha256": "55af07b915f894cda503fba6246f7651cfab791001c807a2a1026e83ed443952",
+      "transformed": true,
+      "source_map": "/home/user/references/rea-phase1/maps/gdevelop-newide-flow-stripped/src/ExportAndShare/Builds/BuildsWatcher.js.map"
+    },
+    {
+      "original_path": "src/EventsSheet/EventsTree/index.js",
+      "generated_path": "src/EventsSheet/EventsTree/index.js",
+      "input_sha256": "25bee79202e35acb047513050dbbdcf42d1f6afa51f01c945040da74a577b244",
+      "output_sha256": "6f38444da62f957c4d271ea3db952435cc85aaec71ee08d677e74c11edbb704f",
+      "transformed": true,
+      "source_map": "/home/user/references/rea-phase1/maps/gdevelop-newide-flow-stripped/src/EventsSheet/EventsTree/index.js.map"
+    }
+  ]
+}

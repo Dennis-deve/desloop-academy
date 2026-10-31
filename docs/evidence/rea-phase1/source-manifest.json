@@ -1,0 +1,236 @@
+{
+  "purpose": "REA Phase 1 focused static analysis only",
+  "inputs": {
+    "scratch-gui": {
+      "head": "dae2a97a5bb0cd8a7513fafd60f9e7488f2a89a4",
+      "artifact_root": "/home/user/references/rea-phase1/inputs/scratch-gui",
+      "files": [
+        {
+          "source_path": "LICENSE",
+          "artifact_path": "LICENSE",
+          "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+          "bytes": 34523
+        },
+        {
+          "source_path": "package.json",
+          "artifact_path": "package.json",
+          "sha256": "60a552a3c12da8616399c5c98d2c5d342c436b8b06eca950f426e75a5f88a051",
+          "bytes": 5557
+        },
+        {
+          "source_path": "src/containers/gui.jsx",
+          "artifact_path": "src/containers/gui.jsx",
+          "sha256": "21448a4a91ba3d2194a34963ee7e2734574ca58b53f65237fe7544a738425c8d",
+          "bytes": 8013
+        },
+        {
+          "source_path": "src/components/gui/gui.jsx",
+          "artifact_path": "src/components/gui/gui.jsx",
+          "sha256": "4c63ed4986a02988fe0c1422c7eb485193790fb7eaf90b804aca30fea662e121",
+          "bytes": 19833
+        },
+        {
+          "source_path": "src/containers/blocks.jsx",
+          "artifact_path": "src/containers/blocks.jsx",
+          "sha256": "18e605c638f011dc28617936c464ad1feede96e63db56708e680fb628c644a9d",
+          "bytes": 30932
+        },
+        {
+          "source_path": "src/components/blocks/blocks.jsx",
+          "artifact_path": "src/components/blocks/blocks.jsx",
+          "sha256": "ea83d4532276bec0b07049c542c0289b478956fc3776c741ef5cfc899b249d31",
+          "bytes": 656
+        },
+        {
+          "source_path": "src/containers/stage.jsx",
+          "artifact_path": "src/containers/stage.jsx",
+          "sha256": "c8dd1c07727bee09764fe97fd832381cb8722d5de504e47dd6461bafb0e50b2c",
+          "bytes": 18027
+        },
+        {
+          "source_path": "src/lib/vm-manager-hoc.jsx",
+          "artifact_path": "src/lib/vm-manager-hoc.jsx",
+          "sha256": "258a2571eaa8d1a47c984d324ffdfffce4bfd0214780d181ae4563f93f480cff",
+          "bytes": 6068
+        },
+        {
+          "source_path": "src/lib/vm-listener-hoc.jsx",
+          "artifact_path": "src/lib/vm-listener-hoc.jsx",
+          "sha256": "9af394ea01113f0e8ebd63378040232dc5cdb17e700b626f9d90dde5be48b36a",
+          "bytes": 9375
+        },
+        {
+          "source_path": "src/lib/project-fetcher-hoc.jsx",
+          "artifact_path": "src/lib/project-fetcher-hoc.jsx",
+          "sha256": "7779473876773d334a8eeaff8d3c27796bac88e540e14e05c959ff6f692a89ec",
+          "bytes": 6885
+        },
+        {
+          "source_path": "src/lib/project-saver-hoc.jsx",
+          "artifact_path": "src/lib/project-saver-hoc.jsx",
+          "sha256": "849279ae2c49b104e6c92b69015ce5887058de39e91f0a5ed95e8870f0db3f3a",
+          "bytes": 19910
+        },
+        {
+          "source_path": "src/lib/save-project-to-server.js",
+          "artifact_path": "src/lib/save-project-to-server.js",
+          "sha256": "31b856e3e7d166170d92f05666034ee09677510d53cd54db994054e88172ea4f",
+          "bytes": 2599
+        },
+        {
+          "source_path": "src/lib/storage.js",
+          "artifact_path": "src/lib/storage.js",
+          "sha256": "2494ef3e2fccbd7a5bdeb0ad613c6291928e92b0a2d7391f67292961774bdbe0",
+          "bytes": 3226
+        },
+        {
+          "source_path": "src/containers/project-watcher.jsx",
+          "artifact_path": "src/containers/project-watcher.jsx",
+          "sha256": "3711239dc3c9d2a55c41d64f07e135c3d8086d83fe80cbf8f37d2d50df9830cd",
+          "bytes": 1987
+        },
+        {
+          "source_path": "src/reducers/project-state.js",
+          "artifact_path": "src/reducers/project-state.js",
+          "sha256": "904e4079de35b8c70c6c641fec835cba7af1cef80b8fd938831855d5f6df1f53",
+          "bytes": 19087
+        }
+      ],
+      "file_count": 15
+    },
+    "scratch-vm": {
+      "head": "b3266a0cfe5122f20b72ccd738a3dd4dff4fc5a5",
+      "artifact_root": "/home/user/references/rea-phase1/inputs/scratch-vm",
+      "files": [
+        {
+          "source_path": "LICENSE",
+          "artifact_path": "LICENSE",
+          "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+          "bytes": 34523
+        },
+        {
+          "source_path": "package.json",
+          "artifact_path": "package.json",
+          "sha256": "6f040503e7e7840857419e3d24a934f93978bff9a75fc81f94837cb2db58c9a3",
+          "bytes": 3669
+        },
+        {
+          "source_path": "src/virtual-machine.js",
+          "artifact_path": "src/virtual-machine.js",
+          "sha256": "784a55bbf5a3151c262c55984195870566f5202300e87897e78b923086c5cdce",
+          "bytes": 65153
+        },
+        {
+          "source_path": "src/engine/runtime.js",
+          "artifact_path": "src/engine/runtime.js",
+          "sha256": "f65206802b72d0f6e4b3c4e0a06423d4220ce411a3ec857423604fd1eb61f3f8",
+          "bytes": 101741
+        },
+        {
+          "source_path": "src/engine/sequencer.js",
+          "artifact_path": "src/engine/sequencer.js",
+          "sha256": "373c552c3e55a505b500f8502cc598ce4945a0c9d56a8ab3c34acd2cc226b091",
+          "bytes": 14187
+        },
+        {
+          "source_path": "src/serialization/sb3.js",
+          "artifact_path": "src/serialization/sb3.js",
+          "sha256": "979b9531154dd0b5bd0ce400899cc2b9a966758b4f10aed66256847321030b86",
+          "bytes": 52717
+        },
+        {
+          "source_path": "src/extension-support/extension-manager.js",
+          "artifact_path": "src/extension-support/extension-manager.js",
+          "sha256": "474ce871a390df4a35773bf40ebdc71f7ddc71b93cd9935a970332118eadac0b",
+          "bytes": 19514
+        }
+      ],
+      "file_count": 7
+    },
+    "GDevelop": {
+      "head": "85ab0e40e00fdc775e22e014fb885d2390705827",
+      "artifact_root": "/home/user/references/rea-phase1/inputs/gdevelop-newide",
+      "files": [
+        {
+          "source_path": "newIDE/LICENSE.md",
+          "artifact_path": "LICENSE.md",
+          "sha256": "e77fddfcbc2a3effb6ed52f3ee0405d6f328a8a815bf64e949110e0a41bbbdd0",
+          "bytes": 1107
+        },
+        {
+          "source_path": "newIDE/app/package.json",
+          "artifact_path": "package.json",
+          "sha256": "f89c4acc859465feea08d7b1962865338b996f407385787146c7f537c5adff72",
+          "bytes": 7716
+        },
+        {
+          "source_path": "newIDE/app/src/Course/TextBasedCourseChapterTaskItem.js",
+          "artifact_path": "src/Course/TextBasedCourseChapterTaskItem.js",
+          "sha256": "6d932dd7982179e713fb167e5542b73a9ea414a6d299f1565e1d026974db0dc8",
+          "bytes": 4236
+        },
+        {
+          "source_path": "newIDE/app/src/Course/TextBasedCourseChapterView.js",
+          "artifact_path": "src/Course/TextBasedCourseChapterView.js",
+          "sha256": "88ea85de052e4d763866bfc15aa677f3800db4b9d11f24751e821baa5c4b8e47",
+          "bytes": 4524
+        },
+        {
+          "source_path": "newIDE/app/src/ProjectsStorage/CloudStorageProvider/CloudProjectWriter.js",
+          "artifact_path": "src/ProjectsStorage/CloudStorageProvider/CloudProjectWriter.js",
+          "sha256": "094279290dfa08b72fd29baf3d26f0d265b385081f991781b933c59aa7c83d61",
+          "bytes": 18351
+        },
+        {
+          "source_path": "newIDE/app/src/ProjectsStorage/CloudStorageProvider/CloudProjectOpener.js",
+          "artifact_path": "src/ProjectsStorage/CloudStorageProvider/CloudProjectOpener.js",
+          "sha256": "4e43eb4554f27c24dd86850a14fc4f51a762664e9acfe19bd49ef4eabb042341",
+          "bytes": 5636
+        },
+        {
+          "source_path": "newIDE/app/src/ProjectsStorage/ProjectStorageProviders.js",
+          "artifact_path": "src/ProjectsStorage/ProjectStorageProviders.js",
+          "sha256": "3eeb8203967442f02081cf149644d8aa57f67ca58972143629b12ec1a81e067e",
+          "bytes": 6605
+        },
+        {
+          "source_path": "newIDE/app/src/ExportAndShare/BrowserExporters/BrowserHTML5Export.js",
+          "artifact_path": "src/ExportAndShare/BrowserExporters/BrowserHTML5Export.js",
+          "sha256": "fb0c5c91aa903ff27aae9b71fe6e1059bebb664ce58a0521b6427f9a6c59ac0e",
+          "bytes": 4332
+        },
+        {
+          "source_path": "newIDE/app/src/ExportAndShare/BrowserExporters/BrowserSWPreviewLauncher/index.js",
+          "artifact_path": "src/ExportAndShare/BrowserExporters/BrowserSWPreviewLauncher/index.js",
+          "sha256": "9245bf03619bd9a6675e1f54c5fc332e6f4f133326c4c5ae0d4b6905cf84f04f",
+          "bytes": 15807
+        },
+        {
+          "source_path": "newIDE/app/src/ExportAndShare/GenericExporters/HTML5Export.js",
+          "artifact_path": "src/ExportAndShare/GenericExporters/HTML5Export.js",
+          "sha256": "8296bfe88e928f19011f1954513e93bfdf820f10e3a8f54dbc78b54493059906",
+          "bytes": 4343
+        },
+        {
+          "source_path": "newIDE/app/src/ExportAndShare/GenericExporters/OnlineCordovaExport.js",
+          "artifact_path": "src/ExportAndShare/GenericExporters/OnlineCordovaExport.js",
+          "sha256": "47f63d91f5d978bb35b22d05bac06c0d05d7d441fb322dd37b96889a5626025a",
+          "bytes": 6877
+        },
+        {
+          "source_path": "newIDE/app/src/ExportAndShare/Builds/BuildsWatcher.js",
+          "artifact_path": "src/ExportAndShare/Builds/BuildsWatcher.js",
+          "sha256": "0191c649b579bd57496584f7a92e5e71cf7d942c0b44aaf1ab20e398c890c246",
+          "bytes": 2467
+        },
+        {
+          "source_path": "newIDE/app/src/EventsSheet/EventsTree/index.js",
+          "artifact_path": "src/EventsSheet/EventsTree/index.js",
+          "sha256": "25bee79202e35acb047513050dbbdcf42d1f6afa51f01c945040da74a577b244",
+          "bytes": 46075
+        }
+      ],
+      "file_count": 13
+    }
+  }
+}
