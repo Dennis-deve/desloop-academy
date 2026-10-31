@@ -31,7 +31,7 @@
     "test:e2e": "playwright test",
     "test:e2e:render-public": "playwright test -c playwright.render-public.config.ts",
     "test:e2e:render-hosted": "playwright test -c playwright.render-hosted.config.ts",
-    "lint": "eslint . --ext .ts,.tsx --max-warnings 0",
+    "lint": "eslint . --ext .ts,.tsx --max-warnings 0 && node scripts/check_lint_contract.mjs",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"*.{md,json,ts,js,cjs}\"",
     "typecheck": "tsc --noEmit && tsc -p server/tsconfig.json --noEmit"
   },
@@ -61,6 +61,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
+    "@eslint/js": "10.0.1",
     "@playwright/test": "^1.50.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@testing-library/jest-dom": "^6.6.3",
@@ -71,12 +72,12 @@
     "@types/pngjs": "6.0.5",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
-    "@typescript-eslint/eslint-plugin": "^8.72.0",
-    "@typescript-eslint/parser": "^8.72.0",
+    "@typescript-eslint/eslint-plugin": "8.72.1",
+    "@typescript-eslint/parser": "8.72.1",
     "@vitejs/plugin-react": "^4.3.4",
-    "eslint": "^8.57.1",
-    "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint": "10.14.0",
+    "eslint-plugin-jsx-a11y-x": "0.2.0",
+    "eslint-plugin-react-hooks": "7.1.1",
     "jsdom": "^26.0.0",
     "postcss": "^8.5.2",
     "prettier": "^3.5.1",
@@ -90,6 +91,7 @@
   "overrides": {
     "@fastify/static": {
       "glob": "14.0.3"
-    }
+    },
+    "minimatch": "11.0.3"
   }
 }
