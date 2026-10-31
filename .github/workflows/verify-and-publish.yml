@@ -46,6 +46,7 @@ jobs:
       PILOT_TEST_DATABASE_URL: postgres://postgres:ci-disposable-only@127.0.0.1:5432/desloop_pilot_disposable_ci
       ENGINE_TEST_DATABASE_URL: postgres://postgres:ci-disposable-only@127.0.0.1:5432/desloop_engine_disposable_ci
       AI_TEST_DATABASE_URL: postgres://postgres:ci-disposable-only@127.0.0.1:5432/desloop_ai_disposable_ci
+      PROJECT_CORE_TEST_DATABASE_URL: postgres://postgres:ci-disposable-only@127.0.0.1:5432/desloop_project_core_disposable_ci
     steps:
       - uses: actions/checkout@v7
         with:
@@ -73,11 +74,11 @@ jobs:
           npm run build:render-public
           npm run test:render-public
           npm run test:render-deploy
-      - name: Create three distinct disposable databases in CI's ephemeral container
+      - name: Create four distinct disposable databases in CI's ephemeral container
         env:
           PG_CONTAINER: ${{ job.services.postgres.id }}
         run: |
-          for db in desloop_pilot_disposable_ci desloop_engine_disposable_ci desloop_ai_disposable_ci; do
+          for db in desloop_pilot_disposable_ci desloop_engine_disposable_ci desloop_ai_disposable_ci desloop_project_core_disposable_ci; do
             docker exec "$PG_CONTAINER" psql -v ON_ERROR_STOP=1 -U postgres -d postgres -c "CREATE DATABASE $db"
           done
       - name: Real local PostgreSQL permission, migration and failure tests

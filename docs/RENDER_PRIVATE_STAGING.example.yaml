@@ -36,6 +36,8 @@ services:
         value: 'false'
       - key: ENGINE_DRAFT_ACKNOWLEDGED
         value: 'false'
+      - key: PROJECT_CORE_ENABLED # local-only first slice: cannot be enabled in this remote template
+        value: 'false'
       - key: CHILD_ACCOUNTS_ENABLED
         value: 'false'
       - key: GUARDIAN_EVIDENCE_COLLECTION_ENABLED

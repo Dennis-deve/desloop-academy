@@ -7,10 +7,11 @@ import { migrateEngine, verifyEngineRelease } from './engine/migrate.js';
 import { LearningEngine } from './engine/service.js';
 import { migrateGuardianGroundwork, verifyGuardianHold } from './guardian/readiness.js';
 import { grantAIAdmin, migrateAI } from './ai/store.js';
+import { migrateProjectCore } from './project-core/migrate.js';
 
 const [command, ...args] = process.argv.slice(2);
 const usage =
-  'Commands: migrate | invite <email> learner|reviewer | submissions | assign <submission-uuid> <reviewer-email> | disable <email> | engine-migrate | engine-enrol <adult-learner-email> | engine-submissions | engine-assign <submission-uuid> <reviewer-email> | ai-migrate | ai-admin-grant <active-reviewer-email>';
+  'Commands: migrate | invite <email> learner|reviewer | submissions | assign <submission-uuid> <reviewer-email> | disable <email> | engine-migrate | engine-enrol <adult-learner-email> | engine-submissions | engine-assign <submission-uuid> <reviewer-email> | project-core-migrate (local test DB only) | ai-migrate | ai-admin-grant <active-reviewer-email>';
 if (command === 'help') {
   console.log(usage);
   process.exit(0);
@@ -18,7 +19,8 @@ if (command === 'help') {
 if (!process.env.DATABASE_URL)
   throw new Error('DATABASE_URL must be set in the server environment');
 const config = loadConfig({ ...process.env, PILOT_ENABLED: 'false', ENGINE_V2_ENABLED: 'false',
-  AI_GATEWAY_ENABLED: 'false', AI_ADMIN_UI_ENABLED: 'false', AI_LIVE_TESTS_APPROVED: 'false' });
+  AI_GATEWAY_ENABLED: 'false', AI_ADMIN_UI_ENABLED: 'false', AI_LIVE_TESTS_APPROVED: 'false',
+  PROJECT_CORE_ENABLED: 'false' });
 const db = createDatabase(config);
 const catalog = loadCatalog();
 const operator = process.env.PILOT_OPERATOR?.trim();
@@ -144,6 +146,23 @@ try {
       });
     });
     console.log('Account disabled and all sessions revoked.');
+  } else if (command === 'project-core-migrate') {
+    if (process.env.PROJECT_CORE_LOCAL_MIGRATION_APPROVED !== 'true' ||
+        !['test', 'development'].includes(process.env.NODE_ENV ?? '') ||
+        process.env.HOST !== '127.0.0.1' ||
+        new URL(process.env.APP_ORIGIN ?? '').hostname !== '127.0.0.1' ||
+        new URL(process.env.DATABASE_URL).hostname !== '127.0.0.1' ||
+        !new URL(process.env.DATABASE_URL).pathname.startsWith('/desloop_project_core_disposable_'))
+      throw new Error('Project core migration is explicitly approved for a loopback disposable DB only');
+    const actor = operatorRequired();
+    await migrateProjectCore(db, catalog);
+    await inTransaction(db, async (client) => {
+      await appendAudit(client, null, 'project_core.schema.migrated_local', '005', {
+        operator: actor,
+        localOnly: true,
+      });
+    });
+    console.log('Local private project schema verified. No remote migration, editor or studio was enabled.');
   } else if (command === 'ai-migrate') {
     if (process.env.AI_SCHEMA_MIGRATION_APPROVED !== 'true')
       throw new Error('AI schema migration requires an operator-reviewed private database and AI_SCHEMA_MIGRATION_APPROVED=true');

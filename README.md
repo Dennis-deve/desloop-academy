@@ -2,6 +2,8 @@
 
 Desloop Academy is an in-progress, Ghana-first digital-skills learning platform. **It is not production-ready, open for enrolment or suitable for minors.** The single unreviewed curriculum draft has 44 required courses in one order; proposed GES/Cambridge/Oxford labels are **not** accreditation or official mappings.
 
+**Unpublished local-only adult project core (31 October 2026):** The owner approved the **first genuine editor-agnostic** project ownership, immutable revision, PNG validation and save/reopen API on the existing stack, **not** a hosted studio or private-stage deployment. Migration 005 is manual/disposable-loopback only; routes default off on Railway and reject production/remote activation. Four-DB local server regression **31/31** passes, but the **full** `npm audit --audit-level=low` currently fails on 15 moderate development-toolchain advisories. Production-only audit is 0 following a scoped Fastify/glob override; do not suppress CI or push/deploy this candidate as approved. Resolve audit/compatibility and separate legal, privacy, security, ingress/region/budget gates first. [Runbook/API contract](docs/PROJECT_CORE_RUNBOOK.md) · [single feature register](docs/FEATURE_REGISTER.md). No editor/vendor, client UI, child account, school tenant or assessed credit was enabled.
+
 ## Current implementation and release boundary
 
 **No-demo candidate (initial feature commit `201a1e4` pushed to GitHub `main` on 22 October 2026; Railway rollout not verified):** a read-only Desloop-branded course guide, searchable by title/stage, with 44 ordered draft outlines and honest availability/status. It has **no fake registration, school/partner dashboard, payment, AI, community or child action**. Direct visits to those retired simulated routes show an unavailable page; the built Fastify server returns HTTP 404. The public bundle contains only allowlisted course metadata—**not draft quiz questions, correct options or answers**. An automated build gate initially found correct options repeated in source outcome/focus text; those fields were removed from the public projection and the gate now passes. Historical browser-only source and tests are preserved in Git/`docs/archive`, but are not imported into the release or counted as product evidence.
@@ -53,10 +55,11 @@ npm audit --audit-level=low
 npx playwright install chromium
 npm run test:e2e              # desktop/mobile public guide + brand + axe; adult E2E skip by default
 
-# Test resets permitted ONLY on three distinct disposable loopback DBs; never Railway.
+# Test resets permitted ONLY on four distinct disposable loopback DBs; never Railway.
 PILOT_TEST_DATABASE_URL='postgresql://LOCAL_USER@127.0.0.1:5432/desloop_pilot_disposable_test' \
 ENGINE_TEST_DATABASE_URL='postgresql://LOCAL_USER@127.0.0.1:5432/desloop_engine_disposable_test' \
-AI_TEST_DATABASE_URL='postgresql://LOCAL_USER@127.0.0.1:5432/desloop_ai_disposable_test' npm run test:server
+AI_TEST_DATABASE_URL='postgresql://LOCAL_USER@127.0.0.1:5432/desloop_ai_disposable_test' \
+PROJECT_CORE_TEST_DATABASE_URL='postgresql://LOCAL_USER@127.0.0.1:5432/desloop_project_core_disposable_test' npm run test:server
 # Adult browser opt-in also requires two further separate disposable E2E DBs.
 ```
 

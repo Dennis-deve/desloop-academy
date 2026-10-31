@@ -19,6 +19,7 @@ import { SandboxService } from './engine/sandbox.js';
 import { verifyGuardianHold } from './guardian/readiness.js';
 import { isAvailableClientPath } from './public-routes.js';
 import { registerAIRoutes } from './ai/routes.js';
+import { registerProjectCoreRoutes } from './project-core/routes.js';
 import type { AIProviders } from './ai/gateway.js';
 import {
   ApiError,
@@ -449,6 +450,10 @@ export async function buildApi(
         return studio.guidedBrief(auth.user.id, courseId, lessonId);
       });
     }
+  }
+  if (config.projectCoreEnabled) {
+    if (!config.enabled || !db) throw new Error('Project core requires the private adult database');
+    await registerProjectCoreRoutes(app, db, config);
   }
   if (config.aiGatewayEnabled) {
     if (!config.enabled || !db) throw new Error('AI gateway requires the private adult database');

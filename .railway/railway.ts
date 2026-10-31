@@ -32,6 +32,8 @@ export default defineRailway(() => {
       PILOT_DRAFT_ACKNOWLEDGED: 'true',
       ENGINE_V2_ENABLED: 'true',
       ENGINE_DRAFT_ACKNOWLEDGED: 'true',
+      // Local-only project persistence research; even an accidental remote toggle is rejected by config.
+      PROJECT_CORE_ENABLED: 'false',
       CHILD_ACCOUNTS_ENABLED: 'false',
       GUARDIAN_EVIDENCE_COLLECTION_ENABLED: 'false',
       MINOR_LEARNING_ENABLED: 'false',

@@ -253,10 +253,18 @@ test('bounded response and timeouts fail closed without forwarding provider body
         );
       }),
   ).nvidia;
-  await assert.rejects(
-    slow.generate({ ...request(model), signal: AbortSignal.timeout(10) }),
-    (e: unknown) => e instanceof AIProviderError && e.kind === 'timeout' && e.message === 'timeout',
-  );
+  // AbortSignal.timeout() uses an unref'd timer: a lone pending promise can be
+  // cancelled by node:test when the worker has no other referenced handles.
+  const abort = new AbortController();
+  const timer = setTimeout(() => abort.abort(), 10);
+  try {
+    await assert.rejects(
+      slow.generate({ ...request(model), signal: abort.signal }),
+      (e: unknown) => e instanceof AIProviderError && e.kind === 'timeout' && e.message === 'timeout',
+    );
+  } finally {
+    clearTimeout(timer);
+  }
 });
 
 test('OpenRouter never sends a random or Gemini model to a third-party processor', async () => {

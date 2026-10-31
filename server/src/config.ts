@@ -1,6 +1,8 @@
 export interface PilotConfig {
   enabled: boolean;
   engineV2Enabled: boolean;
+  /** Strictly local, adult-only storage slice. No remote/private-stage activation yet. */
+  projectCoreEnabled: boolean;
   databaseUrl: string | null;
   appOrigin: string;
   cookieSecure: boolean;
@@ -30,8 +32,12 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): PilotConfig {
     if (env[key] !== undefined && env[key] !== 'false')
       throw new Error(`${key} is not supported; minor accounts and evidence capture are disabled`);
   }
+  if (env.PROJECT_CORE_ENABLED !== undefined &&
+      !['true', 'false'].includes(env.PROJECT_CORE_ENABLED))
+    throw new Error('PROJECT_CORE_ENABLED must be exactly true or false');
   const enabled = env.PILOT_ENABLED === 'true';
   const engineV2Enabled = env.ENGINE_V2_ENABLED === 'true';
+  const projectCoreEnabled = env.PROJECT_CORE_ENABLED === 'true';
   const aiGatewayEnabled = env.AI_GATEWAY_ENABLED === 'true';
   const aiAdminUiEnabled = env.AI_ADMIN_UI_ENABLED === 'true';
   const aiLiveTestsApproved = env.AI_LIVE_TESTS_APPROVED === 'true';
@@ -55,6 +61,16 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): PilotConfig {
     throw new Error('Adult pilot requires DATABASE_URL and explicit PILOT_DRAFT_ACKNOWLEDGED=true');
   if (enabled && env.NODE_ENV === 'production' && url.protocol !== 'https:')
     throw new Error('A production adult pilot requires an HTTPS APP_ORIGIN');
+  if (projectCoreEnabled) {
+    if (!enabled || env.PROJECT_CORE_LOCAL_ACKNOWLEDGED !== 'true')
+      throw new Error('Project core requires an enabled adult pilot and explicit local acknowledgement');
+    if (!['test', 'development'].includes(env.NODE_ENV ?? '') ||
+        url.hostname !== '127.0.0.1' ||
+        env.HOST !== '127.0.0.1' ||
+        !env.DATABASE_URL || new URL(env.DATABASE_URL).hostname !== '127.0.0.1' ||
+        !new URL(env.DATABASE_URL).pathname.startsWith('/desloop_project_core_disposable_'))
+      throw new Error('Project core requires a named disposable loopback DB until separate private-stage approval');
+  }
   const localE2eAuthLimit =
     env.NODE_ENV === 'test' &&
     env.PILOT_LOCAL_E2E_AUTH_LIMIT === 'true' &&
@@ -68,6 +84,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): PilotConfig {
   return {
     enabled,
     engineV2Enabled,
+    projectCoreEnabled,
     databaseUrl: env.DATABASE_URL ?? null,
     appOrigin: origin,
     cookieSecure: url.protocol === 'https:',
