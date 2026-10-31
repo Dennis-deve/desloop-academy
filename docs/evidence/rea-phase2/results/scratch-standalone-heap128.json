@@ -1,0 +1,85 @@
+{
+  "timestamp": "2026-10-31T19:40:13.671Z",
+  "purpose": "research only; authentic current Scratch npm standalone distribution, no Desloop integration",
+  "package": {
+    "name": "@scratch/scratch-gui",
+    "version": "15.3.0",
+    "tarSha256": "7d82aa70885f70ede5e20645df44d5ce8b6462c7a08d1784bd902e7f0f547eea",
+    "standaloneJsRawBytes": 17083105,
+    "standaloneJsGzipBytes": 5700431
+  },
+  "browser": {
+    "playwright": "1.64.1",
+    "chromium": "156.0.8078.4",
+    "v8OldSpaceCapMiB": 128
+  },
+  "profile": "heap128",
+  "network": {
+    "mode": "ephemeral loopback static server; no external browser requests allowed",
+    "emulation": null,
+    "blockedHosts": {},
+    "responses": 63,
+    "encodedBytes": 5970373,
+    "failures": 0,
+    "statuses": {
+      "200": 63
+    }
+  },
+  "limits": [
+    "not a real Ghana network or low-RAM device",
+    "no physical RAM constraint",
+    "one cold-context run; local loopback server, not production CDN"
+  ],
+  "maxMs": 55000,
+  "maxTransferBytes": 83886080,
+  "ui": {
+    "title": "Isolated Scratch package test (not Desloop)",
+    "bootState": "render-called",
+    "bootError": null,
+    "guiGlobalPresent": true,
+    "jsHeapSizeLimitBytes": 139000000,
+    "bodyFirst850": "Settings\nFile\nEdit\nTutorials\nDebug\nCode\nCostumes\nSounds\nMotion\nLooks\nSound\nEvents\nControl\nSensing\nOperators\nVariables\nMy Blocks\nnext backdrop\n25\nchange\ncolor\neffect by\n0\nset\ncolor\neffect to\nclear graphic effects\nbackdrop\nnumber\nstop all sounds\n10\nchange\npitch\neffect by\n100\nset\npitch\neffect to\nclear sound effects\n-10\nchange volume by\n100\nset volume to\n%\nvolume\nwhen\nclicked\nwhen\nspace\nkey pressed\n10\nwhen\nloudness\n>\n1\nwait\nseconds\n10\nrepeat\nforever\nif\nthen\nif\nthen\nelse\nwait until\nrepeat until\nanswer\nspace\nkey\npressed?\nmouse down?\nmouse x\nmouse y\nloudness\ntimer\nreset timer\ncurrent\nyear\ndays since 2000\nonline?\nusername\n+\n-\n*\n/\n1\n10\npick random\nto\n50\n>\n50\n<\n50\n=\nand\nor\nnot\nmod\nround\nabs\nof\nMotion\n10\nmove\nsteps\n15\nturn\ndegrees\n15\nturn\ndegrees\nrandom position\ngo to\n0\n0\ngo to x:\ny:\n1\nrandom position\nglide\nsecs to\n1\n0\n0\nglide\nsecs to x:\ny:\n90\npoint",
+    "buttons": 25,
+    "canvases": 3,
+    "svgCount": 7,
+    "stagePresence": true,
+    "blocklyPresence": true,
+    "greenFlagPresence": true,
+    "editorStatePresent": true
+  },
+  "runtime": {
+    "beforeFlag": {
+      "vmPresent": true,
+      "targets": [
+        {
+          "name": "Stage",
+          "isStage": true
+        },
+        {
+          "name": "Sprite1",
+          "isStage": false
+        }
+      ],
+      "vmRuntimeStepping": true
+    },
+    "afterFlag": {
+      "projectStartEvents": 1,
+      "threads": 0
+    }
+  },
+  "metrics": {
+    "Documents": 45,
+    "Nodes": 5200,
+    "ScriptDuration": 1.308596,
+    "TaskDuration": 1.99334,
+    "JSHeapUsedSize": 29528664,
+    "JSHeapTotalSize": 32657408
+  },
+  "errors": [],
+  "nav": {
+    "status": 200,
+    "dclMs": 1546
+  },
+  "projectLoadedElapsedMs": 1881,
+  "totalMs": 5939
+}

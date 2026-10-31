@@ -1,0 +1,69 @@
+{
+  "timestamp": "2026-10-31T19:42:25.224Z",
+  "target": "https://editor.gdevelop.io/",
+  "test": "isolated anonymous unsaved empty project -> same-origin preview",
+  "browser": {
+    "playwright": "1.64.1",
+    "chromium": "156.0.8078.4"
+  },
+  "limits": [
+    "single baseline sample",
+    "empty project proves runtime boot, not gameplay or complex project performance",
+    "CDP JS heap is not physical RAM"
+  ],
+  "stages": {
+    "navigationDclMs": 332,
+    "editorVisibleMs": 6324,
+    "previewDocumentDclMs": 6604,
+    "previewObservedMs": 11230
+  },
+  "preview": {
+    "locationPath": "/browser_sw_preview/1/preview/index.html",
+    "documentTitle": "",
+    "canvas": [
+      {
+        "width": 1280,
+        "height": 720,
+        "webgl2": true
+      }
+    ],
+    "gdjsRuntimeGamePresent": true,
+    "gdjsRuntimeScenePresent": true,
+    "runtimeScripts": 74,
+    "runtimeScriptHosts": [
+      "resources.gdevelop-app.com",
+      "editor.gdevelop.io"
+    ],
+    "scriptNames": [
+      "/browser_sw_preview/1/preview/code0.js",
+      "/browser_sw_preview/1/preview/data.js"
+    ],
+    "serviceWorkerControlled": true,
+    "swScopes": [
+      "https://editor.gdevelop.io/"
+    ],
+    "cdpMetrics": {
+      "Nodes": 2419,
+      "ScriptDuration": 0,
+      "TaskDuration": 0.000084,
+      "JSHeapUsedSize": 64219868,
+      "JSHeapTotalSize": 69668864
+    }
+  },
+  "main": {
+    "editorVisible": true,
+    "serviceWorkerControlled": true,
+    "swScopes": [
+      "https://editor.gdevelop.io/"
+    ]
+  },
+  "errors": [],
+  "labBrowserProcesses": {
+    "processes": 6,
+    "pssKiB": 704138,
+    "rssKiB": 1175932,
+    "unreadable": 0,
+    "note": "single-time Chromium process snapshot, shared pages counted proportionally by PSS; not actual device RAM use or peak"
+  },
+  "totalMs": 11321
+}

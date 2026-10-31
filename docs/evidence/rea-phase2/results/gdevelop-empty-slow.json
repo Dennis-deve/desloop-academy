@@ -1,0 +1,241 @@
+{
+  "purpose": "external editor runtime research only; no authenticated session, no Desloop integration",
+  "timestamp": "2026-10-31T19:31:41.771Z",
+  "target": "https://editor.gdevelop.io/",
+  "browser": {
+    "engine": "Playwright Chromium headless shell",
+    "version": "156.0.8078.4",
+    "playwright": "1.64.1"
+  },
+  "profile": "slow",
+  "emulation": {
+    "rttMs": 150,
+    "downBytesPerSecond": 100000,
+    "upBytesPerSecond": 50000,
+    "cpuFactor": 4,
+    "note": "CDP network/CPU emulation; not physical Ghana 3G, not physical low-RAM"
+  },
+  "sampleCount": 1,
+  "timeoutMs": 180000,
+  "settleMs": 15000,
+  "transferBudgetBytes": 62914560,
+  "workflow": {
+    "name": "gdevelop-empty",
+    "saved": false,
+    "authenticated": false,
+    "milestones": {
+      "createTabClickedMs": 40070,
+      "newGameDialogOpenedMs": 42194,
+      "emptyTemplateSelectedMs": 43629,
+      "unsavedChoiceSelectedMs": 43973,
+      "createUnsavedGameClickedMs": 46225,
+      "sceneEditorVisibleMs": 47275
+    },
+    "editorVisible": true,
+    "saveChoice": "Don't save this project now"
+  },
+  "navigation": {
+    "httpStatus": 200,
+    "domContentLoadedMs": 2547
+  },
+  "ui": {
+    "documentTitle": "GDevelop 5 - Isolated research - unsaved",
+    "locationPath": "/",
+    "bodyTextFirst500": "Untitled scene\nUntitled scene (Events)\nAsk AI\nPreview\nShare\n2D\n3D\nProperties\n\nUntitled scene\n\nProperties\nBehaviors\nScene Variables\nClick on an instance on the canvas or an object in the list to display their properties.\nProperties\nObjects\nGlobal Objects\nScene Objects\nAdd object\nStart by adding a new object.\nObjects",
+    "buttons": 89,
+    "canvases": 1,
+    "inputs": 4,
+    "iframeCount": 2,
+    "gdGlobalPresent": true,
+    "scratchGUIStandalonePresent": false,
+    "navigationTiming": {
+      "dclMs": 2536,
+      "loadMs": 2536,
+      "transferSize": 2244
+    }
+  },
+  "metrics": {
+    "Documents": 9,
+    "Frames": 9,
+    "JSEventListeners": 747,
+    "Nodes": 2118,
+    "ScriptDuration": 10.548547,
+    "TaskDuration": 22.490573,
+    "JSHeapUsedSize": 62338576,
+    "JSHeapTotalSize": 66523136,
+    "domCounters": {
+      "documents": 9,
+      "nodes": 2118,
+      "jsEventListeners": 747
+    }
+  },
+  "requests": {
+    "responses": 135,
+    "failures": 0,
+    "statuses": {
+      "200": 131,
+      "204": 4
+    },
+    "byHost": {
+      "editor.gdevelop.io": {
+        "responses": 26,
+        "encodedBytes": 3764931
+      },
+      "": {
+        "responses": 3,
+        "encodedBytes": 0
+      },
+      "us-assets.i.posthog.com": {
+        "responses": 1,
+        "encodedBytes": 1034
+      },
+      "resources.gdevelop.io": {
+        "responses": 1,
+        "encodedBytes": 6450
+      },
+      "us.i.posthog.com": {
+        "responses": 2,
+        "encodedBytes": 1163
+      },
+      "analytics.tiktok.com": {
+        "responses": 12,
+        "encodedBytes": 165584
+      },
+      "snap.licdn.com": {
+        "responses": 1,
+        "encodedBytes": 21828
+      },
+      "px.ads.linkedin.com": {
+        "responses": 1,
+        "encodedBytes": 494
+      },
+      "connect.facebook.net": {
+        "responses": 2,
+        "encodedBytes": 281839
+      },
+      "analytics-ipv6.tiktokw.us": {
+        "responses": 1,
+        "encodedBytes": 956
+      },
+      "api.gdevelop.io": {
+        "responses": 23,
+        "encodedBytes": 787023
+      },
+      "resources.gdevelop-app.com": {
+        "responses": 56,
+        "encodedBytes": 0
+      },
+      "public-resources.gdevelop.io": {
+        "responses": 1,
+        "encodedBytes": 735
+      }
+    },
+    "topTransferred": [
+      {
+        "url": "https://editor.gdevelop.io/static/js/9705.eb9d37c9.chunk.js",
+        "host": "editor.gdevelop.io",
+        "type": "Script",
+        "status": 200,
+        "encodedBytes": 1240481,
+        "cache": false
+      },
+      {
+        "url": "https://editor.gdevelop.io/static/js/740.076f11cb.chunk.js",
+        "host": "editor.gdevelop.io",
+        "type": "Script",
+        "status": 200,
+        "encodedBytes": 933278,
+        "cache": false
+      },
+      {
+        "url": "https://editor.gdevelop.io/static/js/7817.9d8cdfff.chunk.js",
+        "host": "editor.gdevelop.io",
+        "type": "Script",
+        "status": 200,
+        "encodedBytes": 279068,
+        "cache": false
+      },
+      {
+        "url": "https://api.gdevelop.io/shop/asset-pack",
+        "host": "api.gdevelop.io",
+        "type": "XHR",
+        "status": 200,
+        "encodedBytes": 263243,
+        "cache": false
+      },
+      {
+        "url": "https://editor.gdevelop.io/static/media/FiraSans-Bold.b2c1d356b236acbad8ef.ttf",
+        "host": "editor.gdevelop.io",
+        "type": "Font",
+        "status": 200,
+        "encodedBytes": 215045,
+        "cache": false
+      },
+      {
+        "url": "https://editor.gdevelop.io/static/media/FiraSans-SemiBold.9b44246405e74df4837c.ttf",
+        "host": "editor.gdevelop.io",
+        "type": "Font",
+        "status": 200,
+        "encodedBytes": 214836,
+        "cache": false
+      },
+      {
+        "url": "https://editor.gdevelop.io/static/media/FiraSans-Regular.f4eb295ecc2fb842d61c.ttf",
+        "host": "editor.gdevelop.io",
+        "type": "Font",
+        "status": 200,
+        "encodedBytes": 201642,
+        "cache": false
+      },
+      {
+        "url": "https://editor.gdevelop.io/static/js/main.718d98ef.js",
+        "host": "editor.gdevelop.io",
+        "type": "Script",
+        "status": 200,
+        "encodedBytes": 187200,
+        "cache": false
+      },
+      {
+        "url": "https://editor.gdevelop.io/libGD.js",
+        "host": "editor.gdevelop.io",
+        "type": "Script",
+        "status": 200,
+        "encodedBytes": 178964,
+        "cache": false
+      },
+      {
+        "url": "https://connect.facebook.net/signals/config/3620269531446296",
+        "host": "connect.facebook.net",
+        "type": "Script",
+        "status": 200,
+        "encodedBytes": 164103,
+        "cache": false
+      },
+      {
+        "url": "https://api.gdevelop.io/asset/tutorial",
+        "host": "api.gdevelop.io",
+        "type": "XHR",
+        "status": 200,
+        "encodedBytes": 139311,
+        "cache": false
+      },
+      {
+        "url": "https://analytics.tiktok.com/i18n/pixel/static/main.MTJjYzk1MmQ1MQ.js",
+        "host": "analytics.tiktok.com",
+        "type": "Script",
+        "status": 200,
+        "encodedBytes": 118233,
+        "cache": false
+      }
+    ],
+    "encodedBytes": 5032037
+  },
+  "pageErrors": [],
+  "observedErrors": [],
+  "limitations": [
+    "single sample; cloud host and lab network",
+    "CDP JS heap is not device RAM",
+    "UI text alone does not prove editing, save or play"
+  ],
+  "totalMs": 62611
+}

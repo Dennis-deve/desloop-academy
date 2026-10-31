@@ -1,5 +1,7 @@
 # REA Phase 1 — Scratch GUI and GDevelop source analysis
 
+**Subsequent work:** [Phase 2 licensing/current-package and actual editor browser study](REA_PHASE2_STUDIO_FEASIBILITY.md) uses the active Scratch `scratch-editor` monorepo/scoped React-18 package and GDevelop's anonymous hosted editor. The React-16 peer and "no runtime test" statements **below** describe this earlier pinned Phase 1 snapshot, not current package/browser findings. Neither study created a Desloop studio.
+
 **31 October 2026 · Research-only deliverable.** No editor was embedded, no Desloop application code or deployment was changed, no child accounts were enabled, and no production or third-party project/build API was called. This is a **focused source study**, not a complete audit of either repository. The existing [read-only public guide](https://desloop-readonly-guide.onrender.com) remains the sole approved public surface. Later studio choices require explicit licensing, architecture, safety, cost and accessibility decisions.
 
 ## Executive finding

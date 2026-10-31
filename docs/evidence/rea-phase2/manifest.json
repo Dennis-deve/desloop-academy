@@ -1,0 +1,69 @@
+{
+  "generated_at_utc": "2026-10-31",
+  "purpose": "Research-only authenticated package/browser run provenance, not product or legal clearance",
+  "scratch_package": {
+    "name": "@scratch/scratch-gui",
+    "version": "15.3.0",
+    "registry_integrity_sha512": "sha512-Iaa4Su+CA8pnZiGmBuN6ezLwNK06cfnH9zmVVKdPxRbGWbOTHGcIZ92C2gsvi51ArbKfPwcHboTQC4N3vs+maQ==",
+    "tar_sha256": "7d82aa70885f70ede5e20645df44d5ce8b6462c7a08d1784bd902e7f0f547eea",
+    "tar_bytes": 149932350,
+    "raw_standalone_js_bytes": 17083105,
+    "gzip_level6_standalone_js_bytes": 5700431
+  },
+  "upstream": {
+    "scratch_editor_monorepo": "478149ee07f7f5156defe6f239f776b1c6ccbcae",
+    "gdevelop_source": "85ab0e40e00fdc775e22e014fb885d2390705827",
+    "hosted_gdevelop_build": "not pinned; observed 2026-10-31"
+  },
+  "browser": {
+    "playwright": "1.64.1",
+    "chromium_headless_shell": "156.0.8078.4",
+    "host_os": "Debian GNU/Linux 13 (trixie), x86_64"
+  },
+  "files": {
+    "scripts/bench_editor.cjs": {
+      "sha256": "ab696e1a8aaf5770184c7c38de8f9053867ecbad928097101b8a8dbcd06d6e32",
+      "bytes": 9427
+    },
+    "scripts/browser_memory.cjs": {
+      "sha256": "76a183fe9e26812957e98f28a9f85148f29bc536a6d33c255967eea46c5daa73",
+      "bytes": 1499
+    },
+    "scripts/preview_gdevelop.cjs": {
+      "sha256": "433816d67002c63594fdb3d9d5a3977b5f6cff725a920b144eedd0324e430e69",
+      "bytes": 4837
+    },
+    "scripts/scratch_standalone_probe.cjs": {
+      "sha256": "51795ceca1ed44180b6fef17e2924be0ebc0eba958e0ee40108881bdea5d980e",
+      "bytes": 9686
+    },
+    "results/gdevelop-empty-baseline.json": {
+      "sha256": "7ae70795db2c822c9a3757100d0bb2061f8d77a27c1f93868c8041de5e386972",
+      "bytes": 7015
+    },
+    "results/gdevelop-empty-heap128.json": {
+      "sha256": "ccba05dcc09087a53aa9ea1a045fde834840f3c80e5821e91e10ce181aed6746",
+      "bytes": 6748
+    },
+    "results/gdevelop-empty-slow.json": {
+      "sha256": "7b8a36c5195313cf3778c3f7a8fa9497acb94a226c415520b92cff21d80385b7",
+      "bytes": 6694
+    },
+    "results/gdevelop-preview-baseline.json": {
+      "sha256": "8a33b5aba6f3cd565478fd68ba412f73365ab70f08bce71776470b9f82a36acc",
+      "bytes": 1793
+    },
+    "results/scratch-standalone-baseline.json": {
+      "sha256": "347c3a2439a938c6d436652a76c195eee10cfab2600600801a1a010a36d996ef",
+      "bytes": 3356
+    },
+    "results/scratch-standalone-heap128.json": {
+      "sha256": "130fa53c5c115dee5c61d2b1b1cd51cf0a60bc084a3272c74bbf8579435f2a63",
+      "bytes": 3090
+    },
+    "results/scratch-standalone-slow.json": {
+      "sha256": "5955c0a9532e69b1a28d64282a86f8af7e2a71d6d9753c20a5671f04a8896356",
+      "bytes": 3143
+    }
+  }
+}

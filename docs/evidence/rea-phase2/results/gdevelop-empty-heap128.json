@@ -1,0 +1,239 @@
+{
+  "purpose": "external editor runtime research only; no authenticated session, no Desloop integration",
+  "timestamp": "2026-10-31T19:40:32.310Z",
+  "target": "https://editor.gdevelop.io/",
+  "browser": {
+    "engine": "Playwright Chromium headless shell",
+    "version": "156.0.8078.4",
+    "playwright": "1.64.1",
+    "v8OldSpaceCapMiB": 128
+  },
+  "profile": "heap128",
+  "emulation": {
+    "note": "no CDP throttling"
+  },
+  "sampleCount": 1,
+  "timeoutMs": 80000,
+  "settleMs": 8000,
+  "transferBudgetBytes": 62914560,
+  "workflow": {
+    "name": "gdevelop-empty",
+    "saved": false,
+    "authenticated": false,
+    "milestones": {
+      "createTabClickedMs": 4162,
+      "newGameDialogOpenedMs": 5104,
+      "emptyTemplateSelectedMs": 5574,
+      "unsavedChoiceSelectedMs": 5711,
+      "createUnsavedGameClickedMs": 6477,
+      "sceneEditorVisibleMs": 6507
+    },
+    "editorVisible": true,
+    "saveChoice": "Don't save this project now"
+  },
+  "navigation": {
+    "httpStatus": 200,
+    "domContentLoadedMs": 440
+  },
+  "ui": {
+    "documentTitle": "GDevelop 5 - Isolated research - unsaved",
+    "locationPath": "/",
+    "bodyTextFirst500": "Untitled scene\nUntitled scene (Events)\nAsk AI\nPreview\nShare\n2D\n3D\nProperties\n\nUntitled scene\n\nProperties\nBehaviors\nScene Variables\nClick on an instance on the canvas or an object in the list to display their properties.\nProperties\nObjects\nGlobal Objects\nScene Objects\nAdd object\nStart by adding a new object.\nObjects",
+    "buttons": 89,
+    "canvases": 1,
+    "inputs": 4,
+    "iframeCount": 2,
+    "gdGlobalPresent": true,
+    "scratchGUIStandalonePresent": false,
+    "jsHeapSizeLimitBytes": 139000000,
+    "navigationTiming": {
+      "dclMs": 437,
+      "loadMs": 438,
+      "transferSize": 2244
+    }
+  },
+  "metrics": {
+    "Documents": 10,
+    "Frames": 10,
+    "JSEventListeners": 872,
+    "Nodes": 2243,
+    "ScriptDuration": 3.847843,
+    "TaskDuration": 8.829347,
+    "JSHeapUsedSize": 62672876,
+    "JSHeapTotalSize": 67047424,
+    "domCounters": {
+      "documents": 10,
+      "nodes": 2243,
+      "jsEventListeners": 872
+    }
+  },
+  "requests": {
+    "responses": 187,
+    "failures": 0,
+    "statuses": {
+      "200": 183,
+      "204": 4
+    },
+    "byHost": {
+      "editor.gdevelop.io": {
+        "responses": 26,
+        "encodedBytes": 4590306
+      },
+      "": {
+        "responses": 3,
+        "encodedBytes": 0
+      },
+      "resources.gdevelop.io": {
+        "responses": 2,
+        "encodedBytes": 1063122
+      },
+      "snap.licdn.com": {
+        "responses": 1,
+        "encodedBytes": 21828
+      },
+      "connect.facebook.net": {
+        "responses": 2,
+        "encodedBytes": 281866
+      },
+      "us.i.posthog.com": {
+        "responses": 2,
+        "encodedBytes": 1164
+      },
+      "us-assets.i.posthog.com": {
+        "responses": 1,
+        "encodedBytes": 1033
+      },
+      "analytics.tiktok.com": {
+        "responses": 11,
+        "encodedBytes": 164992
+      },
+      "px.ads.linkedin.com": {
+        "responses": 1,
+        "encodedBytes": 494
+      },
+      "analytics-ipv6.tiktokw.us": {
+        "responses": 1,
+        "encodedBytes": 980
+      },
+      "api.gdevelop.io": {
+        "responses": 23,
+        "encodedBytes": 786978
+      },
+      "resources.gdevelop-app.com": {
+        "responses": 99,
+        "encodedBytes": 0
+      },
+      "public-resources.gdevelop.io": {
+        "responses": 11,
+        "encodedBytes": 3816142
+      }
+    },
+    "topTransferred": [
+      {
+        "url": "https://editor.gdevelop.io/static/js/9705.eb9d37c9.chunk.js",
+        "host": "editor.gdevelop.io",
+        "type": "Script",
+        "status": 200,
+        "encodedBytes": 1240488,
+        "cache": false
+      },
+      {
+        "url": "https://resources.gdevelop.io/announcements/GDevelop_Game_Jam_10_Desktop.png",
+        "host": "resources.gdevelop.io",
+        "type": "Image",
+        "status": 200,
+        "encodedBytes": 1056667,
+        "cache": false
+      },
+      {
+        "url": "https://editor.gdevelop.io/static/js/740.076f11cb.chunk.js",
+        "host": "editor.gdevelop.io",
+        "type": "Script",
+        "status": 200,
+        "encodedBytes": 933324,
+        "cache": false
+      },
+      {
+        "url": "https://editor.gdevelop.io/libGD.wasm",
+        "host": "editor.gdevelop.io",
+        "type": "Fetch",
+        "status": 200,
+        "encodedBytes": 825179,
+        "cache": false
+      },
+      {
+        "url": "https://public-resources.gdevelop.io/course/ui-design-course.jpg",
+        "host": "public-resources.gdevelop.io",
+        "type": "Image",
+        "status": 200,
+        "encodedBytes": 538587,
+        "cache": false
+      },
+      {
+        "url": "https://public-resources.gdevelop.io/course/game-art-course.jpg",
+        "host": "public-resources.gdevelop.io",
+        "type": "Image",
+        "status": 200,
+        "encodedBytes": 501143,
+        "cache": false
+      },
+      {
+        "url": "https://public-resources.gdevelop.io/course/market-sell-game-course.jpg",
+        "host": "public-resources.gdevelop.io",
+        "type": "Image",
+        "status": 200,
+        "encodedBytes": 500850,
+        "cache": false
+      },
+      {
+        "url": "https://public-resources.gdevelop.io/course/platformer-game-course.jpg",
+        "host": "public-resources.gdevelop.io",
+        "type": "Image",
+        "status": 200,
+        "encodedBytes": 487879,
+        "cache": false
+      },
+      {
+        "url": "https://public-resources.gdevelop.io/course/brotato-roguelike-game-course.jpg",
+        "host": "public-resources.gdevelop.io",
+        "type": "Image",
+        "status": 200,
+        "encodedBytes": 467461,
+        "cache": false
+      },
+      {
+        "url": "https://public-resources.gdevelop.io/course/gdevelop-essentials-course.jpg",
+        "host": "public-resources.gdevelop.io",
+        "type": "Image",
+        "status": 200,
+        "encodedBytes": 449728,
+        "cache": false
+      },
+      {
+        "url": "https://public-resources.gdevelop.io/course/javascript-intro.jpg",
+        "host": "public-resources.gdevelop.io",
+        "type": "Image",
+        "status": 200,
+        "encodedBytes": 448598,
+        "cache": false
+      },
+      {
+        "url": "https://editor.gdevelop.io/static/js/7817.9d8cdfff.chunk.js",
+        "host": "editor.gdevelop.io",
+        "type": "Script",
+        "status": 200,
+        "encodedBytes": 279045,
+        "cache": false
+      }
+    ],
+    "encodedBytes": 10728905
+  },
+  "pageErrors": [],
+  "observedErrors": [],
+  "limitations": [
+    "single sample; cloud host and lab network",
+    "CDP JS heap is not device RAM",
+    "UI text alone does not prove editing, save or play"
+  ],
+  "totalMs": 14644
+}
