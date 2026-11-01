@@ -40,12 +40,12 @@ export function isApprovedNeonStageUrl(value: string): boolean {
   }
 }
 
-/** Separate, operator-invoked migration gate: never a Render build/start or local E2E reset. */
-export function isApprovedProjectCoreStageMigration(env: NodeJS.ProcessEnv): boolean {
+/** The two independently approved migrations are operator-invoked on direct Neon, never Render startup. */
+function isApprovedDirectStageMigration(env: NodeJS.ProcessEnv, approval: string): boolean {
   try {
     const origin = new URL(env.APP_ORIGIN ?? '');
     const db = new URL(env.DATABASE_URL ?? '');
-    return env.PROJECT_CORE_STAGE_MIGRATION_APPROVED === 'true' &&
+    return env[approval] === 'true' &&
       env.SYNTHETIC_STAGE_ACKNOWLEDGED === 'true' &&
       env.NODE_ENV === 'production' && env.DATABASE_TLS === 'verify' &&
       origin.protocol === 'https:' && origin.origin === env.APP_ORIGIN &&
@@ -54,6 +54,14 @@ export function isApprovedProjectCoreStageMigration(env: NodeJS.ProcessEnv): boo
   } catch {
     return false;
   }
+}
+
+export function isApprovedEngineStageBootstrap(env: NodeJS.ProcessEnv): boolean {
+  return isApprovedDirectStageMigration(env, 'ENGINE_STAGE_BOOTSTRAP_APPROVED');
+}
+
+export function isApprovedProjectCoreStageMigration(env: NodeJS.ProcessEnv): boolean {
+  return isApprovedDirectStageMigration(env, 'PROJECT_CORE_STAGE_MIGRATION_APPROVED');
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): PilotConfig {

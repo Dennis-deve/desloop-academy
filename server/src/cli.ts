@@ -1,7 +1,8 @@
 import { randomToken, hexHash } from './security.js';
 import { loadCatalog } from './catalog.js';
-import { isApprovedProjectCoreStageMigration, loadConfig } from './config.js';
+import { isApprovedEngineStageBootstrap, isApprovedProjectCoreStageMigration, loadConfig } from './config.js';
 import { appendAudit, createDatabase, inTransaction, migrate, verifyRelease } from './db.js';
+import { verifyEmptySyntheticStageDatabase } from './synthetic-stage-db.js';
 import { loadEngineCatalog } from './engine/catalog.js';
 import { migrateEngine, verifyEngineRelease } from './engine/migrate.js';
 import { LearningEngine } from './engine/service.js';
@@ -24,6 +25,19 @@ const config = loadConfig({ ...process.env, PILOT_ENABLED: 'false', ENGINE_V2_EN
 const db = createDatabase(config);
 const catalog = loadCatalog();
 const operator = process.env.PILOT_OPERATOR?.trim();
+/** A local test migration is restricted to an explicitly opted-in loopback disposable DB. */
+function isApprovedLocalMigration(approval: string, prefix: string): boolean {
+  try {
+    return process.env[approval] === 'true' &&
+      ['test', 'development'].includes(process.env.NODE_ENV ?? '') &&
+      process.env.HOST === '127.0.0.1' &&
+      new URL(process.env.APP_ORIGIN ?? '').hostname === '127.0.0.1' &&
+      new URL(process.env.DATABASE_URL ?? '').hostname === '127.0.0.1' &&
+      new URL(process.env.DATABASE_URL ?? '').pathname.startsWith(prefix);
+  } catch {
+    return false;
+  }
+}
 function operatorRequired() {
   if (!operator || operator.length < 3 || operator.length > 120)
     throw new Error(
@@ -147,13 +161,8 @@ try {
     });
     console.log('Account disabled and all sessions revoked.');
   } else if (command === 'project-core-migrate') {
-    const url = new URL(process.env.DATABASE_URL);
-    const localApproved = process.env.PROJECT_CORE_LOCAL_MIGRATION_APPROVED === 'true' &&
-      ['test', 'development'].includes(process.env.NODE_ENV ?? '') &&
-      process.env.HOST === '127.0.0.1' &&
-      new URL(process.env.APP_ORIGIN ?? '').hostname === '127.0.0.1' &&
-      url.hostname === '127.0.0.1' &&
-      url.pathname.startsWith('/desloop_project_core_disposable_');
+    const localApproved = isApprovedLocalMigration(
+      'PROJECT_CORE_LOCAL_MIGRATION_APPROVED', '/desloop_project_core_disposable_');
     const syntheticStageApproved = isApprovedProjectCoreStageMigration(process.env);
     if (!localApproved && !syntheticStageApproved)
       throw new Error('Project core migration needs explicit approval for a disposable loopback DB or direct Frankfurt Neon synthetic stage');
@@ -191,7 +200,14 @@ try {
       throw new Error(
         'Set ENGINE_DRAFT_ACKNOWLEDGED=true for the unpublished adult learning engine.',
       );
+    const localApproved = isApprovedLocalMigration(
+      'PROJECT_CORE_LOCAL_MIGRATION_APPROVED', '/desloop_project_core_disposable_') ||
+      isApprovedLocalMigration('ENGINE_LOCAL_MIGRATION_APPROVED', '/desloop_engine_disposable_');
+    const stageApproved = isApprovedEngineStageBootstrap(process.env);
+    if (!localApproved && !stageApproved)
+      throw new Error('Engine migration requires an explicitly approved disposable loopback DB or direct Frankfurt Neon synthetic bootstrap');
     const actor = operatorRequired();
+    if (stageApproved) await verifyEmptySyntheticStageDatabase(db); // Reject partial or pre-existing data before 001.
     await migrate(db, catalog);
     const candidate = loadEngineCatalog();
     await migrateEngine(db, candidate);

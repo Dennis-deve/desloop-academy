@@ -1,5 +1,8 @@
 # AI-01 — private, provider-neutral AI gateway: setup and operations
 
+> **D23 current-state correction (1 November 2026):** The owner reports deleting both Railway app and PostgreSQL with no known backup; this has not been independently inspected here. The Railway runtime/restore steps below are **historical**, not an available service or rollback. Do not reapply old IaC or attempt to recover/credit nonexistent rows. For the separately approved **new empty synthetic-only Neon + gated Render Free** development plan, use [the D23-corrected runbook](RENDER_NEON_SYNTHETIC_STAGE_D22_2026-11-01.md). The public read-only Render guide remains separate. No real users, minors, live AI, spending or production activation is authorised.
+
+
 **Status at 22 October 2026:** source implementation only. **No provider credential, owner budget/terms approval, live provider call, Railway migration or deployment was performed.** `.railway/railway.ts` pins `AI_GATEWAY_ENABLED=false`, `AI_ADMIN_UI_ENABLED=false`, `AI_LIVE_TESTS_APPROVED=false`; its app remains domainless and synthetic-only. Do **not** set any of these true on Railway as an expedient release. [Provider-specific research and blockers](AI_PROVIDER_DUE_DILIGENCE.md) · [authoritative feature status](FEATURE_REGISTER.md) · [private deployment verification](DEPLOYMENT_GUIDE.md).
 
 ## Architecture and actual boundaries

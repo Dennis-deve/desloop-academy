@@ -1,5 +1,23 @@
 import type { Database } from './db.js';
 
+/** A newly selected stage must not silently import or merge with existing private records. */
+export async function verifyEmptySyntheticStageDatabase(db: Database): Promise<void> {
+  const result = await db.query<{
+    database: string; role: string; tls: boolean;
+    existing_schema: boolean; public_relations: boolean;
+  }>(`SELECT current_database() AS database, current_user AS role,
+      (SELECT ssl FROM pg_stat_ssl WHERE pid=pg_backend_pid()) AS tls,
+      EXISTS (SELECT 1 FROM pg_catalog.pg_namespace WHERE nspname IN
+        ('pilot','learning','safeguarding','project_core','ai')) AS existing_schema,
+      EXISTS (SELECT 1 FROM pg_catalog.pg_class c JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+        WHERE n.nspname='public' AND c.relkind IN ('r','p','v','m','f')) AS public_relations`);
+  const row = result.rows[0];
+  if (result.rowCount !== 1 || !row ||
+      row.database !== 'desloop_synthetic_stage' || row.role === 'desloop_stage_runtime' ||
+      !row.tls || row.existing_schema || row.public_relations)
+    throw new Error('Synthetic bootstrap requires an empty, direct verified-TLS owner connection to the exact new stage database');
+}
+
 /** A production synthetic web service must never start on an admin, non-TLS or wrong DB. */
 export async function verifySyntheticStageDatabase(db: Database): Promise<void> {
   const result = await db.query<{

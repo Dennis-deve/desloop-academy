@@ -1,7 +1,9 @@
 import { defineRailway, github, postgres, preserve, project, service } from 'railway/iac';
 
-// Private, domainless adult/internal draft. No minor access and no public database proxy.
-// Apply with railway config plan / apply after linking to the owner-approved project.
+// HISTORICAL ONLY: owner reports both Railway app and Postgres deleted with no known backup.
+// Do NOT apply to recreate or call this a rollback. The new synthetic stage is Render +
+// empty Neon; a future Railway return needs its own data/cost/identity/backup approval.
+// This old plan was private/domainless, adult/internal; no minor access or public DB proxy.
 // Adult/internal API is enabled only inside Railway's private network; browser sign-in
 // remains closed because APP_ORIGIN has no public HTTPS host.
 export default defineRailway(() => {
@@ -14,6 +16,7 @@ export default defineRailway(() => {
       buildCommand: 'npm run build:all',
     },
     deploy: {
+      // Old automatic command now fails closed on an unapproved remote DB.
       preDeployCommand: ['npm run engine:migrate'],
       preDeployTimeoutSeconds: 600,
       startCommand: 'npm start',

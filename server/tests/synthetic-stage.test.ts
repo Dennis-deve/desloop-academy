@@ -5,10 +5,10 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import pg from 'pg';
 import { buildApi } from '../src/api.js';
-import { isApprovedNeonStageUrl, isApprovedProjectCoreStageMigration, loadConfig } from '../src/config.js';
+import { isApprovedEngineStageBootstrap, isApprovedNeonStageUrl, isApprovedProjectCoreStageMigration, loadConfig } from '../src/config.js';
 import { isAvailableClientPath } from '../src/public-routes.js';
 import { isSyntheticStageProtectedPath } from '../src/synthetic-stage.js';
-import { verifySyntheticStageDatabase } from '../src/synthetic-stage-db.js';
+import { verifyEmptySyntheticStageDatabase, verifySyntheticStageDatabase } from '../src/synthetic-stage-db.js';
 import type { Database } from '../src/db.js';
 
 const key = 'a'.repeat(64); // Synthetic fixture; never a real stage key.
@@ -83,6 +83,34 @@ void test('005 migration only accepts a separately acknowledged direct Neon targ
     { NODE_ENV: 'test' },
     { APP_ORIGIN: 'http://127.0.0.1:5173' },
   ]) assert.equal(isApprovedProjectCoreStageMigration({ ...stage, ...bad }), false);
+});
+
+void test('a fresh empty synthetic stage has its own manual direct-only 001–003 bootstrap approval', () => {
+  const stage = { NODE_ENV: 'production', APP_ORIGIN: renderOrigin, DATABASE_URL: neonUrl,
+    ENGINE_STAGE_BOOTSTRAP_APPROVED: 'true', SYNTHETIC_STAGE_ACKNOWLEDGED: 'true',
+    DATABASE_TLS: 'verify' };
+  assert.equal(isApprovedEngineStageBootstrap(stage), true);
+  assert.equal(isApprovedProjectCoreStageMigration(stage), false); // 005 needs a separate approval.
+  for (const bad of [
+    { ENGINE_STAGE_BOOTSTRAP_APPROVED: 'false' },
+    { DATABASE_URL: neonUrl.replace('ep-example.', 'ep-example-pooler.') },
+    { DATABASE_URL: neonUrl.replace('desloop_synthetic_stage', 'railway') },
+    { DATABASE_URL: neonUrl.replace('verify-full', 'require') },
+    { DATABASE_TLS: 'false' },
+    { NODE_ENV: 'test' },
+    { APP_ORIGIN: 'http://127.0.0.1:5173' },
+  ]) assert.equal(isApprovedEngineStageBootstrap({ ...stage, ...bad }), false);
+});
+
+void test('fresh stage bootstrap refuses an existing schema/table, wrong DB, local non-TLS or app role', async () => {
+  const good = { database: 'desloop_synthetic_stage', role: 'neondb_owner', tls: true,
+    existing_schema: false, public_relations: false };
+  const fake = (row: typeof good) => ({ query: async () => ({ rowCount: 1, rows: [row] }) }) as unknown as Database;
+  await assert.doesNotReject(verifyEmptySyntheticStageDatabase(fake(good)));
+  for (const unsafe of [
+    { database: 'railway' }, { role: 'desloop_stage_runtime' }, { tls: false },
+    { existing_schema: true }, { public_relations: true },
+  ]) await assert.rejects(verifyEmptySyntheticStageDatabase(fake({ ...good, ...unsafe })), /requires an empty/);
 });
 
 void test('startup rejects a Neon admin, wrong DB, unencrypted transport or authority to edit child/account roles', async () => {
