@@ -81,7 +81,7 @@ test('project-core data and PNG validators are bounded and reject unsafe inputs'
   assert.throws(() => normalizePng(oversizedHeader.toString('base64'), sha256(oversizedHeader)));
 });
 
-test('project core stays closed by default and cannot be enabled in a remote/prod service', async () => {
+test('project core stays closed by default and rejects unreviewed remote/prod configurations', async () => {
   const config = loadConfig({ NODE_ENV: 'test', PILOT_ENABLED: 'false', APP_ORIGIN: origin });
   assert.equal(config.projectCoreEnabled, false);
   const app = await buildApi(config);

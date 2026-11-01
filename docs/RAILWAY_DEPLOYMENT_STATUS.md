@@ -1,5 +1,8 @@
 # Railway private adult engine — verified deployment record
 
+> **D23 current-state correction (1 November 2026):** The owner reports deleting both Railway app and PostgreSQL with no known backup; this has not been independently inspected here. The Railway runtime/restore steps below are **historical**, not an available service or rollback. Do not reapply old IaC or attempt to recover/credit nonexistent rows. For the separately approved **new empty synthetic-only Neon + gated Render Free** development plan, use [the D23-corrected runbook](RENDER_NEON_SYNTHETIC_STAGE_D22_2026-11-01.md). The public read-only Render guide remains separate. No real users, minors, live AI, spending or production activation is authorised.
+
+
 **22 October 2026 · internal/synthetic use only.** This records an actual Railway configuration and private runtime smoke test, **not** a public product launch or a browser-ready tester portal. A later documentation-only deployment on GitHub `main` at `784b0ed16675186ee20d9c7400ba4541853a15e1` was also reported `SUCCESS`. The new FND-01 no-demo source commit `201a1e4` was later pushed to GitHub `main` and independently confirmed, but its Railway rollout is **unverified**: no Railway CLI/session was available for new private health, domain or denial checks. This earlier deployment record must **not** be used as hosted verification for the new source.
 
 | Item | Verified state |

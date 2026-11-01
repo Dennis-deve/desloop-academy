@@ -1,5 +1,8 @@
 # Desloop Academy — safe deployment guide, private to full public
 
+> **D23 current-state correction (1 November 2026):** The owner reports deleting both Railway app and PostgreSQL with no known backup; this has not been independently inspected here. The Railway runtime/restore steps below are **historical**, not an available service or rollback. Do not reapply old IaC or attempt to recover/credit nonexistent rows. For the separately approved **new empty synthetic-only Neon + gated Render Free** development plan, use [the D23-corrected runbook](RENDER_NEON_SYNTHETIC_STAGE_D22_2026-11-01.md). The public read-only Render guide remains separate. No real users, minors, live AI, spending or production activation is authorised.
+
+
 **Planning guide · 22 October 2026, with 23 October Render source addendum.** The separately implemented public-only Render static artifact and non-deployable private-staging template are documented in [Render setup](RENDER_DEPLOYMENT.md); neither has been created or hosted. This document does **not** approve or execute a public launch. The last GitHub `main` verified for this guide is `7c957d081287aff30fc18f6b3ec56b58f1be671c`. Its first no-demo feature commit is `201a1e4`. The **last privately verified Railway deployment** was the older `784b0ed` source; after the newer GitHub pushes, Railway's deployment SHA, state and exposure have **not** been checked. Follow [the authoritative feature register](FEATURE_REGISTER.md) for completion status, [the existing private runbook](RAILWAY_PRIVATE_ADULT_SETUP.md) for prior setup/rollback, and [the blank verification worksheet](DEPLOYMENT_EVIDENCE_TEMPLATE.md) to record actual results. Never turn an unobserved step into a pass.
 
 ## 1. Decide which boundary you are operating

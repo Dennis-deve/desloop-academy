@@ -1,5 +1,8 @@
 # Railway: private adult/internal engine setup
 
+> **D23 current-state correction (1 November 2026):** The owner reports deleting both Railway app and PostgreSQL with no known backup; this has not been independently inspected here. The Railway runtime/restore steps below are **historical**, not an available service or rollback. Do not reapply old IaC or attempt to recover/credit nonexistent rows. For the separately approved **new empty synthetic-only Neon + gated Render Free** development plan, use [the D23-corrected runbook](RENDER_NEON_SYNTHETIC_STAGE_D22_2026-11-01.md). The public read-only Render guide remains separate. No real users, minors, live AI, spending or production activation is authorised.
+
+
 **Last verified private configuration, 22 October 2026 (before FND-01 GitHub push):** The owner's existing Railway project **`glorious-inspiration`** had a domainless `desloop-academy` app and a private PostgreSQL service in Amsterdam (`ams`). Recheck its new deployment and domain count after source changes; GitHub success alone is not hosted verification. Its **adult/internal** draft-2 API is enabled only inside Railway's private network; pre-deploy migrations 001–003 and private health/denial checks passed. GitHub `main` carries the IaC and source. **There is no public domain, public database proxy, browser login for testers, enrolled adult, minor account or guardian-consent collection.** The Railway environment is named `production` by default but is limited to **synthetic internal testing**, not an approved public or child release. See [verified checks](RAILWAY_DEPLOYMENT_STATUS.md), [guardian safety hold](GUARDIAN_CONSENT_AND_IDENTITY.md) and [engine runbook](LEARNING_ENGINE_RUNBOOK.md).
 
 ## 0. Confirm the scope and source

@@ -1,7 +1,8 @@
 import { randomToken, hexHash } from './security.js';
 import { loadCatalog } from './catalog.js';
-import { loadConfig } from './config.js';
+import { isApprovedEngineStageBootstrap, isApprovedProjectCoreStageMigration, loadConfig } from './config.js';
 import { appendAudit, createDatabase, inTransaction, migrate, verifyRelease } from './db.js';
+import { verifyEmptySyntheticStageDatabase } from './synthetic-stage-db.js';
 import { loadEngineCatalog } from './engine/catalog.js';
 import { migrateEngine, verifyEngineRelease } from './engine/migrate.js';
 import { LearningEngine } from './engine/service.js';
@@ -11,7 +12,7 @@ import { migrateProjectCore } from './project-core/migrate.js';
 
 const [command, ...args] = process.argv.slice(2);
 const usage =
-  'Commands: migrate | invite <email> learner|reviewer | submissions | assign <submission-uuid> <reviewer-email> | disable <email> | engine-migrate | engine-enrol <adult-learner-email> | engine-submissions | engine-assign <submission-uuid> <reviewer-email> | project-core-migrate (local test DB only) | ai-migrate | ai-admin-grant <active-reviewer-email>';
+  'Commands: migrate | invite <email> learner|reviewer | submissions | assign <submission-uuid> <reviewer-email> | disable <email> | engine-migrate | engine-enrol <adult-learner-email> | engine-submissions | engine-assign <submission-uuid> <reviewer-email> | project-core-migrate (disposable local or explicitly approved synthetic Neon stage only) | ai-migrate | ai-admin-grant <active-reviewer-email>';
 if (command === 'help') {
   console.log(usage);
   process.exit(0);
@@ -24,6 +25,19 @@ const config = loadConfig({ ...process.env, PILOT_ENABLED: 'false', ENGINE_V2_EN
 const db = createDatabase(config);
 const catalog = loadCatalog();
 const operator = process.env.PILOT_OPERATOR?.trim();
+/** A local test migration is restricted to an explicitly opted-in loopback disposable DB. */
+function isApprovedLocalMigration(approval: string, prefix: string): boolean {
+  try {
+    return process.env[approval] === 'true' &&
+      ['test', 'development'].includes(process.env.NODE_ENV ?? '') &&
+      process.env.HOST === '127.0.0.1' &&
+      new URL(process.env.APP_ORIGIN ?? '').hostname === '127.0.0.1' &&
+      new URL(process.env.DATABASE_URL ?? '').hostname === '127.0.0.1' &&
+      new URL(process.env.DATABASE_URL ?? '').pathname.startsWith(prefix);
+  } catch {
+    return false;
+  }
+}
 function operatorRequired() {
   if (!operator || operator.length < 3 || operator.length > 120)
     throw new Error(
@@ -147,22 +161,21 @@ try {
     });
     console.log('Account disabled and all sessions revoked.');
   } else if (command === 'project-core-migrate') {
-    if (process.env.PROJECT_CORE_LOCAL_MIGRATION_APPROVED !== 'true' ||
-        !['test', 'development'].includes(process.env.NODE_ENV ?? '') ||
-        process.env.HOST !== '127.0.0.1' ||
-        new URL(process.env.APP_ORIGIN ?? '').hostname !== '127.0.0.1' ||
-        new URL(process.env.DATABASE_URL).hostname !== '127.0.0.1' ||
-        !new URL(process.env.DATABASE_URL).pathname.startsWith('/desloop_project_core_disposable_'))
-      throw new Error('Project core migration is explicitly approved for a loopback disposable DB only');
+    const localApproved = isApprovedLocalMigration(
+      'PROJECT_CORE_LOCAL_MIGRATION_APPROVED', '/desloop_project_core_disposable_');
+    const syntheticStageApproved = isApprovedProjectCoreStageMigration(process.env);
+    if (!localApproved && !syntheticStageApproved)
+      throw new Error('Project core migration needs explicit approval for a disposable loopback DB or direct Frankfurt Neon synthetic stage');
     const actor = operatorRequired();
     await migrateProjectCore(db, catalog);
     await inTransaction(db, async (client) => {
-      await appendAudit(client, null, 'project_core.schema.migrated_local', '005', {
-        operator: actor,
-        localOnly: true,
-      });
+      await appendAudit(client, null,
+        syntheticStageApproved ? 'project_core.schema.migrated_synthetic_stage' : 'project_core.schema.migrated_local',
+        '005', { operator: actor, syntheticStage: syntheticStageApproved, localOnly: localApproved });
     });
-    console.log('Local private project schema verified. No remote migration, editor or studio was enabled.');
+    console.log(syntheticStageApproved
+      ? 'Synthetic-only project schema verified in the approved Neon stage. This did not open the app to users.'
+      : 'Local private project schema verified. No remote migration, editor or studio was enabled.');
   } else if (command === 'ai-migrate') {
     if (process.env.AI_SCHEMA_MIGRATION_APPROVED !== 'true')
       throw new Error('AI schema migration requires an operator-reviewed private database and AI_SCHEMA_MIGRATION_APPROVED=true');
@@ -187,7 +200,14 @@ try {
       throw new Error(
         'Set ENGINE_DRAFT_ACKNOWLEDGED=true for the unpublished adult learning engine.',
       );
+    const localApproved = isApprovedLocalMigration(
+      'PROJECT_CORE_LOCAL_MIGRATION_APPROVED', '/desloop_project_core_disposable_') ||
+      isApprovedLocalMigration('ENGINE_LOCAL_MIGRATION_APPROVED', '/desloop_engine_disposable_');
+    const stageApproved = isApprovedEngineStageBootstrap(process.env);
+    if (!localApproved && !stageApproved)
+      throw new Error('Engine migration requires an explicitly approved disposable loopback DB or direct Frankfurt Neon synthetic bootstrap');
     const actor = operatorRequired();
+    if (stageApproved) await verifyEmptySyntheticStageDatabase(db); // Reject partial or pre-existing data before 001.
     await migrate(db, catalog);
     const candidate = loadEngineCatalog();
     await migrateEngine(db, candidate);

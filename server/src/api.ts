@@ -18,6 +18,8 @@ import { LearningEngine } from './engine/service.js';
 import { SandboxService } from './engine/sandbox.js';
 import { verifyGuardianHold } from './guardian/readiness.js';
 import { isAvailableClientPath } from './public-routes.js';
+import { registerSyntheticStageGate } from './synthetic-stage.js';
+import { verifySyntheticStageDatabase } from './synthetic-stage-db.js';
 import { registerAIRoutes } from './ai/routes.js';
 import { registerProjectCoreRoutes } from './project-core/routes.js';
 import type { AIProviders } from './ai/gateway.js';
@@ -150,8 +152,9 @@ export async function buildApi(
           ],
         },
     bodyLimit: 32 * 1024,
-    trustProxy: false, // Do not trust arbitrary forwarded IPs. Configure a verified Railway proxy boundary before scaling rate limits.
+    trustProxy: false, // Do not trust arbitrary forwarded IPs. Configure a verified proxy boundary before scaling rate limits.
   });
+  registerSyntheticStageGate(app, config); // Before routes/static files: no private URL can bypass the operator gate.
   await app.register(cookie);
   await app.register(helmet, {
     contentSecurityPolicy: config.isProduction
@@ -204,6 +207,8 @@ export async function buildApi(
   }));
   if (config.enabled) {
     if (!db) throw new Error('An enabled pilot requires a database');
+    if (config.syntheticStageGateEnabled && config.isProduction)
+      await verifySyntheticStageDatabase(db); // A Neon admin or non-TLS connection cannot serve adults.
     await verifyRelease(db, catalog); // Fail startup closed if the draft file changes without a new version/migration.
     const progression = new PilotProgression(db, catalog);
     const dummyHash = await hash('unused dummy password; never an account', passwordOptions);
@@ -477,7 +482,7 @@ export async function buildApi(
         config.aiAdminUiEnabled &&
         new URL(request.url, 'http://internal.invalid').pathname === '/pilot/ai/admin';
       return reply
-        .code(isAvailableClientPath(request.url) || privateAdminPath ? 200 : 404)
+        .code(isAvailableClientPath(request.url, config.projectCoreEnabled) || privateAdminPath ? 200 : 404)
         .type('text/html')
         .sendFile('index.html');
     });
