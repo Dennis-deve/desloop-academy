@@ -11,8 +11,9 @@ if (courseSlugs.size !== 44) throw new Error('Public course slugs must be unique
 // endpoints are registered separately and never fall through to this list.
 const exact = new Set(['/', '/courses', '/how-it-works', '/availability', '/pilot']);
 const pilotPath = /^\/pilot\/(?:courses\/course-\d{2}|reviews|engine(?:\/(?:courses\/course-\d{2}|reviews|studio(?:\/projects\/[0-9a-f-]{36})?|guided\/course-\d{2}\/c\d{2}-l\d+))?)$/;
+const projectPath = /^\/pilot\/projects(?:\/[0-9a-f-]{36})?$/;
 
-export function isAvailableClientPath(rawUrl: string): boolean {
+export function isAvailableClientPath(rawUrl: string, projectCoreEnabled = false): boolean {
   let pathname: string;
   try {
     pathname = new URL(rawUrl, 'http://internal.invalid').pathname;
@@ -20,5 +21,6 @@ export function isAvailableClientPath(rawUrl: string): boolean {
     return false;
   }
   if (pathname.startsWith('/courses/')) return courseSlugs.has(pathname.slice('/courses/'.length));
-  return exact.has(pathname) || pilotPath.test(pathname);
+  return exact.has(pathname) || pilotPath.test(pathname) ||
+    (projectCoreEnabled && projectPath.test(pathname));
 }

@@ -140,7 +140,7 @@ export function PilotLayout() {
       <Container>
         <div className="mb-7 flex flex-col items-start justify-between gap-5 border-b border-line pb-7 sm:flex-row sm:items-end">
           <div>
-            <Eyebrow>PostgreSQL pilot service · Railway deployment target</Eyebrow>
+            <Eyebrow>PostgreSQL-backed · synthetic adult/internal pilot</Eyebrow>
             <h1 className="mt-2 font-display text-4xl text-heading sm:text-5xl">
               Adult learning pilot
             </h1>

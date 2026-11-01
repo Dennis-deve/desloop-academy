@@ -2,6 +2,12 @@
 
 Feature status is governed **only** by [FEATURE_REGISTER.md](FEATURE_REGISTER.md). For every atomic feature, record expected/actual, result, file/report, environment and gaps. A green build does not replace user, manual AT, provider or security tests.
 
+## D22 synthetic stage — local test receipt, 1 November 2026
+
+- **Automated, actually run on this local source:** Node 22.23.4 typecheck/lint/34-rule accessibility lint contract; frontend **36/36**; server **38/38** with four separate disposable PostgreSQL 17 DBs; combined `build:all` and isolated `build:render-public` plus public-route verifier; Python **9/9** and full/production npm audits **0**. `server/tests/synthetic-stage.test.ts` covers fail-closed production gate/Render type/Host/wrong key/encoded paths/Neon URL parser TLS/005 migration target. A fifth disposable DB ran the **new built same-origin Fastify** stage browser suite `npm run test:e2e:synthetic-stage` **2/2** desktop/mobile with **SQL-created limited runtime role** and admin-held fixture, and subsequently ran the **existing** adult project-client recovery/conflict/replay/cross-account browser suite **2/2** against that same dedicated disposable DB (sequentially, no reset). The stage browser checked anonymous Basic denial, adult invitation + original pilot/draft-2 lesson DB writes, ungraded playground, JSON save/reload/sign-out, axe tags and reflow. Local guarded `engine:migrate` + `project-core:migrate` CLI succeeded on a separate disposable DB with audit event. The new sixth CI DB/browser step is present in source; **remote CI has not run for it**. [Full local receipt and fail-then-fix record](evidence/synthetic-stage/LOCAL_SOURCE_AND_QA_2026-11-01.md).
+- **Not tested / not claimed:** Fresh Railway data classification/backup, Neon/Render accounts, restore/parity, actual Neon TLS or restricted-role connection, Render edge/Free cold-start/quotas, hosted key denial/real browser, external security/privacy/AT usability, production or real records. A Playwright HTTP Basic fixture or local SQL role is not a Render/Neon receipt. Follow the [D22 hosted acceptance matrix](RENDER_NEON_SYNTHETIC_STAGE_D22_2026-11-01.md) before a working-hosted claim.
+
+
 ## Executed on 22 October 2026 — FND-01 and connected adult regressions
 
 | Layer | Command / test file | Expected and observed | Limitation |

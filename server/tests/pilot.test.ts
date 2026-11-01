@@ -438,11 +438,13 @@ test(
         payload: { email: learner.email, password: 'wrong-password' },
       });
       assert.equal(wrongLogin.statusCode, 401);
+      // Test HTTPS cookie semantics without enabling an un-gated public adult origin.
+      // A browser-reachable production origin now requires the independent stage gate.
       const secureConfig = loadConfig({
         NODE_ENV: 'production',
         PILOT_ENABLED: 'true',
         PILOT_DRAFT_ACKNOWLEDGED: 'true',
-        APP_ORIGIN: 'https://pilot.example.test',
+        APP_ORIGIN: 'https://no-public-origin.invalid',
         DATABASE_URL: testDb,
       });
       const secureApp = await buildApi(secureConfig, db, catalog);

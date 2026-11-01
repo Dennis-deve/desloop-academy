@@ -1,6 +1,8 @@
-# Owner setup: Render public guide + closed development web + Neon PostgreSQL
+# HISTORICAL D21 — superseded inactive-shell proposal (do not follow)
 
-**1 November 2026 — plan, not a deployment receipt.** The owner chose to **reuse** the existing [read-only Render static guide](https://desloop-readonly-guide.onrender.com), create **one new public Render web service with all adult/project/child/AI features off**, and copy the **verified-synthetic-only** Railway PostgreSQL data into a **new development-only Neon PostgreSQL project**. The owner chose **free/synthetic-only** resources and **Frankfurt** for the new web service and Neon project. Railway stays intact until a separately approved, verified cutover. No service, Neon project, backup, database copy, new GitHub push or web activation has been performed by this plan. See [decision D21](DECISIONS.md).
+> **Superseded by [D22: working synthetic-only adult stage](RENDER_NEON_SYNTHETIC_STAGE_D22_2026-11-01.md).** The owner rejected the inactive-shell goal and the mistaken assumption that a custom-domain identity gateway exists. The steps below are a dated decision record, **not** the current setup/activation instructions. Do not use them to disable the desired adult pilot or infer that Render Free is private.
+
+**1 November 2026 — historical plan, not a deployment receipt.** The owner chose to **reuse** the existing [read-only Render static guide](https://desloop-readonly-guide.onrender.com), create **one new public Render web service with all adult/project/child/AI features off**, and copy the **verified-synthetic-only** Railway PostgreSQL data into a **new development-only Neon PostgreSQL project**. The owner chose **free/synthetic-only** resources and **Frankfurt** for the new web service and Neon project. Railway stays intact until a separately approved, verified cutover. No service, Neon project, backup, database copy, new GitHub push or web activation has been performed by this plan. See [decision D21](DECISIONS.md).
 
 ## Important boundaries before creating anything
 

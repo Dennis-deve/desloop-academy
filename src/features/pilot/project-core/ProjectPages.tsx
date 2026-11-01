@@ -100,7 +100,7 @@ export function ProjectListPage() {
       <ArrowLeft className="h-4 w-4" /> Adult pilot
     </Link>
     <Card className="p-6 sm:p-8">
-      <Eyebrow>Adult-only · local opt-in storage</Eyebrow>
+      <Eyebrow>Adult-only · operator-enabled private storage</Eyebrow>
       <h2 className="mt-2 font-display text-3xl text-heading">Private project documents</h2>
       <p className="mt-3 max-w-3xl text-sm leading-7 text-body">
         Create and revise a data-only JSON document in your account. Each confirmed save creates an
@@ -108,8 +108,8 @@ export function ProjectListPage() {
         course assessment or backup service. Do not include real personal or confidential information.
       </p>
       <InfoBox tone="amber" className="mt-4">
-        Local synthetic adult testing only. There is no approved retention/erasure or real-user
-        ingress. Unsaved edits to an existing document can be recovered while this pilot stays open
+        Synthetic adult/internal testing only. There is no approved retention/erasure or real-user
+        access. Unsaved edits to an existing document can be recovered while this pilot stays open
         in the same tab, after a server check. Creating a new document is different: leaving this
         form discards its unsent title/text. Sign-out, reload or leaving the pilot discards all
         in-memory drafts; this is not offline or durable backup.
@@ -119,7 +119,7 @@ export function ProjectListPage() {
       : closed ? <EmptyState
         icon={FolderLock}
         title="Private project storage is not available"
-        description="The server has not enabled this local-only feature. Nothing here can be saved."
+        description="The server has not enabled this private feature. Nothing here can be saved."
       />
         : error && !uncertainCreate ? <Card className="p-6">
           <InfoBox tone="amber" role="alert">{error}</InfoBox>
@@ -417,7 +417,7 @@ export function ProjectDocumentPage() {
     {loading ? <Card className="p-7" role="status">Opening the server-owned document…</Card>
       : loadError || !detail ? <Card className="p-7">
         <EmptyState icon={FolderLock} title="This private document is unavailable"
-          description={closed ? 'This local-only feature is disabled, or this account does not own the requested document. Nothing was opened.'
+          description={closed ? 'This private feature is disabled, or this account does not own the requested document. Nothing was opened.'
             : loadError || 'The server did not return a document owned by this account.'}
           action={closed ? <Link to="/pilot" className={buttonStyles('outline')}>Return to adult pilot</Link>
             : <Button variant="outline" onClick={() => setRefresh((value) => value + 1)}>Retry opening document</Button>} />

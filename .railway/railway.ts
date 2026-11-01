@@ -32,7 +32,7 @@ export default defineRailway(() => {
       PILOT_DRAFT_ACKNOWLEDGED: 'true',
       ENGINE_V2_ENABLED: 'true',
       ENGINE_DRAFT_ACKNOWLEDGED: 'true',
-      // Local-only project persistence research; even an accidental remote toggle is rejected by config.
+      // Railway remains off; the separate synthetic Render/Neon stage needs extra config gates.
       PROJECT_CORE_ENABLED: 'false',
       CHILD_ACCOUNTS_ENABLED: 'false',
       GUARDIAN_EVIDENCE_COLLECTION_ENABLED: 'false',

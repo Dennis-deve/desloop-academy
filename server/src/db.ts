@@ -10,14 +10,20 @@ export type Transaction = pg.PoolClient;
 
 export function createDatabase(config: PilotConfig) {
   if (!config.databaseUrl) throw new Error('DATABASE_URL is required');
-  return new pg.Pool({
+  const pool = new pg.Pool({
     connectionString: config.databaseUrl,
+    // node-postgres parses URL TLS options after this object. The Render stage
+    // rejects every Neon URL except sslmode=verify-full before reaching here.
     ssl: config.databaseTls ? { rejectUnauthorized: true } : false,
     max: 10,
-    connectionTimeoutMillis: 5000,
+    connectionTimeoutMillis: config.syntheticStageGateEnabled ? 20000 : 5000,
     idleTimeoutMillis: 30000,
     statement_timeout: 8000,
   });
+  // A pooled idle connection can close while a free Neon compute sleeps.
+  // Handle it without logging connection strings, queries or credentials.
+  pool.on('error', () => { console.warn('An idle database connection ended; the pool will reconnect on demand.'); });
+  return pool;
 }
 export async function inTransaction<T>(
   db: Database,

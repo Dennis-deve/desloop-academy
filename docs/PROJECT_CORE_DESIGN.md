@@ -1,6 +1,8 @@
 # STU-CORE-01 / STU-CORE-UI-01 / STU-CORE-UI-02: private persistence, data-only client and in-tab recovery
 
-**Scope decision (31 October 2026):** The owner approved a genuine, editor-agnostic **adult-only project-core API** on React/Vite + Fastify + PostgreSQL, then selected a real connected project document client. API/UI-01 source reached GitHub `main` `5641102…` with successful CI; GitHub reports a Railway deploy, **not** an inspected/approved private runtime. The later local-only UI-02 adds per-account **in-tab unsaved edit recovery** after an authorised server GET. Separate approval is required for private adult staging. The JSON_V1 client only changes **data-only JSON**; it is not a Scratch/GDevelop adapter, executable code/block editor, Supabase migration, preview, offline backup or finished studio.
+> **D22 design correction (1 November):** Keep the account-owned, JSON-only contract and ephemeral in-tab recovery below. The owner has now approved **synthetic-only** stage testing on a new publicly addressable Render Free web service with a **separate server-side operator Basic gate** before adult session/CSRF, backed by a verified-TLS Neon Free Frankfurt copy. A limited SQL-created app role and direct-only, manually approved 005 are required. This is **not** a private network, licensed editor or hosted/real-user go-live; no Render/Neon instance exists. [Current D22 runbook](RENDER_NEON_SYNTHETIC_STAGE_D22_2026-11-01.md).
+
+**Historical scope decision (31 October 2026):** The owner approved a genuine, editor-agnostic **adult-only project-core API** on React/Vite + Fastify + PostgreSQL, then selected a real connected project document client. API/UI-01 source reached GitHub `main` `5641102…` with successful CI; GitHub reports a Railway deploy, **not** an inspected/approved private runtime. The later local-only UI-02 adds per-account **in-tab unsaved edit recovery** after an authorised server GET. Separate approval is required for private adult staging. The JSON_V1 client only changes **data-only JSON**; it is not a Scratch/GDevelop adapter, executable code/block editor, Supabase migration, preview, offline backup or finished studio.
 
 ## Trust and data flow
 
@@ -10,7 +12,7 @@ local adult-only JSON document client (real, untrusted data, no vendor adapter)
      Same-tab return → authenticated project GET → compare server revision → optionally restore.
   → bounded data-only JSON document; preserve existing PNG asset ID manifest on save
   → active adult learner session + exact Origin/CSRF + per-route body/rate limits
-  → Fastify /api/pilot/project-core/v1 [local+flag only]
+  → Fastify /api/pilot/project-core/v1 [disposable local OR D22 gated synthetic Render+Neon]
   → project-core/{contract,routes,store,migrate}.ts
   → PostgreSQL pilot.users identity → project_core.{projects,revisions,assets,revision_assets}
   ↘ pilot.audit_events (IDs, SHA-256, counts; never raw image/document)
