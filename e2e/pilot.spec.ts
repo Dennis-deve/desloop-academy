@@ -83,6 +83,10 @@ test('browser: private invite, first course, assigned human approval and next-co
   await expect(page.getByText('0 of 44 draft courses passed')).toBeVisible();
   await expect(page.getByText('0 recorded actions in these 7 UTC days.')).toBeVisible();
   await expect(page.getByText('Locked by server').first()).toBeVisible();
+  if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+    // An orbiting touch target never settles for a tap; animate only its decorative ring.
+    expect(await page.locator('.motion-orbit-rotor').evaluate((node) => getComputedStyle(node).animationName)).toBe('none');
+  }
   const initialViewport = page.viewportSize();
   await page.setViewportSize({ width: 320, height: 740 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
@@ -91,7 +95,7 @@ test('browser: private invite, first course, assigned human approval and next-co
   if (initialViewport) await page.setViewportSize(initialViewport);
   await expectAxeClean(page);
   await page.getByRole('button', { name: /02. Build/ }).click();
-  await expect(page.locator('.ll-orbit-core strong')).toHaveText('Build');
+  await expect(page.locator('.motion-orbit-center strong')).toHaveText('Build');
   await page.locator('.ll-palette').getByRole('button', { name: 'Move right' }).click();
   await page.locator('.ll-palette').getByRole('button', { name: 'Say “Hello!”' }).click();
   await page.getByRole('button', { name: 'Run blocks' }).click();
@@ -122,6 +126,11 @@ test('browser: private invite, first course, assigned human approval and next-co
   await page.goto('/pilot');
   await expect(page.getByText(`${lessons.length} recorded actions in these 7 UTC days.`)).toBeVisible();
   await expect(page.getByText('0 of 44 draft courses passed')).toBeVisible();
+  await page.locator('.ll-stat-grid').scrollIntoViewIfNeeded();
+  await expect.poll(async () => page.locator('.ll-bar-track > span').last().evaluate((bar) => bar.getBoundingClientRect().height)).toBeGreaterThan(0);
+  await expect(page.locator('.ll-bars')).toHaveAttribute('aria-label', /: 4(?:;|$)/);
+  // A chart animation is presentation of persisted actions, not a generated minutes estimate.
+  await expect(page.getByText(/recorded action.*in these 7 UTC days/)).toBeVisible();
   await page.goto('/pilot/courses/course-01');
   for (const [index, check] of lessons
     .map((lesson) => lesson.check)

@@ -45,13 +45,18 @@ test('four-stage orbit, actual draft filters, age lenses and accessible keyboard
   page,
 }) => {
   await page.goto(review);
+  await expect(page.locator('.motion-particles')).toHaveAttribute('data-motion', 'running');
+  await page.getByRole('button', { name: 'Pause orbit' }).click();
+  await expect(page.getByRole('button', { name: 'Resume orbit' })).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: 'Pause stage ticker' }).click();
+  await expect(page.getByRole('button', { name: 'Resume stage ticker' })).toHaveAttribute('aria-pressed', 'true');
   const stages = ['Learn', 'Build', 'Share', 'Grow'];
   for (const [index, label] of stages.entries()) {
     const button = page.getByRole('button', { name: new RegExp(`0${index + 1}\\. ${label}`) });
     await button.focus();
     await page.keyboard.press('Enter');
     await expect(button).toHaveAttribute('aria-pressed', 'true');
-    await expect(page.locator('.ll-orbit-core strong')).toHaveText(label);
+    await expect(page.locator('.motion-orbit-center strong')).toHaveText(label);
   }
   await expect(page.getByText(/Showing 6 of 44/)).toBeVisible();
   await page.getByRole('button', { name: 'Ages 9–12' }).click();
@@ -95,6 +100,7 @@ test('pointer dragging really changes the block order, independently of keyboard
   await page.mouse.up();
   await expect(page.locator('.ll-block-description strong').first()).toHaveText('Say “Hello!”');
   await page.getByRole('button', { name: 'Run blocks' }).click();
+  await expect(page.locator('.ll-block-active')).toHaveCount(1);
   await expect(page.locator('.ll-preview-stage svg')).toHaveAttribute('aria-label', /space 2 of 6/);
 });
 
@@ -103,6 +109,9 @@ test('reorderable local block program animates SVG steps without creating learne
 }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto(review);
+  await expect(page.locator('.motion-particles')).toHaveAttribute('data-motion', 'static');
+  expect(await page.locator('.motion-orbit-ring').evaluate((node) => getComputedStyle(node).animationName)).toBe('none');
+  expect(await page.locator('.motion-ticker-track').evaluate((node) => getComputedStyle(node).animationName)).toBe('none');
   const palette = page.locator('.ll-palette');
   await palette.getByRole('button', { name: 'Move right' }).click();
   await palette.getByRole('button', { name: 'Set colour' }).click();

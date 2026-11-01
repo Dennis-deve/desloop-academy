@@ -16,6 +16,8 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { motionRipple } from '@/components/motion/ripple';
+import { motionSpotlight } from '@/components/motion/spotlight';
 
 export type ButtonVariant = 'primary' | 'navy' | 'outline' | 'ghost' | 'white' | 'danger' | 'soft';
 export function buttonStyles(
@@ -24,7 +26,7 @@ export function buttonStyles(
   className?: string,
 ) {
   return cn(
-    'inline-flex items-center justify-center gap-2 rounded-xl font-bold transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500',
+    'motion-pressable inline-flex items-center justify-center gap-2 rounded-xl font-bold transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500',
     {
       'bg-brand-600 text-white hover:bg-brand-700': variant === 'primary',
       'bg-ink-900 text-white hover:bg-ink-800': variant === 'navy',
@@ -47,7 +49,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
 }
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { variant = 'primary', size = 'md', loading, className, disabled, children, ...props },
+  { variant = 'primary', size = 'md', loading, className, disabled, children, onPointerDown, ...props },
   ref,
 ) {
   return (
@@ -56,6 +58,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       type="button"
       className={buttonStyles(variant, size, className)}
       disabled={disabled || loading}
+      onPointerDown={(event) => { onPointerDown?.(event); if (!event.defaultPrevented) motionRipple(event); }}
       {...props}
     >
       {loading && <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />}
@@ -69,8 +72,14 @@ export function Container({ className, ...props }: HTMLAttributes<HTMLDivElement
     <div className={cn('mx-auto w-full max-w-page px-5 sm:px-7 lg:px-10', className)} {...props} />
   );
 }
-export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('card-surface', className)} {...props} />;
+export function Card({ className, onPointerMove, ...props }: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn('card-surface motion-spotlight', className)}
+      onPointerMove={(event) => { onPointerMove?.(event); if (!event.defaultPrevented) motionSpotlight(event); }}
+      {...props}
+    />
+  );
 }
 export function Badge({
   children,

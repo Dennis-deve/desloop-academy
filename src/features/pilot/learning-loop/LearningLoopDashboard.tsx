@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, Reorder, useReducedMotion } from 'framer-motion';
 import {
   ArrowDown,
@@ -30,42 +30,13 @@ import {
   type LabBlock,
   type SpriteColour,
 } from './program';
+import { LearningOrbit } from '@/components/motion/LearningOrbit';
+import { MotionParticles } from '@/components/motion/MotionParticles';
+import { MotionTicker } from '@/components/motion/MotionTicker';
+import { motionRipple } from '@/components/motion/ripple';
+import { motionSpotlight } from '@/components/motion/spotlight';
+import '@/components/motion/motion.css';
 import './LearningLoop.css';
-
-const loopStages = [
-  {
-    id: 'learn',
-    number: '01',
-    label: 'Learn',
-    short: 'Understand it',
-    detail: 'Start with the idea. Try an example and make it your own.',
-    colour: 'teal',
-  },
-  {
-    id: 'build',
-    number: '02',
-    label: 'Build',
-    short: 'Try it out',
-    detail: 'Put the pieces together and see what your choices do.',
-    colour: 'coral',
-  },
-  {
-    id: 'share',
-    number: '03',
-    label: 'Share',
-    short: 'Show your thinking',
-    detail: 'Explain what you made, with privacy and safety in mind.',
-    colour: 'sun',
-  },
-  {
-    id: 'grow',
-    number: '04',
-    label: 'Grow',
-    short: 'Improve it',
-    detail: 'Use feedback, revise and take the next step.',
-    colour: 'mint',
-  },
-] as const;
 
 const ageBands: { id: PublicAgeBand; label: string }[] = [
   { id: 'early', label: 'Ages 6–8' },
@@ -181,6 +152,11 @@ function LoopLab({ onOpenStudio }: { onOpenStudio?: () => void }) {
     setError('');
     setAnnouncement('Cleared this in-tab activity. Nothing was saved or credited.');
   };
+  // Expanded repeats use the Repeat block's id with a bounded -1/-2 suffix.
+  const activeActionId = running ? actions[stepIndex]?.id : undefined;
+  const activeBlockId = activeActionId
+    ? blocks.find((block) => activeActionId === block.id || activeActionId.startsWith(`${block.id}-`))?.id
+    : undefined;
 
   return (
     <section className="ll-lab-section ll-section" id="ll-lab" aria-labelledby="ll-lab-title">
@@ -198,7 +174,7 @@ function LoopLab({ onOpenStudio }: { onOpenStudio?: () => void }) {
         </span>
       </div>
       <div className="ll-lab-grid">
-        <div className="ll-lab-editor">
+        <div className="ll-lab-editor motion-spotlight" onPointerMove={motionSpotlight}>
           <div className="ll-card-topline">
             <span className="ll-live-dot" aria-hidden="true" /> YOUR BLOCKS{' '}
             <span className="ll-count">{blocks.length} / 8</span>
@@ -206,10 +182,11 @@ function LoopLab({ onOpenStudio }: { onOpenStudio?: () => void }) {
           <div className="ll-palette" role="group" aria-label="Add a block">
             {blocksToAdd.map((kind) => (
               <button
-                className={`ll-add ll-add-${kind.toLowerCase()}`}
+                className={`ll-add motion-pressable ll-add-${kind.toLowerCase()}`}
                 type="button"
                 key={kind}
                 disabled={running || blocks.length >= 8}
+                onPointerDown={motionRipple}
                 onClick={() => addBlock(kind)}
                 title={blockHelp[kind]}
               >
@@ -239,7 +216,8 @@ function LoopLab({ onOpenStudio }: { onOpenStudio?: () => void }) {
                   value={block}
                   key={block.id}
                   drag={running ? false : 'y'}
-                  className={`ll-block ll-block-${block.kind.toLowerCase()}`}
+                  className={`ll-block ll-block-${block.kind.toLowerCase()}${activeBlockId === block.id ? ' ll-block-active' : ''}`}
+                  aria-current={activeBlockId === block.id ? 'step' : undefined}
                 >
                   <GripVertical size={17} aria-hidden="true" className="ll-grip" />
                   <span className="ll-block-index">{String(index + 1).padStart(2, '0')}</span>
@@ -307,14 +285,15 @@ function LoopLab({ onOpenStudio }: { onOpenStudio?: () => void }) {
             </p>
           )}
           <div className="ll-lab-controls">
-            <button className="ll-run" type="button" disabled={running} onClick={run}>
+            <button className="ll-run motion-pressable" type="button" disabled={running} onPointerDown={motionRipple} onClick={run}>
               <Play size={16} fill="currentColor" aria-hidden="true" />{' '}
               {running ? 'Running…' : 'Run blocks'} <ArrowRight size={16} aria-hidden="true" />
             </button>
             <button
-              className="ll-reset"
+              className="ll-reset motion-pressable"
               type="button"
               disabled={running || (blocks.length === 0 && sprite.position === 0 && !sprite.speech)}
+              onPointerDown={motionRipple}
               onClick={reset}
             >
               <RotateCcw size={16} aria-hidden="true" /> Clear
@@ -341,7 +320,7 @@ function LoopLab({ onOpenStudio }: { onOpenStudio?: () => void }) {
                 : 'Ready when you are'}
             </span>
           </div>
-          <div className="ll-preview-stage">
+          <div className={`ll-preview-stage${running ? ' ll-preview-running' : ''}`}>
             <svg
               viewBox="0 0 420 220"
               role="img"
@@ -474,6 +453,16 @@ export function LearningLoopDashboard({
   onOpenStudio,
 }: LearningLoopProps) {
   const reducedMotion = Boolean(useReducedMotion());
+  const statsRef = useRef<HTMLDivElement>(null);
+  const [statsVisible, setStatsVisible] = useState(() => typeof IntersectionObserver === 'undefined');
+  useEffect(() => {
+    if (!statsRef.current || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setStatsVisible(true); observer.disconnect(); }
+    }, { threshold: 0.2 });
+    observer.observe(statsRef.current);
+    return () => observer.disconnect();
+  }, []);
   const [theme, setTheme] = useState<'light' | 'dark'>(() =>
     typeof window !== 'undefined' &&
     typeof window.matchMedia === 'function' &&
@@ -481,7 +470,6 @@ export function LearningLoopDashboard({
       ? 'dark'
       : 'light',
   );
-  const [activeStage, setActiveStage] = useState(0);
   const [age, setAge] = useState<PublicAgeBand>('adult');
   const [category, setCategory] = useState('all');
   const [query, setQuery] = useState('');
@@ -504,7 +492,8 @@ export function LearningLoopDashboard({
   );
   const visibleCourses = filtered.slice(0, shown);
   const current = pathway?.courses.find((course) => course.id === pathway.currentCourseId);
-  const complete = pathway?.completedCount;
+  const count = pathway?.completedCount;
+  const complete = count !== undefined && Number.isSafeInteger(count) && count >= 0 && count <= publicCourses.length ? count : undefined;
   // A stale/malformed server response must not become a fictional chart or crash
   // the private page. This also keeps the standalone view data-free by design.
   const activityDays =
@@ -527,7 +516,6 @@ export function LearningLoopDashboard({
       : null;
   const peak = Math.max(1, ...(activityDays?.map((day) => day.actions) ?? []));
   const totalActions = activityDays?.reduce((sum, day) => sum + day.actions, 0);
-  const stage = loopStages[activeStage];
   const brand = mode === 'review' ? '__DESLOOP_BRAND_MARK__' : '/brand/brandmark-dark.webp';
   const HeroHeading = mode === 'review' ? 'h1' : 'h2'; // PilotLayout already supplies the private page h1.
   const changeFilter = (nextCategory: string) => {
@@ -551,6 +539,7 @@ export function LearningLoopDashboard({
   return (
     <div className="learning-loop" data-theme={theme} id="ll-top">
       <div className="ll-shell">
+        {mode === 'review' && <div className="motion-weave-bar" aria-hidden="true" />}
         <header className="ll-header">
           <div className="ll-identity">
             <img src={brand} alt="" width="50" height="30" />
@@ -580,8 +569,10 @@ export function LearningLoopDashboard({
             )}
           </button>
         </header>
+        <MotionTicker />
         <div className="ll-main" role={mode === 'review' ? 'main' : undefined}>
           <section className="ll-hero" id="ll-journey" aria-labelledby="ll-title">
+            <MotionParticles />
             <div className="ll-hero-copy">
               <span className="ll-kicker">
                 <span className="ll-kicker-star" aria-hidden="true">
@@ -605,18 +596,19 @@ export function LearningLoopDashboard({
                 {current && onOpenCourse ? (
                   <button
                     type="button"
-                    className="ll-hero-primary"
+                    className="ll-hero-primary motion-pressable"
+                    onPointerDown={motionRipple}
                     onClick={() => onOpenCourse(current.id)}
                   >
                     Continue Course {String(current.number).padStart(2, '0')}{' '}
                     <ArrowRight size={18} aria-hidden="true" />
                   </button>
                 ) : (
-                  <a className="ll-hero-primary" href="#ll-courses">
+                  <a className="ll-hero-primary motion-pressable" href="#ll-courses" onPointerDown={motionRipple}>
                     Explore the draft pathway <ArrowRight size={18} aria-hidden="true" />
                   </a>
                 )}
-                <a className="ll-hero-secondary" href="#ll-lab">
+                <a className="ll-hero-secondary motion-pressable" href="#ll-lab" onPointerDown={motionRipple}>
                   Try the block lab <ChevronDown size={17} aria-hidden="true" />
                 </a>
               </div>
@@ -626,68 +618,7 @@ export function LearningLoopDashboard({
                   : `Design review · ${publicCatalog.version} · no sign-in or activity data`}
               </p>
             </div>
-            <div
-              className="ll-orbit"
-              role="group"
-              aria-label="Four selectable learning loop stages"
-            >
-              <svg className="ll-orbit-ring" viewBox="0 0 420 420" aria-hidden="true">
-                <motion.circle
-                  cx="210"
-                  cy="210"
-                  r="155"
-                  fill="none"
-                  stroke="rgba(215,218,255,.24)"
-                  strokeWidth="1.5"
-                  strokeDasharray="4 9"
-                  animate={reducedMotion ? undefined : { rotate: 360 }}
-                  transition={{ duration: 80, repeat: Infinity, ease: 'linear' }}
-                  style={{ transformOrigin: '50% 50%' }}
-                />
-                <circle
-                  cx="210"
-                  cy="210"
-                  r="115"
-                  fill="none"
-                  stroke="rgba(215,218,255,.12)"
-                  strokeWidth="1"
-                />
-              </svg>
-              <div className="ll-orbit-core" aria-live="polite" aria-atomic="true">
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.div
-                    key={stage.id}
-                    initial={reducedMotion ? false : { opacity: 0, scale: 0.91 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={reducedMotion ? undefined : { opacity: 0, scale: 0.91 }}
-                    transition={{ duration: reducedMotion ? 0 : 0.23 }}
-                  >
-                    <span className={`ll-core-icon ll-core-${stage.colour}`} aria-hidden="true">
-                      ✳
-                    </span>
-                    <strong>{stage.label}</strong>
-                    <span>{stage.detail}</span>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-              {loopStages.map((part, index) => (
-                <motion.button
-                  key={part.id}
-                  type="button"
-                  className={`ll-orbit-node ll-node-${part.id}`}
-                  aria-pressed={activeStage === index}
-                  aria-label={`${part.number}. ${part.label}: ${part.short}`}
-                  onClick={() => setActiveStage(index)}
-                  whileHover={reducedMotion ? undefined : { scale: 1.09 }}
-                  whileTap={reducedMotion ? undefined : { scale: 0.96 }}
-                >
-                  <span className={`ll-node-glyph ll-glyph-${part.colour}`} aria-hidden="true">
-                    {part.number}
-                  </span>
-                  <span className="ll-node-name">{part.label}</span>
-                </motion.button>
-              ))}
-            </div>
+            <div className="ll-orbit-wrap"><LearningOrbit variant="pilot" /></div>
           </section>
           <div className="ll-content">
             <section className="ll-stats ll-section" aria-labelledby="ll-progress-title">
@@ -706,8 +637,8 @@ export function LearningLoopDashboard({
                   01 / MOMENTUM
                 </span>
               </div>
-              <div className="ll-stat-grid">
-                <div className="ll-stat-card ll-progress-card">
+              <div className="ll-stat-grid" ref={statsRef}>
+                <div className="ll-stat-card ll-progress-card motion-spotlight" onPointerMove={motionSpotlight}>
                   <div className="ll-card-topline">
                     DRAFT-1 COURSE PROGRESSION{' '}
                     <span className="ll-stat-decoration" aria-hidden="true">
@@ -737,8 +668,9 @@ export function LearningLoopDashboard({
                           transform="rotate(-90 90 90)"
                           initial={reducedMotion ? false : { strokeDashoffset: 2 * Math.PI * 69 }}
                           animate={{
-                            strokeDashoffset:
-                              2 * Math.PI * 69 * (1 - (complete ?? 0) / publicCourses.length),
+                            strokeDashoffset: statsVisible || reducedMotion
+                              ? 2 * Math.PI * 69 * (1 - (complete ?? 0) / publicCourses.length)
+                              : 2 * Math.PI * 69,
                           }}
                           transition={{ duration: reducedMotion ? 0 : 0.9, ease: 'easeOut' }}
                         />
@@ -779,7 +711,7 @@ export function LearningLoopDashboard({
                     </div>
                   </div>
                 </div>
-                <div className="ll-stat-card ll-activity-card">
+                <div className="ll-stat-card ll-activity-card motion-spotlight" onPointerMove={motionSpotlight}>
                   <div className="ll-card-topline">
                     LAST 7 UTC DAYS{' '}
                     <span className="ll-stat-decoration" aria-hidden="true">
@@ -807,7 +739,7 @@ export function LearningLoopDashboard({
                                 className={index === 6 ? 'll-bar-current' : ''}
                                 initial={reducedMotion ? false : { height: 0 }}
                                 animate={{
-                                  height: day.actions
+                                  height: (statsVisible || reducedMotion) && day.actions
                                     ? `${Math.max(10, (day.actions / peak) * 100)}%`
                                     : '0%',
                                 }}
@@ -932,7 +864,8 @@ export function LearningLoopDashboard({
                         animate={{ opacity: 1, y: 0 }}
                         exit={reducedMotion ? undefined : { opacity: 0, scale: 0.97 }}
                         transition={{ duration: reducedMotion ? 0 : 0.22 }}
-                        className="ll-course-card"
+                        className="ll-course-card motion-spotlight"
+                        onPointerMove={motionSpotlight}
                       >
                         <div className="ll-course-head">
                           <span className="ll-course-number">

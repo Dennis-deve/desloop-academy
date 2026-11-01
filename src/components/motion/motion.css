@@ -1,0 +1,221 @@
+/* Shared, data-free motion vocabulary. Public entry imports no pilot/AI/assessment code. */
+.motion-visually-hidden { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0 0 0 0) !important; white-space: nowrap !important; border: 0 !important; }
+.motion-weave-bar {
+  position: sticky;
+  top: 0;
+  z-index: 51;
+  height: 6px;
+  background: linear-gradient(90deg, #28b9aa, #7a72df 26%, #f39c87 53%, #e4bd70 72%, #28b9aa);
+  background-size: 210% 100%;
+  animation: motion-weave 3.8s ease-out 1 both;
+}
+@keyframes motion-weave { from { background-position: 100% 0; } to { background-position: 0 0; } }
+.motion-site-header {
+  background: var(--panel);
+  background: color-mix(in srgb, var(--panel) 92%, transparent);
+  backdrop-filter: blur(14px);
+}
+.motion-site-header a:not(.motion-pressable) { transition: color 180ms ease, text-decoration-color 180ms ease; }
+.motion-public-page { animation: motion-page-in 470ms ease-out both; }
+/* Keep text fully opaque throughout entrance: faded copy temporarily failed WCAG contrast. */
+@keyframes motion-page-in { from { transform: translateY(9px); } to { transform: none; } }
+
+.motion-hero-public {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: #fff;
+  background: radial-gradient(circle at 76% 42%, #343360 0, transparent 47%),
+    radial-gradient(circle at 2% 100%, #183d4e 0, transparent 40%), #141630;
+}
+.motion-hero-public::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(110deg, #ffffff08 1px, transparent 1px),
+    linear-gradient(#ffffff08 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: linear-gradient(135deg, transparent 30%, black);
+}
+.motion-hero-public > :not(.motion-particles) { position: relative; z-index: 1; }
+.motion-particles { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.motion-hero-badge { color: #b1f5e1; letter-spacing: .16em; font-weight: 800; text-transform: uppercase; }
+.motion-hero-title { color: #fff; text-wrap: normal; letter-spacing: -.045em; }
+.motion-hero-title em { font-style: normal; color: #a8eedd; }
+.motion-hero-copy { color: #e5e9fa; }
+.motion-hero-note { color: #cbd4e5; }
+.motion-hero-foot { color: #d6dded; }
+
+.motion-pressable {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+.motion-pressable::before {
+  content: '';
+  position: absolute;
+  inset: -30%;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-80%) rotate(-15deg);
+  background: linear-gradient(110deg, transparent 36%, #ffffff3a 50%, transparent 64%);
+}
+.motion-pressable:hover:not(:disabled)::before { opacity: 1; animation: motion-sheen 500ms ease-out 1; }
+@keyframes motion-sheen { to { transform: translateX(80%) rotate(-15deg); } }
+@media (hover: hover) and (pointer: fine) {
+  .motion-pressable:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 9px 24px #17193625; }
+  .motion-card-link:hover { transform: translateY(-3px); box-shadow: 0 17px 34px #12163816; }
+}
+.motion-pressable:active:not(:disabled) { transform: translateY(0); }
+.motion-ripple {
+  position: absolute;
+  z-index: 2;
+  width: 14px;
+  height: 14px;
+  margin: -7px;
+  pointer-events: none;
+  border-radius: 50%;
+  background: #b2f3deaa;
+  animation: motion-ripple 620ms ease-out forwards;
+}
+@keyframes motion-ripple { from { transform: scale(0); opacity: .85; } to { transform: scale(23); opacity: 0; } }
+.motion-card-link { transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease; }
+.motion-spotlight { position: relative; isolation: isolate; overflow: hidden; }
+.motion-spotlight::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(220px circle at var(--spot-x, 65%) var(--spot-y, 15%), #65cfc028, transparent 74%);
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+.motion-spotlight > * { position: relative; z-index: 1; }
+@media (hover: hover) and (pointer: fine) { .motion-spotlight:hover::before { opacity: 1; } }
+
+.motion-orbit {
+  position: relative;
+  width: min(100%, 390px);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  color: #fff;
+  isolation: isolate;
+  --orbit-time: 48s;
+}
+.motion-orbit-ring {
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  border: 1px dashed #d7d9ff7a;
+  outline: 1px solid #c5c5ec27;
+  outline-offset: -42px;
+  animation: motion-orbit-spin var(--orbit-time) linear infinite;
+}
+.motion-orbit-rotor { position: absolute; inset: 50px; animation: motion-orbit-spin var(--orbit-time) linear infinite; }
+.motion-orbit-node {
+  position: absolute;
+  width: 96px;
+  min-height: 70px;
+  margin: -35px -48px;
+  padding: 5px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  border: 2px solid #ffffff42;
+  border-radius: 15px;
+  background: #272849;
+  box-shadow: 0 10px 25px #0c0e2d80;
+  font-size: 12px;
+  font-weight: 800;
+  animation: motion-orbit-counter var(--orbit-time) linear infinite;
+}
+.motion-orbit-node[aria-pressed='true'] { border-color: #fff; box-shadow: 0 0 0 4px #ffffff2e, 0 13px 28px #08092199; }
+.motion-orbit-node-0 { top: 0; left: 50%; }
+.motion-orbit-node-1 { top: 50%; left: 100%; }
+.motion-orbit-node-2 { top: 100%; left: 50%; }
+.motion-orbit-node-3 { top: 50%; left: 0; }
+.motion-orbit-node-content { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
+.motion-orbit-index { display: grid; place-items: center; width: 27px; height: 27px; border-radius: 8px; font-size: 11px; color: #172e2b; background: #b8f1d9; }
+.motion-orbit-coral .motion-orbit-index { background: #ffc9bd; color: #40252e; }
+.motion-orbit-gold .motion-orbit-index { background: #ffe3a1; color: #48351d; }
+.motion-orbit-lilac .motion-orbit-index { background: #ddd0ff; color: #32274c; }
+.motion-orbit-center {
+  position: absolute;
+  inset: 28%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 12px;
+  text-align: center;
+  background: #2b2955;
+  border: 1px solid #c9c5f056;
+  border-radius: 50%;
+  box-shadow: 0 0 0 10px #b0abe817, 0 18px 46px #06052288;
+}
+.motion-orbit-center-glyph { font-size: 24px; line-height: 1; color: #b6f3db; }
+.motion-orbit-center strong { font-family: 'Bricolage Grotesque Variable', system-ui, sans-serif; font-size: clamp(17px, 3vw, 26px); line-height: 1; }
+.motion-orbit-center > span:last-child { max-width: 145px; font-size: 10px; line-height: 1.35; color: #e5e6fb; }
+.motion-orbit-pause {
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  right: 0;
+  min-height: 31px;
+  padding: 3px 9px;
+  border: 1px solid #c0c5da90;
+  border-radius: 99px;
+  background: #252742;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+}
+.motion-orbit-pause:hover { background: #454367; }
+@keyframes motion-orbit-spin { to { transform: rotate(360deg); } }
+@keyframes motion-orbit-counter { to { transform: rotate(-360deg); } }
+.motion-orbit:is(:hover, :focus-within, .motion-orbit-paused) :is(.motion-orbit-ring, .motion-orbit-rotor, .motion-orbit-node) { animation-play-state: paused; }
+
+.motion-ticker { display: flex; align-items: center; min-height: 43px; gap: 10px; overflow: hidden; color: #21213f; background: #d8f4e9; border-block: 1px solid #a7daca; }
+.motion-ticker-clip { flex: 1; min-width: 0; overflow: hidden; }
+.motion-ticker-track { display: flex; width: max-content; animation: motion-ticker-slide 72s linear infinite; }
+.motion-ticker-list { flex: 0 0 auto; display: flex; align-items: center; gap: 38px; margin: 0; padding: 0 38px 0 0; list-style: none; }
+.motion-ticker-list li { display: inline-flex; align-items: center; gap: 9px; white-space: nowrap; font-size: 11px; font-weight: 800; letter-spacing: .015em; }
+.motion-ticker-list li > span:first-child { font-size: 16px; color: #168576; }
+.motion-ticker-toggle { flex: 0 0 auto; min-height: 34px; margin: 4px 9px 4px 0; padding: 4px 10px; border: 1px solid #568c7e; border-radius: 8px; background: #f1fcf6; color: #124d41; font-size: 11px; font-weight: 750; }
+.motion-ticker-toggle:hover { background: #fff; }
+@keyframes motion-ticker-slide { to { transform: translateX(-50%); } }
+.motion-ticker:is(:hover, :focus-within, .motion-ticker-paused) .motion-ticker-track { animation-play-state: paused; }
+
+/* Stable touch targets: only the decorative ring rotates on coarse/no-hover input. */
+@media (hover: none), (pointer: coarse), (any-pointer: coarse) {
+  .motion-orbit-rotor, .motion-orbit-node { animation: none !important; }
+}
+@media (max-width: 470px) {
+  .motion-orbit-rotor { inset: 46px; }
+  .motion-orbit-node { width: 78px; min-height: 64px; margin: -32px -39px; font-size: 10px; }
+  .motion-orbit-center { inset: 26.5%; padding: 8px; }
+  .motion-orbit-center > span:last-child { font-size: 9px; }
+  .motion-orbit-center-glyph { font-size: 19px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .motion-weave-bar, .motion-public-page, .motion-pressable, .motion-pressable::before,
+  .motion-ripple, .motion-card-link, .motion-spotlight::before,
+  .motion-orbit-ring, .motion-orbit-rotor, .motion-orbit-node, .motion-ticker-track {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+  /* In reduced motion, show all nine labels at once: no marquee or hidden scroll area. */
+  .motion-ticker-clip { overflow: visible; }
+  .motion-ticker-track { width: 100%; }
+  .motion-ticker-list { width: 100%; flex: 1 1 auto; flex-wrap: wrap; gap: 4px 16px; padding: 6px 12px; }
+  .motion-ticker-list li { max-width: 100%; white-space: normal; }
+  .motion-ticker-list[aria-hidden='true'] { display: none; }
+  .motion-ticker-toggle, .motion-orbit-pause { display: none; }
+}

@@ -4,7 +4,7 @@ import { Card, Container, Eyebrow, buttonStyles } from '@/components/ui';
 /** Public static site: intentionally no request to the adult/private backend. */
 export function PublicOnlyAvailability() {
   return (
-    <section className="public-bg py-12 sm:py-16">
+    <section className="motion-public-page public-bg py-12 sm:py-16">
       <Container>
         <Eyebrow>Current access boundary</Eyebrow>
         <h1 className="mt-3 font-display text-4xl text-heading sm:text-5xl">

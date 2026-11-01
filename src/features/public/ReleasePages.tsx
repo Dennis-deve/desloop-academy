@@ -3,49 +3,55 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, LockKeyhole, SearchX } from 'lucide-react';
 import { Badge, Card, Container, EmptyState, Eyebrow, buttonStyles } from '@/components/ui';
 import { publicCatalog, publicCourseBySlug, publicCourses, publicStages } from '@/curriculum/public';
+import { LearningOrbit } from '@/components/motion/LearningOrbit';
+import { MotionParticles } from '@/components/motion/MotionParticles';
+import { MotionTicker } from '@/components/motion/MotionTicker';
+import { motionRipple } from '@/components/motion/ripple';
+import { motionSpotlight } from '@/components/motion/spotlight';
 
 const draftNotice = 'Unreviewed curriculum outline · Not open for public enrolment or official credit';
 
 export function ReleaseHome() {
   return (
     <>
-      <section className="hero-surface border-b border-line py-14 sm:py-24">
-        <Container className="grid items-center gap-10 lg:grid-cols-[1.25fr_.75fr]">
+      <section className="motion-hero-public motion-public-page border-b border-line py-14 sm:py-20">
+        <MotionParticles />
+        <Container className="grid items-center gap-9 lg:grid-cols-[1.12fr_.88fr]">
           <div>
-            <Eyebrow>Desloop Academy · course guide</Eyebrow>
-            <h1 className="mt-5 max-w-3xl font-display text-5xl leading-[1.13] text-heading sm:text-6xl">
-              Learn it. Build it. Make it yours.
+            <div className="flex items-center gap-3">
+              <img src="/brand/brandmark-dark.webp" alt="" width={450} height={450} className="h-10 w-10 rounded-xl" />
+              <Eyebrow className="motion-hero-badge">Desloop Academy · course guide</Eyebrow>
+            </div>
+            <h1 aria-label="Learn it. Build it. Make it yours." className="motion-hero-title mt-6 max-w-3xl font-display text-5xl leading-[1.08] sm:text-6xl">
+              <span className="block">Learn it. <em>Build it.</em></span>
+              <span className="block">Make it yours.</span>
             </h1>
-            <p className="mt-6 max-w-2xl text-base leading-8 text-body">
+            <p className="motion-hero-copy mt-6 max-w-2xl text-base leading-8">
               Explore a draft sequence of 44 digital-skills courses, from foundations to a capstone.
               Every learner would follow the same order; examples and support can adapt without skipping essential skills.
             </p>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-body">
+            <p className="motion-hero-note mt-4 max-w-2xl text-sm leading-7">
               This is <strong>information, not enrolment</strong>. Lessons and awards need expert review;
               the working learning engine is restricted to an invited-adult internal service. Children cannot register.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/courses" className={buttonStyles('primary', 'lg')}>
+              <Link to="/courses" onPointerDown={motionRipple} className={buttonStyles('primary', 'lg')}>
                 Explore the 44-course outline <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
-              <Link to="/availability" className={buttonStyles('outline', 'lg')}>
+              <Link to="/availability" onPointerDown={motionRipple} className={buttonStyles('outline', 'lg', 'border-white/60 bg-white/10 text-white hover:bg-white/20')}>
                 Check availability
               </Link>
             </div>
+            <p className="motion-hero-foot mt-6 text-xs leading-6">{draftNotice}.</p>
           </div>
-          <div className="rounded-3xl border border-line bg-panel p-6 shadow-soft sm:p-8">
-            <img src="/brand/brandmark-dark.webp" alt="" width={450} height={450} className="mx-auto w-28 rounded-2xl" />
-            <h2 className="mt-6 font-display text-2xl text-heading">One ordered pathway</h2>
-            <ol className="mt-4 space-y-4 text-sm text-body">
-              <li><strong>01</strong> Learn a digital idea with clear examples.</li>
-              <li><strong>02</strong> Practise with guidance, then try independently.</li>
-              <li><strong>03</strong> Receive feedback, revise and demonstrate mastery.</li>
-            </ol>
-            <p className="mt-5 text-xs leading-6 text-subdued">{draftNotice}.</p>
+          <div className="motion-orbit-panel">
+            <LearningOrbit />
+            <p className="mt-5 text-center text-xs leading-6 text-[#e3e7fa]">Select a stage to read about it. This guide cannot save progress.</p>
           </div>
         </Container>
       </section>
-      <section className="py-14 sm:py-20">
+      <MotionTicker />
+      <section className="motion-public-page py-14 sm:py-20">
         <Container>
           <Eyebrow>First, understand the sequence</Eyebrow>
           <h2 className="mt-3 max-w-2xl font-display text-3xl text-heading sm:text-4xl">
@@ -53,7 +59,7 @@ export function ReleaseHome() {
           </h2>
           <div className="mt-8 grid gap-4 md:grid-cols-3">
             {[publicStages[0], publicStages[3], publicStages[8]].map((stage) => (
-              <Link key={stage.number} to={`/courses?stage=${stage.number}`} className="group rounded-2xl border border-line bg-panel p-6 hover:border-brand-400">
+              <Link key={stage.number} to={`/courses?stage=${stage.number}`} onPointerMove={motionSpotlight} className="motion-spotlight motion-card-link group rounded-2xl border border-line bg-panel p-6 hover:border-brand-400">
                 <span className="text-xs font-bold text-brand-600 dark:text-brand-200">Stage {stage.number} · Courses {stage.first}–{stage.last}</span>
                 <h3 className="mt-3 font-display text-xl text-heading">{stage.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-body">{stage.subtitle}</p>
@@ -87,7 +93,7 @@ export function ReleaseCatalog() {
   };
   const reset = () => { setSearch(''); setStage('all'); };
   return (
-    <section className="public-bg py-12 sm:py-16">
+    <section className="motion-public-page public-bg py-12 sm:py-16">
       <Container>
         <Eyebrow>Version {publicCatalog.version} · {publicCatalog.reviewStatus}</Eyebrow>
         <h1 className="mt-3 font-display text-4xl text-heading sm:text-5xl">The 44-course outline</h1>
@@ -117,7 +123,7 @@ export function ReleaseCatalog() {
         {matches.length ? (
           <ol className="mt-6 grid gap-3">
             {matches.map((course) => (
-              <li key={course.id} className="rounded-2xl border border-line bg-panel p-5 sm:p-6">
+              <li key={course.id} onPointerMove={motionSpotlight} className="motion-spotlight motion-card-link rounded-2xl border border-line bg-panel p-5 sm:p-6">
                 <div className="flex items-start gap-4">
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-50 font-bold text-brand-700" aria-hidden="true">
                     {String(course.number).padStart(2, '0')}
@@ -149,7 +155,7 @@ export function ReleaseCourse() {
   const previous = publicCourses[course.number - 2];
   const next = publicCourses[course.number];
   return (
-    <section className="public-bg py-12 sm:py-16">
+    <section className="motion-public-page public-bg py-12 sm:py-16">
       <Container>
         <Link to="/courses" className="inline-flex items-center gap-2 text-sm font-bold text-brand-600 dark:text-brand-200">
           <ArrowLeft className="h-4 w-4" aria-hidden="true" /> All 44 courses
@@ -179,7 +185,7 @@ export function ReleaseCourse() {
             <h2 className="font-display text-2xl text-heading">Four ordered modules</h2>
             <ol className="mt-4 space-y-3">
               {course.modules.map((module, index) => (
-                <li key={module.title} className="rounded-2xl border border-line bg-panel p-5">
+                <li key={module.title} onPointerMove={motionSpotlight} className="motion-spotlight rounded-2xl border border-line bg-panel p-5">
                   <h3 className="font-bold text-heading">{index + 1}. {module.title}</h3>
 
                 </li>
@@ -216,7 +222,7 @@ export function ReleaseCourse() {
 
 export function ReleaseMethod() {
   return (
-    <section className="public-bg py-12 sm:py-16">
+    <section className="motion-public-page public-bg py-12 sm:py-16">
       <Container>
         <Eyebrow>Learning approach · proposed, not a published qualification</Eyebrow>
         <h1 className="mt-3 max-w-3xl font-display text-4xl text-heading sm:text-5xl">How learning works</h1>
@@ -230,7 +236,7 @@ export function ReleaseMethod() {
             ['Make and revise', 'A practical task and feedback show what to improve; another attempt stays within the same course.'],
             ['Prove mastery', 'The server checks required evidence and thresholds. An assigned human reviews projects when required before the next course opens.'],
           ].map(([heading, text], index) => (
-            <li key={heading} className="rounded-2xl border border-line bg-panel p-6">
+            <li key={heading} onPointerMove={motionSpotlight} className="motion-spotlight rounded-2xl border border-line bg-panel p-6">
               <span className="text-xs font-bold text-brand-600 dark:text-brand-200">Step {index + 1}</span>
               <h2 className="mt-2 font-display text-xl text-heading">{heading}</h2>
               <p className="mt-2 text-sm leading-7 text-body">{text}</p>
@@ -249,7 +255,7 @@ export function ReleaseMethod() {
 
 export function ReleaseUnavailable() {
   return (
-    <section className="public-bg py-16 sm:py-24">
+    <section className="motion-public-page public-bg py-16 sm:py-24">
       <Container>
         <div className="mx-auto max-w-2xl rounded-2xl border border-line bg-panel p-7 sm:p-10">
           <Eyebrow>Unavailable</Eyebrow>

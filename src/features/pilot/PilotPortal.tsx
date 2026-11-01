@@ -138,7 +138,7 @@ export function PilotLayout() {
     }
   };
   return (
-    <section className="hero-surface min-h-[70vh] pb-20 pt-12 sm:pt-16">
+    <section className="hero-surface motion-public-page min-h-[70vh] pb-20 pt-12 sm:pt-16">
       <Container>
         <div className="mb-7 flex flex-col items-start justify-between gap-5 border-b border-line pb-7 sm:flex-row sm:items-end">
           <div>

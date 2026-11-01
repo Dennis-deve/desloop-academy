@@ -6,6 +6,8 @@ beforeEach(() => {
   localStorage.clear();
   sessionStorage.clear();
   window.scrollTo = vi.fn();
+  // jsdom intentionally has no canvas renderer; browser suites exercise real particles.
+  vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
   if (!window.matchMedia)
     window.matchMedia = vi.fn().mockImplementation(() => ({
       matches: false,
