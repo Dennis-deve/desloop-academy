@@ -13,6 +13,7 @@ import { appendAudit, inTransaction, verifyRelease } from './db.js';
 import { loadCatalog, type PilotCatalog } from './catalog.js';
 import { PilotProgression } from './progression.js';
 import { readWeeklyActivity } from './dashboard-activity.js';
+import { LearningAnnotations, verifyLearningAnnotations } from './learning/annotations.js';
 import { loadEngineCatalog } from './engine/catalog.js';
 import { verifyEngineRelease } from './engine/migrate.js';
 import { LearningEngine } from './engine/service.js';
@@ -117,6 +118,15 @@ const sandboxRun = z
   .object({ revisionNo: z.number().int().min(1).max(100), requestId: uuid })
   .strict();
 const idParams = z.object({ courseId: z.string().regex(/^course-\d{2}$/) });
+const annotationParams = z.object({
+  courseId: idParams.shape.courseId,
+  lessonId: z.string().regex(/^c\d{2}-l\d+$/),
+});
+const annotationInput = z.object({
+  note: z.string().max(4000).refine((value) => !value.includes('\0')),
+  bookmarked: z.boolean(),
+  expectedRevision: z.number().int().min(0).max(1_000_000_000),
+}).strict();
 function parse<T>(schema: ZodType<T>, input: unknown): T {
   const parsed = schema.safeParse(input);
   if (!parsed.success)
@@ -147,7 +157,8 @@ export async function buildApi(
             'req.headers.authorization',
             'req.body.password',
             'req.body.invitation',
-            'req.body.input', // Private synthetic AI requests must not enter application logs.
+            'req.body.input', // Private AI requests must not enter application logs.
+            'req.body.note', // Learner-written annotations may be sensitive.
             'req.body.decisionReference',
             'res.headers.set-cookie',
           ],
@@ -178,7 +189,11 @@ export async function buildApi(
   app.setErrorHandler((error, request, reply) => {
     if (error instanceof ApiError)
       return reply.code(error.statusCode).send({ error: error.code, message: error.message });
-    request.log.error({ err: error }, 'pilot request failed');
+    // PostgreSQL may include a failing row in its error detail. Never put a learner's
+    // free-text note in logs, even when an unexpected SQL constraint fails.
+    if (request.url.includes('/annotation'))
+      request.log.error({ code: (error as { code?: string }).code ?? 'unknown' }, 'private annotation failed');
+    else request.log.error({ err: error }, 'pilot request failed');
     const possibleStatus = (error as { statusCode?: unknown }).statusCode;
     const status =
       typeof possibleStatus === 'number' && possibleStatus >= 400 && possibleStatus < 500
@@ -202,6 +217,7 @@ export async function buildApi(
   app.get('/api/pilot/status', async () => ({
     enabled: config.enabled,
     engineV2Enabled: config.engineV2Enabled,
+    learningAnnotationsEnabled: config.learningAnnotationsEnabled,
     audience: 'invited adults and internal reviewers only',
     curriculum: 'unreviewed internal draft; no official credit',
     contentVersion: catalog.version,
@@ -211,7 +227,10 @@ export async function buildApi(
     if (config.syntheticStageGateEnabled && config.isProduction)
       await verifySyntheticStageDatabase(db); // A Neon admin or non-TLS connection cannot serve adults.
     await verifyRelease(db, catalog); // Fail startup closed if the draft file changes without a new version/migration.
+    if (config.learningAnnotationsEnabled)
+      await verifyLearningAnnotations(db); // Missing schema or SQL grants must not enable a half-working notebook.
     const progression = new PilotProgression(db, catalog);
+    const annotations = config.learningAnnotationsEnabled ? new LearningAnnotations(db, catalog) : null;
     const dummyHash = await hash('unused dummy password; never an account', passwordOptions);
 
     app.post(
@@ -341,6 +360,20 @@ export async function buildApi(
       const { courseId } = parse(idParams, request.params);
       return progression.courseDetail(auth.user.id, courseId);
     });
+    if (annotations) {
+      app.get('/api/pilot/courses/:courseId/annotations', async (request, reply) => {
+        reply.header('Cache-Control', 'private, no-store');
+        const auth = await requireUser(request, db, config, 'learner');
+        const { courseId } = parse(idParams, request.params);
+        return annotations.course(auth.user.id, courseId);
+      });
+      app.post('/api/pilot/courses/:courseId/lessons/:lessonId/annotation', async (request, reply) => {
+        reply.header('Cache-Control', 'private, no-store');
+        const auth = await requireMutation(request, db, config, 'learner');
+        const { courseId, lessonId } = parse(annotationParams, request.params);
+        return annotations.save(auth.user.id, courseId, lessonId, parse(annotationInput, request.body));
+      });
+    }
     app.post('/api/pilot/courses/:courseId/lessons/:lessonId', async (request) => {
       const auth = await requireMutation(request, db, config, 'learner');
       const { courseId } = parse(idParams, request.params);

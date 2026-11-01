@@ -1,8 +1,9 @@
 import { defineRailway, github, postgres, preserve, project, service } from 'railway/iac';
 
 // HISTORICAL ONLY: owner reports both Railway app and Postgres deleted with no known backup.
-// Do NOT apply to recreate or call this a rollback. The new synthetic stage is Render +
-// empty Neon; a future Railway return needs its own data/cost/identity/backup approval.
+// Do NOT apply to recreate or call this a rollback. D28 cancelled synthetic staging;
+// Railway is a future public-host option only after approved features, legal/privacy,
+// safety, least-privilege data, cost, backup/restore and a reviewed cutover.
 // This old plan was private/domainless, adult/internal; no minor access or public DB proxy.
 // Adult/internal API is enabled only inside Railway's private network; browser sign-in
 // remains closed because APP_ORIGIN has no public HTTPS host.

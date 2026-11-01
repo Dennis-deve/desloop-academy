@@ -1,6 +1,8 @@
 export interface PilotConfig {
   enabled: boolean;
   engineV2Enabled: boolean;
+  /** Server-saved adult notes remain closed unless their separate migration is reviewed. */
+  learningAnnotationsEnabled: boolean;
   /** Private adult storage. Remote activation requires the separate synthetic-stage gate. */
   projectCoreEnabled: boolean;
   syntheticStageGateEnabled: boolean;
@@ -80,6 +82,12 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): PilotConfig {
     throw new Error('PROJECT_CORE_ENABLED must be exactly true or false');
   const enabled = env.PILOT_ENABLED === 'true';
   const engineV2Enabled = env.ENGINE_V2_ENABLED === 'true';
+  if (env.LEARNING_ANNOTATIONS_ENABLED !== undefined &&
+      !['true', 'false'].includes(env.LEARNING_ANNOTATIONS_ENABLED))
+    throw new Error('LEARNING_ANNOTATIONS_ENABLED must be exactly true or false');
+  const learningAnnotationsEnabled = env.LEARNING_ANNOTATIONS_ENABLED === 'true';
+  if (learningAnnotationsEnabled && !enabled)
+    throw new Error('Learning annotations require an enabled adult learning API');
   const projectCoreEnabled = env.PROJECT_CORE_ENABLED === 'true';
   if (env.SYNTHETIC_STAGE_GATE_ENABLED !== undefined &&
       !['true', 'false'].includes(env.SYNTHETIC_STAGE_GATE_ENABLED))
@@ -159,6 +167,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): PilotConfig {
   return {
     enabled,
     engineV2Enabled,
+    learningAnnotationsEnabled,
     projectCoreEnabled,
     syntheticStageGateEnabled,
     syntheticStageGateSecret,

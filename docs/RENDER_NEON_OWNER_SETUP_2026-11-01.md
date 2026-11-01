@@ -1,5 +1,7 @@
 # HISTORICAL D21 — superseded inactive-shell proposal (do not follow)
 
+> **D28 correction:** D22/D23 synthetic setup was also cancelled. The target is real full-platform features, closed Render QA and a later separately approved Railway public host. Do not follow this or the linked D23 synthetic runbook as a release recipe.
+
 > **Superseded by [D23-corrected working synthetic-only adult stage](RENDER_NEON_SYNTHETIC_STAGE_D22_2026-11-01.md).** D22 rejected the inactive-shell/custom-domain gateway assumptions; D23 also superseded this document's Railway copy/rollback: the owner reports deleting both Railway services without known backup and chose a **new empty Neon** baseline. The steps below are a dated decision record, **not** current setup instructions. Do not follow them or infer Render Free is private.
 
 **1 November 2026 — historical plan, not a deployment receipt.** The owner chose to **reuse** the existing [read-only Render static guide](https://desloop-readonly-guide.onrender.com), create **one new public Render web service with all adult/project/child/AI features off**, and copy the **verified-synthetic-only** Railway PostgreSQL data into a **new development-only Neon PostgreSQL project**. The owner chose **free/synthetic-only** resources and **Frankfurt** for the new web service and Neon project. Railway stays intact until a separately approved, verified cutover. No service, Neon project, backup, database copy, new GitHub push or web activation has been performed by this plan. See [decision D21](DECISIONS.md).

@@ -13,6 +13,7 @@ import {
   buttonStyles,
 } from '@/components/ui';
 import { pilotApi, type PilotCourseDetail } from './api';
+import { LessonNotebook } from './LessonNotebook';
 import { usePilotContext } from './PilotPortal';
 
 type Lesson = PilotCourseDetail['course']['modules'][number]['lessons'][number];
@@ -349,7 +350,7 @@ function ProjectForm({ detail, onDone }: { detail: PilotCourseDetail; onDone: ()
 
 export function PilotCoursePage() {
   const { courseId = '' } = useParams();
-  const { user } = usePilotContext();
+  const { user, learningAnnotationsEnabled } = usePilotContext();
   const [detail, setDetail] = useState<PilotCourseDetail | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
@@ -510,6 +511,14 @@ export function PilotCoursePage() {
           ))}
         </ol>
       </Card>
+      {learningAnnotationsEnabled && (
+        <LessonNotebook
+          key={`${detail.course.id}:${detail.course.version}`}
+          courseId={detail.course.id}
+          contentVersion={detail.course.version}
+          lessons={lessons.slice(0, Math.min(lessons.length, detail.completedLessons.length + 1))}
+        />
+      )}
       {!waiting && !complete && nextLesson && (
         <LessonForm
           key={nextLesson.id}

@@ -1,6 +1,6 @@
 # Product requirements and delivery inventory
 
-**22 October 2026 · living requirements baseline.** This is a build plan, not a claim of product readiness. The complete owner directive governs acceptance; this file groups its requirements without deleting any. Each group has an ID in [the authoritative feature register](FEATURE_REGISTER.md). Split groups into smaller IDs before independently implementing them.
+**22 October 2026 · living requirements baseline; D28 direction corrected 1 November.** This is a build plan, not a claim of product readiness. The complete owner directive governs acceptance; this file groups its requirements without deleting any. Each group has an ID in [the authoritative feature register](FEATURE_REGISTER.md). Split groups into smaller IDs before independently implementing them. **Current owner goal:** real full-platform **public enrolment**, with Render for closed real-workflow QA and Railway proposed as the later user host. The older private/synthetic rollout text below describes source and historical boundaries, **not** the current release objective or a live-user authorisation; relevant approvals are still pending. The owner reports the old Railway app and PostgreSQL deleted without a known backup. No current route/feature flag creates a lawful public/child platform by itself.
 
 ## Non-negotiable product rules
 

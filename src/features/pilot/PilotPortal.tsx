@@ -28,6 +28,7 @@ import { LearningLoopDashboard } from './learning-loop/LearningLoopDashboard';
 interface PilotContext {
   user: PilotUser;
   engineV2Enabled: boolean;
+  learningAnnotationsEnabled: boolean;
   refresh: () => void;
   /** Ephemeral UI recovery only; server GET and authorization are required before restoration. */
   projectDrafts: ProjectDraftVault;
@@ -221,6 +222,7 @@ export function PilotLayout() {
                 {
                   user,
                   engineV2Enabled: status.engineV2Enabled,
+                  learningAnnotationsEnabled: status.learningAnnotationsEnabled === true,
                   refresh: () => setRevision((current) => current + 1),
                   projectDrafts,
                 } satisfies PilotContext

@@ -1,7 +1,7 @@
 import { randomToken, hexHash } from './security.js';
 import { loadCatalog } from './catalog.js';
 import { isApprovedEngineStageBootstrap, isApprovedProjectCoreStageMigration, loadConfig } from './config.js';
-import { appendAudit, createDatabase, inTransaction, migrate, verifyRelease } from './db.js';
+import { appendAudit, createDatabase, inTransaction, migrate, migrateAnnotations, verifyRelease } from './db.js';
 import { verifyEmptySyntheticStageDatabase } from './synthetic-stage-db.js';
 import { loadEngineCatalog } from './engine/catalog.js';
 import { migrateEngine, verifyEngineRelease } from './engine/migrate.js';
@@ -12,7 +12,7 @@ import { migrateProjectCore } from './project-core/migrate.js';
 
 const [command, ...args] = process.argv.slice(2);
 const usage =
-  'Commands: migrate | invite <email> learner|reviewer | submissions | assign <submission-uuid> <reviewer-email> | disable <email> | engine-migrate | engine-enrol <adult-learner-email> | engine-submissions | engine-assign <submission-uuid> <reviewer-email> | project-core-migrate (disposable local or explicitly approved synthetic Neon stage only) | ai-migrate | ai-admin-grant <active-reviewer-email>';
+  'Commands: migrate | invite <email> learner|reviewer | submissions | assign <submission-uuid> <reviewer-email> | disable <email> | engine-migrate | engine-enrol <adult-learner-email> | engine-submissions | engine-assign <submission-uuid> <reviewer-email> | project-core-migrate (disposable local or explicitly approved synthetic Neon stage only) | annotations-migrate (approved disposable loopback only) | ai-migrate | ai-admin-grant <active-reviewer-email>';
 if (command === 'help') {
   console.log(usage);
   process.exit(0);
@@ -21,7 +21,7 @@ if (!process.env.DATABASE_URL)
   throw new Error('DATABASE_URL must be set in the server environment');
 const config = loadConfig({ ...process.env, PILOT_ENABLED: 'false', ENGINE_V2_ENABLED: 'false',
   AI_GATEWAY_ENABLED: 'false', AI_ADMIN_UI_ENABLED: 'false', AI_LIVE_TESTS_APPROVED: 'false',
-  PROJECT_CORE_ENABLED: 'false' });
+  PROJECT_CORE_ENABLED: 'false', LEARNING_ANNOTATIONS_ENABLED: 'false' });
 const db = createDatabase(config);
 const catalog = loadCatalog();
 const operator = process.env.PILOT_OPERATOR?.trim();
@@ -51,6 +51,17 @@ try {
     console.log(
       `Migrated private adult pilot schema; content ${catalog.version} with hash ${catalog.hash.slice(0, 10)}…`,
     );
+  } else if (command === 'annotations-migrate') {
+    if (!isApprovedLocalMigration(
+      'LEARNING_ANNOTATIONS_LOCAL_MIGRATION_APPROVED', '/desloop_learning_annotations_disposable_'))
+      throw new Error('Learning annotations migration is limited to a separately approved disposable loopback database; remote deployment requires a new reviewed path.');
+    const actor = operatorRequired();
+    await verifyRelease(db, catalog);
+    await migrateAnnotations(db);
+    await inTransaction(db, async (client) => {
+      await appendAudit(client, null, 'pilot.annotation.schema_migrated', '006', { operator: actor });
+    });
+    console.log('Installed private notes table in a disposable local database. No remote or public activation occurred.');
   } else if (command === 'invite') {
     await verifyRelease(db, catalog);
     const [address, role] = args;

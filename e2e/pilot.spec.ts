@@ -111,6 +111,51 @@ test('browser: private invite, first course, assigned human approval and next-co
   await page.goto('/pilot/courses/course-01');
   const course = catalog.courses[0];
   const lessons = course.modules.flatMap((module) => module.lessons);
+  // A real private annotation persists across reload, belongs to this account,
+  // and cannot grant lesson credit or silently overwrite another tab's revision.
+  const notebook = page.getByRole('region', { name: 'Private lesson notebook' });
+  await expect(notebook.getByRole('textbox', { name: 'Your note (plain text)' })).toBeVisible();
+  await notebook.getByRole('textbox', { name: 'Your note (plain text)' })
+    .fill('I made a careful plan for my first lesson.');
+  await notebook.getByRole('checkbox', { name: 'Bookmark this lesson' }).check();
+  await notebook.getByRole('button', { name: 'Save note and bookmark on server' }).click();
+  await expect(notebook.getByText(/Saved on the server. Revision 1./)).toBeVisible();
+  await page.reload();
+  await expect(notebook.getByRole('textbox', { name: 'Your note (plain text)' }))
+    .toHaveValue('I made a careful plan for my first lesson.');
+  await expect(notebook.getByRole('checkbox', { name: 'Bookmark this lesson' })).toBeChecked();
+  const secondTab = await page.context().newPage();
+  try {
+    await secondTab.goto('/pilot/courses/course-01');
+    const secondNotebook = secondTab.getByRole('region', { name: 'Private lesson notebook' });
+    await secondNotebook.getByRole('textbox', { name: 'Your note (plain text)' })
+      .fill('My second tab updated this private note.');
+    await secondNotebook.getByRole('button', { name: 'Save note and bookmark on server' }).click();
+    await expect(secondNotebook.getByText(/Saved on the server. Revision 2./)).toBeVisible();
+    await notebook.getByRole('textbox', { name: 'Your note (plain text)' })
+      .fill('I want to keep the first tab’s different draft.');
+    await notebook.getByRole('button', { name: 'Save note and bookmark on server' }).click();
+    await expect(notebook.getByText('Compare before resolving')).toBeVisible();
+    await expect(notebook.getByRole('textbox', { name: 'Latest server note' }))
+      .toHaveValue('My second tab updated this private note.');
+    await expect(notebook.getByRole('button', { name: 'Save note and bookmark on server' }))
+      .toBeDisabled();
+    await expectAxeClean(page);
+    await notebook.getByRole('checkbox', { name: /I compared my draft/ }).check();
+    await notebook.getByRole('button', { name: 'Save note and bookmark on server' }).click();
+    await expect(notebook.getByText(/Saved on the server. Revision 3./)).toBeVisible();
+    await page.reload();
+    await expect(notebook.getByRole('textbox', { name: 'Your note (plain text)' }))
+      .toHaveValue('I want to keep the first tab’s different draft.');
+  } finally {
+    await secondTab.close();
+  }
+  await expectAxeClean(page);
+  const notebookCredit = await db.query<{ count: string }>(
+    'SELECT count(*)::text AS count FROM pilot.lesson_completions WHERE learner_id=(SELECT id FROM pilot.users WHERE email=$1)',
+    [learnerEmail],
+  );
+  expect(notebookCredit.rows[0].count).toBe('0');
   for (const lesson of lessons) {
     await expect(page.getByRole('heading', { name: lesson.title })).toBeVisible();
     await page

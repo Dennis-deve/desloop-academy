@@ -55,6 +55,10 @@ export async function migrate(db: Database, catalog: PilotCatalog) {
   );
   await verifyRelease(db, catalog);
 }
+/** A separately reviewed, additive feature migration; never part of legacy bootstrap. */
+export async function migrateAnnotations(db: Database) {
+  await db.query(await readFile(resolve(process.cwd(), 'server/migrations/006_learning_annotations.sql'), 'utf8'));
+}
 export async function verifyRelease(db: Database, catalog: PilotCatalog) {
   const result = await db.query<{ sha256: string; policy_version: string; status: string }>(
     'SELECT sha256, policy_version, status FROM pilot.content_versions WHERE version=$1',

@@ -33,6 +33,7 @@ export default defineConfig({
         DATABASE_URL: databaseUrl,
         PILOT_ENABLED: 'true',
         PILOT_DRAFT_ACKNOWLEDGED: 'true',
+        LEARNING_ANNOTATIONS_ENABLED: 'true',
         PILOT_LOCAL_E2E_AUTH_LIMIT: 'true',
         ENGINE_V2_ENABLED: 'false',
         AI_GATEWAY_ENABLED: 'false',

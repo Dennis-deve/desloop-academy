@@ -9,6 +9,7 @@ export interface PilotUser {
 export interface PilotStatus {
   enabled: boolean;
   engineV2Enabled: boolean;
+  learningAnnotationsEnabled: boolean;
   audience: string;
   curriculum: string;
   contentVersion: string;
@@ -18,6 +19,18 @@ export interface PilotWeeklyActivity {
   measure: 'persisted-learner-actions';
   sources: ('draft-1' | 'draft-2')[];
   days: { date: string; actions: number }[];
+}
+export interface PilotAnnotation {
+  lessonId: string;
+  note: string;
+  bookmarked: boolean;
+  revision: number;
+  updatedAt: string;
+}
+export interface PilotAnnotations {
+  courseId: string;
+  contentVersion: string;
+  items: PilotAnnotation[];
 }
 
 export interface PilotPathway {
@@ -155,6 +168,16 @@ export const pilotApi = {
   weeklyActivity: () => request<PilotWeeklyActivity>('/dashboard/activity'),
   course: (courseId: string) =>
     request<PilotCourseDetail>(`/courses/${encodeURIComponent(courseId)}`),
+  annotations: (courseId: string) =>
+    request<PilotAnnotations>(`/courses/${encodeURIComponent(courseId)}/annotations`),
+  saveAnnotation: (
+    courseId: string,
+    lessonId: string,
+    body: { note: string; bookmarked: boolean; expectedRevision: number },
+  ) => request<PilotAnnotation>(
+    `/courses/${encodeURIComponent(courseId)}/lessons/${encodeURIComponent(lessonId)}/annotation`,
+    body,
+  ),
   lesson: (
     courseId: string,
     lessonId: string,

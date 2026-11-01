@@ -1,6 +1,6 @@
 import { loadCatalog } from '../server/src/catalog.js';
 import { loadConfig } from '../server/src/config.js';
-import { createDatabase, migrate } from '../server/src/db.js';
+import { createDatabase, migrate, migrateAnnotations } from '../server/src/db.js';
 
 const url = process.env.PILOT_E2E_DATABASE_URL;
 if (!url) throw new Error('PILOT_E2E_DATABASE_URL is required for disposable browser QA.');
@@ -29,8 +29,9 @@ try {
       'This browser QA requires a NEW, empty, named disposable database. Refusing any pre-existing pilot schema.',
     );
   await migrate(db, loadCatalog());
+  await migrateAnnotations(db);
   console.log(
-    'Prepared a newly created local pilot-browser schema; no user data was restored or seeded.',
+    'Prepared a newly created local adult-browser schema and separate notes table; no user data was restored or seeded.',
   );
 } finally {
   await db.end();
