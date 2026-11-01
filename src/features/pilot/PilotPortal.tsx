@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Link, Outlet, useOutletContext } from 'react-router-dom';
+import { Link, Outlet, useNavigate, useOutletContext } from 'react-router-dom';
 import { ArrowRight, Database, LockKeyhole, ShieldCheck } from 'lucide-react';
 import {
   Badge,
@@ -11,21 +11,23 @@ import {
   Field,
   InfoBox,
   Input,
-  ProgressBar,
   buttonStyles,
 } from '@/components/ui';
 import {
   pilotApi,
   PilotApiError,
   type PilotPathway,
+  type PilotWeeklyActivity,
   type PilotStatus,
   type PilotUser,
 } from './api';
 import { projectCoreApi } from './project-core/api';
 import { createProjectDraftVault, type ProjectDraftVault } from './project-core/draft-vault';
+import { LearningLoopDashboard } from './learning-loop/LearningLoopDashboard';
 
 interface PilotContext {
   user: PilotUser;
+  engineV2Enabled: boolean;
   refresh: () => void;
   /** Ephemeral UI recovery only; server GET and authorization are required before restoration. */
   projectDrafts: ProjectDraftVault;
@@ -218,6 +220,7 @@ export function PilotLayout() {
               context={
                 {
                   user,
+                  engineV2Enabled: status.engineV2Enabled,
                   refresh: () => setRevision((current) => current + 1),
                   projectDrafts,
                 } satisfies PilotContext
@@ -405,29 +408,28 @@ function PilotAccess({ onAuthenticated }: { onAuthenticated: (user: PilotUser) =
 }
 
 export function PilotHome() {
-  const { user } = usePilotContext();
+  const { user, engineV2Enabled } = usePilotContext();
+  const navigate = useNavigate();
   const [data, setData] = useState<PilotPathway | null>(null);
+  const [activity, setActivity] = useState<PilotWeeklyActivity | null>(null);
+  const [activityUnavailable, setActivityUnavailable] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (user.role !== 'learner') return;
     let active = true;
-    pilotApi
-      .pathway()
-      .then((result) => {
-        if (active) setData(result);
-      })
-      .catch((reason) => {
-        if (active)
-          setError(reason instanceof Error ? reason.message : 'Could not load your pathway.');
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [user.role]);
+    setLoading(true);
+    Promise.allSettled([pilotApi.pathway(), pilotApi.weeklyActivity()]).then(([pathway, weekly]) => {
+      if (!active) return;
+      if (pathway.status === 'fulfilled') setData(pathway.value);
+      else setError(pathway.reason instanceof Error ? pathway.reason.message : 'Could not load your pathway.');
+      if (weekly.status === 'fulfilled') setActivity(weekly.value);
+      else setActivityUnavailable(true); // Do not fabricate bars when the server is unavailable.
+    }).finally(() => {
+      if (active) setLoading(false);
+    });
+    return () => { active = false; };
+  }, [user.id, user.role]);
   if (user.role === 'reviewer')
     return (
       <Card className="p-8">
@@ -442,98 +444,18 @@ export function PilotHome() {
       </Card>
     );
   if (loading)
-    return (
-      <Card className="p-8" role="status">
-        Loading your server-owned pathway…
-      </Card>
-    );
+    return <Card className="p-8" role="status">Loading your server-owned pathway and recorded activity…</Card>;
   if (error || !data)
-    return (
-      <InfoBox tone="amber" role="alert">
-        {error || 'Could not load the pilot pathway.'}
-      </InfoBox>
-    );
-  const active = data.courses.find((course) => course.id === data.currentCourseId);
+    return <InfoBox tone="amber" role="alert">{error || 'Could not load the pilot pathway. No progress has been inferred.'}</InfoBox>;
   return (
-    <div className="space-y-6">
-      <Card className="grid gap-6 p-6 sm:p-8 md:grid-cols-[1fr_auto] md:items-center">
-        <div>
-          <Badge tone="blue">Server-saved rehearsal · {data.contentVersion}</Badge>
-          <h2 className="mt-3 font-display text-3xl text-heading">
-            One required route. Real server gates.
-          </h2>
-          <p className="mt-2 text-sm leading-7 text-body">
-            Complete and pass Course N before Course N+1 opens. A browser role switch, direct URL or
-            localStorage edit cannot award a pilot completion.
-          </p>
-          <ProgressBar
-            className="mt-5 max-w-md"
-            value={Math.round((data.completedCount / 44) * 100)}
-            label={`Courses passed in rehearsal: ${data.completedCount} of 44`}
-          />
-        </div>
-        {active && (
-          <Link to={`/pilot/courses/${active.id}`} className={buttonStyles('primary')}>
-            Continue Course {String(active.number).padStart(2, '0')}{' '}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        )}
-      </Card>
-      <div>
-        <h2 className="font-display text-3xl text-heading">Your 44-course sequence</h2>
-        <p className="mt-1 text-sm text-body">
-          A draft internal pilot. No accreditation, verified child enrolment or official transcript.
-        </p>
-      </div>
-      <ol className="grid gap-3 md:grid-cols-2">
-        {data.courses.map((course) => (
-          <li key={course.id}>
-            <Card className="flex h-full items-start gap-4 p-5">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-sm font-extrabold text-brand-700 dark:bg-brand-500/20 dark:text-brand-100">
-                {String(course.number).padStart(2, '0')}
-              </span>
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-subdued">
-                    {course.stage}
-                  </span>
-                  <Badge
-                    tone={
-                      course.state === 'completed'
-                        ? 'green'
-                        : course.state === 'locked'
-                          ? 'neutral'
-                          : course.state === 'revision'
-                            ? 'amber'
-                            : 'blue'
-                    }
-                  >
-                    {course.state}
-                  </Badge>
-                </div>
-                <h3 className="mt-1 text-sm font-extrabold text-heading">{course.title}</h3>
-                {course.state === 'locked' ? (
-                  <p className="mt-2 text-xs text-body">Locked until the previous course passes.</p>
-                ) : (
-                  <Link
-                    to={`/pilot/courses/${course.id}`}
-                    className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand-600 dark:text-brand-200"
-                  >
-                    {course.state === 'review'
-                      ? 'See review status'
-                      : course.state === 'revision'
-                        ? 'Revise within this course'
-                        : course.state === 'completed'
-                          ? 'View completed work'
-                          : 'Continue lessons'}{' '}
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                )}
-              </div>
-            </Card>
-          </li>
-        ))}
-      </ol>
-    </div>
+    <LearningLoopDashboard
+      mode="private"
+      displayName={user.displayName}
+      pathway={data}
+      activity={activity}
+      activityUnavailable={activityUnavailable}
+      onOpenCourse={(id) => navigate(`/pilot/courses/${id}`)}
+      onOpenStudio={engineV2Enabled ? () => navigate('/pilot/engine/studio') : undefined}
+    />
   );
 }

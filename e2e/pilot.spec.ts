@@ -79,7 +79,28 @@ test('browser: private invite, first course, assigned human approval and next-co
   await expectAxeClean(page);
   const learnerEmail = `casey-${randomUUID().slice(0, 7)}@example.invalid`;
   await register(page, 'Casey Pilot', await invite(learnerEmail, 'learner'));
-  await expect(page.getByRole('heading', { name: 'Your 44-course sequence' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Curiosity starts/ })).toBeVisible();
+  await expect(page.getByText('0 of 44 draft courses passed')).toBeVisible();
+  await expect(page.getByText('0 recorded actions in these 7 UTC days.')).toBeVisible();
+  await expect(page.getByText('Locked by server').first()).toBeVisible();
+  const initialViewport = page.viewportSize();
+  await page.setViewportSize({ width: 320, height: 740 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+    await page.evaluate(() => window.innerWidth),
+  );
+  if (initialViewport) await page.setViewportSize(initialViewport);
+  await expectAxeClean(page);
+  await page.getByRole('button', { name: /02. Build/ }).click();
+  await expect(page.locator('.ll-orbit-core strong')).toHaveText('Build');
+  await page.locator('.ll-palette').getByRole('button', { name: 'Move right' }).click();
+  await page.locator('.ll-palette').getByRole('button', { name: 'Say “Hello!”' }).click();
+  await page.getByRole('button', { name: 'Run blocks' }).click();
+  await expect(page.locator('.ll-preview-stage svg')).toHaveAttribute('aria-label', /space 2 of 6.*saying Hello/);
+  await expect(page.getByText('0 recorded actions in these 7 UTC days.')).toBeVisible(); // Lab is not course credit.
+  await page.getByRole('button', { name: 'Ages 9–12' }).click();
+  await expect(page.getByRole('button', { name: 'Ages 9–12' })).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: 'Switch dashboard to dark theme' }).click();
+  await expect(page.locator('.ll-footer')).toHaveCSS('background-color', 'rgb(20, 20, 49)');
   await expectAxeClean(page);
   await page.goto('/pilot/courses/course-02');
   await expect(page.getByRole('heading', { name: 'Course unavailable' })).toBeVisible();
@@ -98,6 +119,10 @@ test('browser: private invite, first course, assigned human approval and next-co
     ).toBeVisible();
   }
   await expectAxeClean(page);
+  await page.goto('/pilot');
+  await expect(page.getByText(`${lessons.length} recorded actions in these 7 UTC days.`)).toBeVisible();
+  await expect(page.getByText('0 of 44 draft courses passed')).toBeVisible();
+  await page.goto('/pilot/courses/course-01');
   for (const [index, check] of lessons
     .map((lesson) => lesson.check)
     .concat([{ question: '', options: [], correct: 0, safetyCritical: false, explanation: '' }])
@@ -164,6 +189,10 @@ test('browser: private invite, first course, assigned human approval and next-co
     ).toBeVisible();
     await page.reload();
     await expect(page.getByText('Passed in the internal rehearsal')).toBeVisible();
+    await page.goto('/pilot');
+    await expect(page.getByText('1 of 44 draft courses passed')).toBeVisible();
+    await expect(page.getByRole('button', { name: /Continue Course 02/ })).toBeVisible();
+    await page.goto('/pilot/courses/course-01');
     await page.getByRole('link', { name: /Continue to the next required course/ }).click();
     await expect(page.getByRole('heading', { name: catalog.courses[1].title })).toBeVisible();
   } finally {

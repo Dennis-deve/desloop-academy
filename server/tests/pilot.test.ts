@@ -87,6 +87,7 @@ test('disabled service exposes no sign-up or progression endpoints', async () =>
       payload: {},
     });
     assert.equal(denied.statusCode, 404);
+    assert.equal((await app.inject('/api/pilot/dashboard/activity')).statusCode, 404);
   } finally {
     await app.close();
   }
@@ -168,6 +169,16 @@ test(
       assert.equal((await get('/api/pilot/pathway')).statusCode, 401);
       assert.equal((await get('/api/pilot/pathway', reviewer)).statusCode, 403);
       assert.equal((await get('/api/pilot/pathway', learner)).json().completedCount, 0);
+      assert.equal((await get('/api/pilot/dashboard/activity')).statusCode, 401);
+      assert.equal((await get('/api/pilot/dashboard/activity', reviewer)).statusCode, 403);
+      const emptyResponse = await get('/api/pilot/dashboard/activity', learner);
+      assert.equal(emptyResponse.headers['cache-control'], 'private, no-store');
+      const emptyActivity = emptyResponse.json();
+      assert.equal(emptyActivity.timezone, 'UTC');
+      assert.equal(emptyActivity.measure, 'persisted-learner-actions');
+      assert.deepEqual(emptyActivity.sources, ['draft-1']);
+      assert.equal(emptyActivity.days.length, 7);
+      assert.ok(emptyActivity.days.every((day: { actions: number }) => day.actions === 0));
       const courseResponse = (await get('/api/pilot/courses/course-01', learner)).json();
       assert.equal(courseResponse.course.modules[0].lessons[0].check.correct, undefined);
       assert.equal(courseResponse.course.quiz[0].correct, undefined);
@@ -237,6 +248,11 @@ test(
         requestId: randomUUID(),
       });
       assert.equal(wrong.json().completed, false);
+      const oneAction = (await get('/api/pilot/dashboard/activity', learner)).json();
+      assert.equal(oneAction.days.at(-1).actions, 1);
+      assert.ok((await get('/api/pilot/dashboard/activity', learner2)).json().days.every(
+        (day: { actions: number }) => day.actions === 0,
+      ));
       for (const lesson of lessons) {
         const requestId = randomUUID();
         if (lesson === lessons[0]) firstLessonRequestId = requestId;
@@ -311,6 +327,10 @@ test(
       };
       const submitted = await post('/api/pilot/courses/course-01/project', learner, projectBody);
       assert.equal(submitted.statusCode, 201, submitted.body);
+      const recorded = (await get('/api/pilot/dashboard/activity', learner)).json();
+      // Wrong + each successful lesson + failed/passed quiz + project. Replayed
+      // request IDs are idempotent, so they must never create extra chart bars.
+      assert.equal(recorded.days.at(-1).actions, 1 + lessons.length + 2 + 1);
       const submissionId = submitted.json().submissionId;
       assert.equal(
         (await post('/api/pilot/courses/course-01/project', learner, projectBody)).json().repeated,

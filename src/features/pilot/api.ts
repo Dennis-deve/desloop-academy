@@ -13,6 +13,13 @@ export interface PilotStatus {
   curriculum: string;
   contentVersion: string;
 }
+export interface PilotWeeklyActivity {
+  timezone: 'UTC';
+  measure: 'persisted-learner-actions';
+  sources: ('draft-1' | 'draft-2')[];
+  days: { date: string; actions: number }[];
+}
+
 export interface PilotPathway {
   mode: 'adult-internal-draft';
   contentVersion: string;
@@ -145,6 +152,7 @@ export const pilotApi = {
     request<{ user: PilotUser }>('/auth/register', { invitation, name, password, adultAttested }),
   logout: () => request<{ signedOut: boolean }>('/auth/logout', {}),
   pathway: () => request<PilotPathway>('/pathway'),
+  weeklyActivity: () => request<PilotWeeklyActivity>('/dashboard/activity'),
   course: (courseId: string) =>
     request<PilotCourseDetail>(`/courses/${encodeURIComponent(courseId)}`),
   lesson: (

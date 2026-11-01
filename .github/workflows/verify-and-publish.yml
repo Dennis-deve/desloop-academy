@@ -74,17 +74,23 @@ jobs:
           npm run build:render-public
           npm run test:render-public
           npm run test:render-deploy
-      - name: Create six distinct disposable databases in CI's ephemeral container
+      - name: Create seven distinct disposable databases in CI's ephemeral container
         env:
           PG_CONTAINER: ${{ job.services.postgres.id }}
         run: |
-          for db in desloop_pilot_disposable_ci desloop_engine_disposable_ci desloop_ai_disposable_ci desloop_project_core_disposable_ci desloop_project_core_disposable_browser_ci desloop_project_core_disposable_stage_browser; do
+          for db in desloop_pilot_disposable_ci desloop_engine_disposable_ci desloop_ai_disposable_ci desloop_project_core_disposable_ci desloop_project_core_disposable_browser_ci desloop_project_core_disposable_stage_browser desloop_pilot_disposable_dashboard_ci_browser; do
             docker exec "$PG_CONTAINER" psql -v ON_ERROR_STOP=1 -U postgres -d postgres -c "CREATE DATABASE $db"
           done
       - name: Real local PostgreSQL permission, migration and failure tests
         run: npm run test:server
       - name: Install Chromium with system dependencies
         run: npx playwright install --with-deps chromium
+      - name: Offline learning-loop review in light/dark, desktop/mobile and reduced motion
+        run: npm run test:learning-loop-review
+      - name: Real private learning-loop adult journey on a seventh fresh disposable DB
+        env:
+          PILOT_E2E_DATABASE_URL: postgres://postgres:ci-disposable-only@127.0.0.1:5432/desloop_pilot_disposable_dashboard_ci_browser
+        run: npm run test:e2e:pilot-dashboard
       - name: Existing browser regression (adult opt-in flows remain skipped)
         run: npm run test:e2e
       - name: Isolated public browser and 404 regressions

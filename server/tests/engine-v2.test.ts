@@ -180,6 +180,10 @@ test(
       const learner = await createActor('learner', 'Casey');
       const reviewer = await createActor('reviewer', 'Morgan');
       const other = await createActor('learner', 'Taylor');
+      const activityAtStart = (await get('/api/pilot/dashboard/activity', learner)).json();
+      assert.deepEqual(activityAtStart.sources, ['draft-1', 'draft-2']);
+      assert.ok(activityAtStart.days.every((day: { actions: number }) => day.actions === 0));
+      assert.equal((await get('/api/pilot/dashboard/activity', reviewer)).statusCode, 403);
       assert.equal((await get('/api/pilot/guardian-readiness')).statusCode, 401);
       assert.equal((await get('/api/pilot/guardian-readiness', learner)).statusCode, 403);
       const readiness = await get('/api/pilot/guardian-readiness', reviewer);
@@ -307,6 +311,10 @@ test(
       });
       assert.equal(wrong.statusCode, 200, wrong.body);
       assert.equal(wrong.json().completed, false);
+      assert.equal((await get('/api/pilot/dashboard/activity', learner)).json().days.at(-1).actions, 1);
+      assert.ok((await get('/api/pilot/dashboard/activity', other)).json().days.every(
+        (day: { actions: number }) => day.actions === 0,
+      ));
       let detail = (await get('/api/pilot/engine/courses/course-01', learner)).json();
       assert.equal(detail.state, 'FAILED_REMEDIATION');
       assert.equal(detail.moduleStates[0].state, 'FAILED_REMEDIATION');

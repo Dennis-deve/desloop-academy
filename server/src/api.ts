@@ -12,6 +12,7 @@ import type { Database } from './db.js';
 import { appendAudit, inTransaction, verifyRelease } from './db.js';
 import { loadCatalog, type PilotCatalog } from './catalog.js';
 import { PilotProgression } from './progression.js';
+import { readWeeklyActivity } from './dashboard-activity.js';
 import { loadEngineCatalog } from './engine/catalog.js';
 import { verifyEngineRelease } from './engine/migrate.js';
 import { LearningEngine } from './engine/service.js';
@@ -329,6 +330,11 @@ export async function buildApi(
     app.get('/api/pilot/pathway', async (request) => {
       const auth = await requireUser(request, db, config, 'learner');
       return progression.pathway(auth.user.id);
+    });
+    app.get('/api/pilot/dashboard/activity', async (request, reply) => {
+      reply.header('Cache-Control', 'private, no-store');
+      const auth = await requireUser(request, db, config, 'learner');
+      return readWeeklyActivity(db, auth.user.id, config.engineV2Enabled);
     });
     app.get('/api/pilot/courses/:courseId', async (request) => {
       const auth = await requireUser(request, db, config, 'learner');
